@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@types/react-speech-recognition": "^3.9.5",
     "core-js": "^3.37.0",
     "lottie-react": "^2.4.0",

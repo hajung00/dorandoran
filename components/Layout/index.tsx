@@ -3,11 +3,11 @@ import styled from 'styled-components';
 
 const LayoutStyle = styled.div`
   width: 100%;
-  max-width: 475px;
+  max-width: 512px;
   margin: auto;
   min-height: 100vh;
   max-height: fit-content;
-  background: #f5efea;
+  background: #fcfcfc;
   position: relative;
 `;
 
