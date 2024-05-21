@@ -5,6 +5,8 @@ import styled from 'styled-components';
 // import svg
 import XIcon from '../../public/icons/x.svg';
 import AlertIcon from '../../public/icons/alert-circle.svg';
+import ModalLayout from '@/modal/ModalLayout';
+import LoginAlertModal from '@/modal/LoginAlertModal';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -136,6 +138,7 @@ const Login = () => {
   const [enableCheckButton, setEnableCheckButton] = useState(false); // 인증번호 확인 버튼 활성화 여부
   const [timeLeft, setTimeLeft] = useState(300);
   const [requestAuthentication, setRequestAuthentication] = useState(false); // 인증번호 요청 여부
+  const [loginAlertModal, setLoginAlertModal] = useState(false);
 
   const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -184,8 +187,13 @@ const Login = () => {
 
   // 인증문자 받기 버튼 클릭
   const onClickReceiveButton = useCallback(() => {
-    if (enableRequestButton) {
+    const valid = false; // 유효한 이름과 휴대폰 번호인지 확인
+    // db로 부터 검증 한 후 인증번호 전송
+    if (enableRequestButton && valid) {
+      // 인증번호 요청 api 요청
       setRequestAuthentication((prev) => !prev);
+    } else {
+      setLoginAlertModal(true);
     }
   }, [enableRequestButton]);
 
@@ -207,6 +215,13 @@ const Login = () => {
       console.log(authenticationNumber);
     }
   }, [enableCheckButton, authenticationNumber]);
+
+  // 이름, 휴대폰 번호 일치하지 않을 시 alert 모달 toggle
+  const loginAlertModalHandler = useCallback(() => {
+    setName('');
+    setPhoneNumber('');
+    setLoginAlertModal((prev) => !prev);
+  }, [name, phoneNumber]);
 
   return (
     <div>
@@ -263,8 +278,13 @@ const Login = () => {
           <label>휴대폰번호</label>
           <div>
             <input
-              type='text'
+              type='number'
               placeholder="'-'없이 숫자만 입력해주세요."
+              onInput={(el: any) => {
+                if (el.target.value.length > 11) {
+                  el.target.value = el.target.value.substr(0, 11);
+                }
+              }}
               value={phoneNumber}
               onChange={onChangePhoneNumber}
             />
@@ -303,6 +323,7 @@ const Login = () => {
           </>
         )}
       </Content>
+      {loginAlertModal && <LoginAlertModal onClosed={loginAlertModalHandler} />}
     </div>
   );
 };

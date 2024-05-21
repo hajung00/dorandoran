@@ -14,25 +14,27 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  padding: 0 20px;
-  margin-top: 28px;
+  padding: 0 62px;
+  height: calc(100vh - 94px - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transform: translateY(-82px);
 
   .description {
     display: flex;
-    height: 255px;
-    padding: 10px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 18px;
     border-radius: 16px;
-    background: #f7f7f7;
-    color: #222;
+    color: var(--gray09, #222);
     text-align: center;
     font-family: 'Pretendard';
-    font-size: 1.25rem;
-    font-weight: 500;
-    letter-spacing: -0.4px;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 140%; /* 30.8px */
+    letter-spacing: -0.44px;
   }
 
   .icon-wrapper {
@@ -42,7 +44,7 @@ const Content = styled.div`
   }
 
   & > button {
-    margin-top: 24px;
+    margin-top: 50px;
     display: flex;
     width: 100%;
     height: 66px;
@@ -53,12 +55,12 @@ const Content = styled.div`
     border: none;
     border-radius: 18px;
     background: #565bff;
-    color: white;
+    color: var(--white, #fff);
     font-family: 'Pretendard';
     font-size: 20px;
+    font-style: normal;
     font-weight: 600;
     letter-spacing: -0.4px;
-    cursor: pointer;
   }
 `;
 const Counsel = () => {
@@ -73,14 +75,14 @@ const Counsel = () => {
           <div className='icon-wrapper'></div>
           {!user ? (
             <p>
-              상담을 하기 위해서는
-              <br /> 내담자님의 정보가 필요해요.
+              상담을 하기 위해서는 로그인 상태여야 해요!
+              <br />
+              아래 버튼을 눌러 로그인을 진행해주세요.
             </p>
           ) : (
             <p>
-              심리검사를 통해 현재 마음상태를 확인해볼게요.
-              <br />
-              나의 마음을 그대로 떠올리며 검사를 진행해주세요.
+              심리검사로 <br />
+              현재 내 마음상태 알아보기
             </p>
           )}
         </div>
@@ -95,7 +97,7 @@ const Counsel = () => {
         ) : (
           <button
             onClick={() => {
-              router.push('/counsel/psychological-test');
+              router.push('/counsel/psychological-test-intro');
             }}
           >
             심리검사 시작하기
