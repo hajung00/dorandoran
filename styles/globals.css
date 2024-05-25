@@ -9,6 +9,10 @@ body {
   /* background: #f5efea; */
 }
 
+html {
+  font-size: 62.5%;
+}
+
 #__next {
   width: 100%;
   max-width: 512px;

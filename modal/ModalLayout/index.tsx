@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ModalLayoutStyle = styled.div`
-  width: 512px;
-  height: -webkit-fill-available;
+  width: 100%;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;

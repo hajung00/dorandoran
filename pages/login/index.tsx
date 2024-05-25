@@ -101,7 +101,7 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
     border-radius: 18px;
     border: 1px solid #d9d9d9;
     background: #fff;
-    outline-color: ${(props) =>
+    outline-color: ${(props: any) =>
       props.bordercolor === 'true' ? '#FF2020' : '#565bff'};
     color: var(--gray08, #444);
     font-family: 'Pretendard';
@@ -227,7 +227,7 @@ const Login = () => {
     <div>
       <Header>
         <div className='icon-wrapper'>
-          <XIcon width={18} height={18} alt={'cancel'} />
+          <XIcon width={18} height={18} alt={'cancel'} stroke={'#666666'} />
         </div>
         {!requestAuthentication ? (
           <>

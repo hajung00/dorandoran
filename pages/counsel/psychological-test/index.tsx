@@ -5,6 +5,8 @@ import styled from 'styled-components';
 // import svg
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import CheckSVG from '../../../public/icons/check.svg';
+import Loading from '@/components/Loading';
+import { useRouter } from 'next/router';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -15,7 +17,7 @@ const Header = styled.header`
   }
 `;
 
-const Pointer = styled.div`
+const Point = styled.div`
   color: var(--doranblue, #565bff);
   margin-left: 8px;
 `;
@@ -43,7 +45,7 @@ const ProgressBar = styled.div`
 `;
 
 const Progress = styled.div<{ width: number }>`
-  width: ${(props) => props.width}%;
+  width: ${(props: any) => props.width}%;
   height: 10px;
   padding: 0;
   text-align: center;
@@ -159,6 +161,7 @@ const Content = styled.div`
 
 const ButtonSection = styled.div`
   margin-top: 70px;
+  margin-bottom: 64px;
   padding: 0 20px;
 
   & > button {
@@ -212,9 +215,12 @@ interface Props {
 }
 
 const PsychologicalTest = ({ testItmes }: Props) => {
+  const router = useRouter();
+
   const [currentNumber, setCurrnetNumber] = useState(1); // 현재 심리검사 항목 번호
   const [currentAnswer, setCurrentAnswer] = useState(''); // 현재 심리검사 항목 답변
   const [allAnswer, setAllAnswer] = useState<{ [key: string]: any }[]>([]); // 검사 모든 항목에 대한 답변
+  const [analysisTestLoading, setAnalysisTestLoading] = useState(false);
 
   // 답변 클릭 이벤트
   const onClickAnswer = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
@@ -268,6 +274,20 @@ const PsychologicalTest = ({ testItmes }: Props) => {
     setCurrnetNumber((prev) => prev - 1);
   }, []);
 
+  // 심리 결과 분석하기 클릭 이벤트
+  const analysisTestHandler = useCallback(() => {
+    setAnalysisTestLoading((prev) => !prev);
+    nextQuestionHandler();
+    console.log('심리 결과 분석', allAnswer);
+    // 심리 결과 분석 api 요청 후, 완료하면 로딩 false 하고 페이지 이동
+    const timer = setTimeout(() => {
+      setAnalysisTestLoading(false);
+      router.push('/counsel/psychological-test-result');
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [allAnswer]);
+
   return (
     <div>
       <Header>
@@ -275,75 +295,95 @@ const PsychologicalTest = ({ testItmes }: Props) => {
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
       </Header>
-      <ProgressBarSection>
-        <ProgressBar>
-          <Progress width={5.26 * currentNumber} />
-        </ProgressBar>
-        <div className='progress-info'>
-          총 <Pointer>19</Pointer>개 문항 중 <Pointer>{currentNumber}</Pointer>
-          개 진행중
-        </div>
-      </ProgressBarSection>
-      <Content>
-        <div className='question-type'>{testItmes[currentNumber - 1].type}</div>
-        <p className='description'>
-          지난 2주동안 느꼈던 감정으로 선택해주세요.
-        </p>
-        <div className='question-container'>
-          <div className='question-number'>문항 {currentNumber}</div>
-          <div className='question'>
-            {testItmes[currentNumber - 1].question}
-          </div>
-          <p className='question-description'>
-            아래 답변중 하나를 선택해주세요.
-          </p>
-        </div>
-        <div className='answer-container'>
-          <ul>
-            {testItmes[currentNumber - 1].answer.map(
-              (item: string, idx: number) => (
-                <li
-                  key={idx}
-                  className={currentAnswer === item ? 'active' : ''}
-                  onClick={onClickAnswer}
-                >
-                  <div>
-                    <CheckSVG
-                      width={19}
-                      height={19}
-                      alt={'check'}
-                      color={'#e3e3e3'}
-                    />
-                  </div>
-                  {item}
-                </li>
-              )
+      {currentNumber < 19 && (
+        <>
+          <ProgressBarSection>
+            <ProgressBar>
+              <Progress width={5.55 * currentNumber} />
+            </ProgressBar>
+            <div className='progress-info'>
+              총 <Point>18</Point>개 문항 중 <Point>{currentNumber}</Point>개
+              진행중
+            </div>
+          </ProgressBarSection>
+          <Content>
+            <div className='question-type'>
+              {currentNumber < 19 && testItmes[currentNumber - 1].type}
+            </div>
+            <p className='description'>
+              지난 2주동안 느꼈던 감정으로 선택해주세요.
+            </p>
+            <div className='question-container'>
+              <div className='question-number'>문항 {currentNumber}</div>
+              <div className='question'>
+                {currentNumber < 19 && testItmes[currentNumber - 1].question}
+              </div>
+              <p className='question-description'>
+                아래 답변중 하나를 선택해주세요.
+              </p>
+            </div>
+            <div className='answer-container'>
+              <ul>
+                {currentNumber < 19 &&
+                  testItmes[currentNumber - 1].answer.map(
+                    (item: string, idx: number) => (
+                      <li
+                        key={idx}
+                        className={currentAnswer === item ? 'active' : ''}
+                        onClick={onClickAnswer}
+                      >
+                        <div>
+                          <CheckSVG
+                            width={19}
+                            height={19}
+                            alt={'check'}
+                            color={'#e3e3e3'}
+                          />
+                        </div>
+                        {item}
+                      </li>
+                    )
+                  )}
+              </ul>
+            </div>
+          </Content>
+          <ButtonSection>
+            {currentNumber === 1 ? (
+              <button
+                className={currentAnswer ? 'enable' : 'disable'}
+                onClick={nextQuestionHandler}
+              >
+                다음 문항으로 넘어가기
+              </button>
+            ) : (
+              <div className='prev-next-button-wrapper'>
+                <button className='prev-button' onClick={prevQuestionHandler}>
+                  이전 문항으로 돌아가기
+                </button>
+                {currentNumber !== 18 ? (
+                  <button
+                    className={currentAnswer ? 'enable' : 'disable'}
+                    onClick={nextQuestionHandler}
+                  >
+                    다음 문항으로 넘어가기
+                  </button>
+                ) : (
+                  <button
+                    className={currentAnswer ? 'enable' : 'disable'}
+                    onClick={analysisTestHandler}
+                  >
+                    심리 결과 분석하기
+                  </button>
+                )}
+              </div>
             )}
-          </ul>
-        </div>
-      </Content>
-      <ButtonSection>
-        {currentNumber === 1 ? (
-          <button
-            className={currentAnswer ? 'enable' : 'disable'}
-            onClick={nextQuestionHandler}
-          >
-            다음 문항으로 넘어가기
-          </button>
-        ) : (
-          <div className='prev-next-button-wrapper'>
-            <button className='prev-button' onClick={prevQuestionHandler}>
-              이전 문항으로 돌아가기
-            </button>
-            <button
-              className={currentAnswer ? 'enable' : 'disable'}
-              onClick={nextQuestionHandler}
-            >
-              다음 문항으로 넘어가기
-            </button>
-          </div>
-        )}
-      </ButtonSection>
+          </ButtonSection>
+        </>
+      )}
+
+      {analysisTestLoading && (
+        <Loading text={`상담 결과를 분석중이에요. 잠시만 기다려주세요!`} />
+      )}
     </div>
   );
 };

@@ -13,8 +13,10 @@
     "@types/react-speech-recognition": "^3.9.5",
     "core-js": "^3.37.0",
     "lottie-react": "^2.4.0",
+    "moment": "^2.30.1",
     "next": "^13.4.7",
     "react": "^18",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18",
     "react-say": "^2.1.0",
     "react-speech-recognition": "^3.10.0",
@@ -25,6 +27,7 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-custom-scrollbars": "^4.0.13",
     "@types/react-dom": "^18",
     "babel-plugin-styled-components": "^2.1.4",
     "eslint": "^8",

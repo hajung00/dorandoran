@@ -14,96 +14,163 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  padding: 0 62px;
   height: calc(100vh - 94px - 80px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  transform: translateY(-82px);
+  align-items: center;
+  padding: 0 20px;
+`;
 
-  .description {
+const NonLogin = () => {
+  const NonLoginStyle = styled.div`
+    transform: translateY(60%);
+
+    .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      background: #eaeaea;
+    }
+
+    .description {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      border-radius: 16px;
+      color: var(--gray09, #222);
+      text-align: center;
+      font-family: 'Pretendard';
+      font-size: clamp(15px, 4vw, 22px);
+      font-weight: 600;
+      line-height: 140%; /* 30.8px */
+      letter-spacing: -0.44px;
+
+      & > p {
+        width: 100%;
+      }
+    }
+
+    & > button {
+      margin-top: 50px;
+      display: flex;
+      width: 100%;
+      padding: 5.5% 4px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      border: none;
+      border-radius: 18px;
+      background: #565bff;
+      color: var(--white, #fff);
+      font-family: 'Pretendard';
+      font-size: clamp(14px, 4vw, 20px);
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+    }
+  `;
+  const router = useRouter();
+  return (
+    <NonLoginStyle>
+      <div className='description'>
+        <div className='icon-wrapper'></div>
+        <p>
+          상담을 하기 위해서는 로그인 상태여야 해요! <br />
+          아래 버튼을 눌러 로그인을 진행해주세요.
+        </p>
+      </div>
+      <button
+        onClick={() => {
+          router.push('/login');
+        }}
+      >
+        휴대폰 번호로 로그인하기
+      </button>
+    </NonLoginStyle>
+  );
+};
+
+const NonTest = () => {
+  const NonTestStyle = styled.div`
+    width: 100%;
+    margin-top: 30px;
+    padding: 40px 0px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 18px;
-    border-radius: 16px;
-    color: var(--gray09, #222);
-    text-align: center;
-    font-family: 'Pretendard';
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 140%; /* 30.8px */
-    letter-spacing: -0.44px;
-  }
+    border-radius: 26px;
+    background: var(--gray01, #f7f7f7);
 
-  .icon-wrapper {
-    width: 80px;
-    height: 80px;
-    background: #eaeaea;
-  }
+    .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      background: #eaeaea;
+    }
 
-  & > button {
-    margin-top: 50px;
-    display: flex;
-    width: 100%;
-    height: 66px;
-    padding: 4px;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    border: none;
-    border-radius: 18px;
-    background: #565bff;
-    color: var(--white, #fff);
-    font-family: 'Pretendard';
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 600;
-    letter-spacing: -0.4px;
-  }
-`;
-const Counsel = () => {
-  const user = true;
+    .description {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      border-radius: 16px;
+      color: var(--gray09, #222);
+      text-align: center;
+      font-family: 'Pretendard';
+      font-size: clamp(15px, 4vw, 22px);
+      font-weight: 600;
+      line-height: 140%; /* 30.8px */
+      letter-spacing: -0.44px;
+    }
+
+    & > button {
+      margin-top: 29px;
+      display: flex;
+      width: 260px;
+      padding: 5.5% 4px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      border: none;
+      border-radius: 18px;
+      background: #565bff;
+      color: var(--white, #fff);
+      font-family: 'Pretendard';
+      font-size: clamp(14px, 4vw, 20px);
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+    }
+  `;
+
   const router = useRouter();
+  return (
+    <NonTestStyle>
+      <div className='description'>
+        <div className='icon-wrapper'></div>
+        <p>
+          심리검사로 <br />
+          현재 내 마음상태 알아보기
+        </p>
+      </div>
+      <button
+        onClick={() => {
+          router.push('/counsel/psychological-test-intro');
+        }}
+      >
+        심리검사 시작하기
+      </button>
+    </NonTestStyle>
+  );
+};
+const Counsel = () => {
+  const user = false;
 
   return (
     <Layout>
       <Header>상담</Header>
-      <Content>
-        <div className='description'>
-          <div className='icon-wrapper'></div>
-          {!user ? (
-            <p>
-              상담을 하기 위해서는 로그인 상태여야 해요!
-              <br />
-              아래 버튼을 눌러 로그인을 진행해주세요.
-            </p>
-          ) : (
-            <p>
-              심리검사로 <br />
-              현재 내 마음상태 알아보기
-            </p>
-          )}
-        </div>
-        {!user ? (
-          <button
-            onClick={() => {
-              router.push('/login');
-            }}
-          >
-            휴대폰 번호로 로그인하기
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              router.push('/counsel/psychological-test-intro');
-            }}
-          >
-            심리검사 시작하기
-          </button>
-        )}
-      </Content>
+      <Content>{!user ? <NonLogin /> : <NonTest />}</Content>
       <Footer />
     </Layout>
   );

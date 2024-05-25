@@ -5,7 +5,6 @@ import ModalLayout from '../ModalLayout';
 
 const LoginAlertModalLayout = styled.div`
   display: flex;
-  width: 432px;
   padding: 40px 30px 26px 30px;
   flex-direction: column;
   justify-content: center;
@@ -13,6 +12,7 @@ const LoginAlertModalLayout = styled.div`
   gap: 28px;
   border-radius: 18px;
   background: #fff;
+  margin: 0 40px;
 
   & > div {
     display: flex;
@@ -36,6 +36,7 @@ const LoginAlertModalLayout = styled.div`
     font-size: 18px;
     font-weight: 500;
     letter-spacing: -0.36px;
+    text-align: center;
   }
 
   & > button {
@@ -54,6 +55,7 @@ const LoginAlertModalLayout = styled.div`
     font-size: 18px;
     font-weight: 600;
     letter-spacing: -0.36px;
+    cursor: pointer;
   }
 `;
 

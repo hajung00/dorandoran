@@ -9,6 +9,8 @@ const LayoutStyle = styled.div`
   max-height: fit-content;
   background: #fcfcfc;
   position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
 interface Props {
