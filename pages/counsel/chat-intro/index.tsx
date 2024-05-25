@@ -4,13 +4,14 @@ import styled from 'styled-components';
 // import svg
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import { useRouter } from 'next/router';
+import Layout from '@/components/Layout';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
   color: #222;
 
   .icon-wrapper {
-    padding: 9.5px 8px;
+    padding: 10.5px 8px;
   }
 `;
 
@@ -20,7 +21,7 @@ const Content = styled.div`
     margin-top: 22px;
     color: #222;
     font-family: 'Pretendard';
-    font-size: 26px;
+    font-size: clamp(22px, 5.5vw, 26px);
     font-weight: 600;
   }
 
@@ -28,22 +29,21 @@ const Content = styled.div`
     margin-top: 12px;
     color: #666;
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-weight: 400;
   }
 
   & > button {
-    margin-top: 306px;
+    margin-top: 65%;
     margin-bottom: 64px;
-    height: 66px;
-    padding: 4px;
+    padding: 4.5% 4px;
     border-radius: 18px;
     background: var(--doranblue, #565bff);
     width: 100%;
     border: none;
     color: var(--white, #fff);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
   }
@@ -90,7 +90,7 @@ const Content = styled.div`
 const ChatIntro = () => {
   const route = useRouter();
   return (
-    <div>
+    <Layout>
       <Header>
         <div className='icon-wrapper'>
           <ArrowSVG width={21} height={21} alt={'prev'} />
@@ -128,7 +128,7 @@ const ChatIntro = () => {
           상담 시작하기
         </button>
       </Content>
-    </div>
+    </Layout>
   );
 };
 

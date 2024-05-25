@@ -39,7 +39,7 @@ const ChatBoxStyle = styled.div`
       border: none;
       color: var(--gray06, #898989);
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(18px, 4vw, 20px);
       font-weight: 400;
       letter-spacing: -0.4px;
       text-transform: uppercase;
@@ -81,7 +81,7 @@ const Description = () => {
       background: var(--doranblue, #565bff);
       color: var(--white, #fff);
       font-family: Pretendard;
-      font-size: 18px;
+      font-size: clamp(14px, 4vw, 18px);
       font-style: normal;
       font-weight: 500;
       line-height: normal;

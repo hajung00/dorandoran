@@ -3,15 +3,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 // import svg
-import ArrowSVG from '../../../public/icons/arrow.svg';
+import XSVG from '../../../public/icons/x.svg';
 import { useRouter } from 'next/router';
+import Layout from '@/components/Layout';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
   color: #222;
 
   .icon-wrapper {
-    padding: 9.5px 8px;
+    padding: 12px 8px;
   }
 `;
 
@@ -23,8 +24,8 @@ const Content = styled.div`
     margin-top: 55px;
     color: var(--gray09, #222);
     text-align: center;
-    font-family: Pretendard;
-    font-size: 22px;
+    font-family: 'Pretendard';
+    font-size: clamp(18px, 5vw, 22px);
     font-style: normal;
     font-weight: 600;
     line-height: 150%; /* 33px */
@@ -35,22 +36,21 @@ const Content = styled.div`
     width: 78%;
     aspect-ratio: 1 / 1;
     margin: 0 auto;
-    margin-top: 108px;
+    margin-top: 23%;
     background: var(--gray02, #eaeaea);
   }
 
   & > button {
-    margin-top: 216px;
-    margin-bottom: 64px;
+    margin-top: 45.8%;
+    margin-bottom: 13.7%;
     width: 100%;
-    height: 66px;
-    padding: 4px;
+    padding: 4.9% 4px;
     gap: 4px;
     border-radius: 18px;
     background: var(--doranblue, #565bff);
     color: var(--white, #fff);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 2vw, 22px);
     font-weight: 600;
     letter-spacing: -0.4px;
     border: none;
@@ -59,13 +59,13 @@ const Content = styled.div`
 `;
 
 const PsychologicalTestIntro = () => {
-  const route = useRouter();
+  const router = useRouter();
 
   return (
-    <div>
+    <Layout>
       <Header>
-        <div className='icon-wrapper'>
-          <ArrowSVG width={21} height={21} alt={'prev'} />
+        <div className='icon-wrapper' onClick={() => router.push('/counsel')}>
+          <XSVG width={18} height={18} alt={'closed'} />
         </div>
       </Header>
       <Content>
@@ -79,13 +79,13 @@ const PsychologicalTestIntro = () => {
         <div className='animation-wrapper'></div>
         <button
           onClick={() => {
-            route.push('/counsel/psychological-test');
+            router.push('/counsel/psychological-test');
           }}
         >
           심리검사 시작하기
         </button>
       </Content>
-    </div>
+    </Layout>
   );
 };
 

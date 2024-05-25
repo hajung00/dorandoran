@@ -28,6 +28,7 @@ const TestLoadingStyle = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transform: translateY(-8%);
 
   .icon {
     width: 80px;
@@ -40,7 +41,7 @@ const TestLoadingStyle = styled.div`
     color: var(--gray09, #222);
     text-align: center;
     font-family: 'Pretendard';
-    font-size: 22px;
+    font-size: clamp(18px, 5vw, 22px);
     font-weight: 600;
     line-height: 150%; /* 33px */
   }
@@ -53,11 +54,6 @@ interface Props {
 const Loading = ({ text }: Props) => {
   return (
     <TestLoadingStyle>
-      <Header>
-        <div className='icon-wrapper'>
-          <ArrowSVG width={21} height={21} alt={'prev'} />
-        </div>
-      </Header>
       <div className='icon'></div>
       <p>
         {text.split('.')[0]}.

@@ -24,7 +24,7 @@ const LoginAlertModalLayout = styled.div`
   .main-description {
     font-family: 'Pretendard';
     color: var(--gray09, #222);
-    font-size: clamp(18px, 2vw, 22px);
+    font-size: clamp(18px, 5vw, 22px);
     font-weight: 600;
     letter-spacing: -0.44px;
   }
@@ -32,7 +32,7 @@ const LoginAlertModalLayout = styled.div`
   .sub-description {
     font-family: 'Pretendard';
     color: var(--gray06, #898989);
-    font-size: clamp(16px, 2vw, 18px);
+    font-size: clamp(16px, 4vw, 18px);
     font-weight: 500;
     letter-spacing: -0.36px;
     text-align: center;
@@ -51,7 +51,7 @@ const LoginAlertModalLayout = styled.div`
     background: var(--doranblue, #565bff);
     color: var(--white, #fff);
     font-family: 'Pretendard';
-    font-size: clamp(16px, 2vw, 18px);
+    font-size: clamp(16px, 4vw, 18px);
     font-weight: 600;
     letter-spacing: -0.36px;
     cursor: pointer;

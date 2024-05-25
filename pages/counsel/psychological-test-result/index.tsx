@@ -9,12 +9,8 @@ import FileSVG from '../../../public/icons/file.svg';
 import { useRouter } from 'next/router';
 
 const Header = styled.header`
-  padding: 60px 20px 0 20px;
+  padding: 126px 20px 0 20px;
   color: #222;
-
-  .icon-wrapper {
-    padding: 9.5px 8px;
-  }
 `;
 const Point = styled.span`
   color: var(--doranblue, #565bff);
@@ -26,7 +22,7 @@ const Content = styled.div`
   .test-result-title {
     color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: 26px;
+    font-size: clamp(21px, 5vw, 26px);
     font-weight: 600;
     line-height: 140%; /* 36.4px */
   }
@@ -41,7 +37,7 @@ const Content = styled.div`
     border-bottom: 1px solid #e3e3e3;
     color: var(--gray08, #444);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-style: normal;
     font-weight: 600;
     line-height: 140%;
@@ -66,7 +62,7 @@ const Content = styled.div`
     background: var(--gray01, #f7f7f7);
     color: var(--gray06, #898989);
     font-family: Pretendard;
-    font-size: 18px;
+    font-size: clamp(15px, 4vw, 18px);
     font-style: normal;
     font-weight: 500;
     line-height: 140%;
@@ -79,15 +75,15 @@ const Content = styled.div`
     border-radius: 18px;
     background: var(--doranblue, #565bff);
     display: flex;
-    height: 66px;
-    padding: 4px;
+    // height: 66px;
+    padding: 4.5% 4px;
     justify-content: center;
     align-items: center;
     gap: 4px;
     border: none;
     color: var(--white, #fff);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 5vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
     margin-top: 53px;
@@ -109,6 +105,11 @@ const TestItem = styled.div<{ background: string; color: string }>`
       gap: 10px;
 
       & > span {
+        font-family: 'Pretendard';
+        font-size: clamp(14px, 4vw, 18px);
+        font-weight: 600;
+        line-height: 140%; /* 25.2px */
+        letter-spacing: -0.36px;
         color: ${(props: any) => props.color};
       }
     }
@@ -116,7 +117,7 @@ const TestItem = styled.div<{ background: string; color: string }>`
     .item-type {
       color: var(--gray09, #222);
       font-family: 'Pretendard';
-      font-size: 24px;
+      font-size: clamp(20px, 5vw, 24px);
       font-style: normal;
       font-weight: 600;
       line-height: 140%;
@@ -126,7 +127,7 @@ const TestItem = styled.div<{ background: string; color: string }>`
     .item-description {
       color: var(--gray08, #444);
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(16px, 4vw, 20px);
       font-style: normal;
       font-weight: 500;
       line-height: 140%;
@@ -137,8 +138,8 @@ const TestItem = styled.div<{ background: string; color: string }>`
     }
   }
   .item-score {
-    width: 80px;
-    height: 80px;
+    width: 17%;
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -146,7 +147,7 @@ const TestItem = styled.div<{ background: string; color: string }>`
     border-radius: 50%;
     color: ${(props: any) => props.color};
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(16px, 4vw, 20px);
     font-weight: 600;
     line-height: 140%; /* 28px */
     letter-spacing: -0.4px;
@@ -180,11 +181,7 @@ const PsychologicalTestResult = () => {
 
   return (
     <div>
-      <Header>
-        <div className='icon-wrapper'>
-          <ArrowSVG width={21} height={21} alt={'prev'} />
-        </div>
-      </Header>
+      <Header></Header>
       <Content>
         <div className='test-result-title'>
           <p>심리검사 결과</p>

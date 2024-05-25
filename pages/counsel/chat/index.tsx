@@ -26,7 +26,7 @@ const Header = styled.header`
   .title {
     color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
     text-transform: uppercase;
@@ -43,7 +43,7 @@ const Header = styled.header`
     border: none;
     color: var(--doranblue, #565bff);
     font-family: 'Pretendard';
-    font-size: 18px;
+    font-size: clamp(16px, 4vw, 18px);
     font-weight: 500;
     letter-spacing: -0.36px;
     text-transform: uppercase;

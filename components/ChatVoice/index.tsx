@@ -22,29 +22,6 @@ const ChatVoiceStyle = styled.div`
   );
 `;
 
-const ChatVoiceReady = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 81px;
-  gap: 2.1rem;
-  padding-bottom: 12.2%;
-  padding-top: 22px;
-
-  .mic-wrapper {
-    display: flex;
-    width: 29.2%;
-    aspect-ratio: 1 / 1;
-    justify-content: center;
-    align-items: center;
-    border-radius: 233.766px;
-    background: var(
-      --gradient,
-      linear-gradient(315deg, #565bff 0%, #bcbeff 100%)
-    );
-  }
-`;
-
 const ChatVoiceStart = styled.div<{ display: string }>`
   display: flex;
   flex-direction: column;
@@ -65,6 +42,14 @@ const ChatVoiceStart = styled.div<{ display: string }>`
     border-radius: 100px;
     border: 1px solid var(--doranblue02, #e1e2ff);
     background: var(--white, #fff);
+    olor: var(--gray09, #222);
+    font-family: 'Pretendard';
+    font-size: clamp(18px, 4vw, 20px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.4px;
+    text-transform: uppercase;
   }
 
   .icon-wrapper {
@@ -107,7 +92,7 @@ const ChatVoiceStart = styled.div<{ display: string }>`
       props.display === 'true' ? 'visible' : 'hidden'};
     color: var(--gray07, #666);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
   }

@@ -27,7 +27,7 @@ const Content = styled.div`
   .description {
     color: #222;
     font-family: 'Pretendard';
-    font-size: clamp(22px, 2vw, 26px);
+    font-size: clamp(20px, 6vw, 26px);
     font-weight: 600;
   }
 
@@ -36,7 +36,7 @@ const Content = styled.div`
     margin-bottom: 93px;
     color: #666;
     font-family: 'Pretendard';
-    font-size: clamp(16px, 2vw, 20px);
+    font-size: clamp(16px, 5vw, 20px);
     font-weight: 400;
   }
 
@@ -69,7 +69,7 @@ const Content = styled.div`
     border: none;
     border-radius: 18px;
     font-family: 'Pretendard';
-    font-size: clamp(18px, 2vw, 22px);
+    font-size: clamp(18px, 5vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
   }

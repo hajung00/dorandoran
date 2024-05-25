@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 // import svg
-import ArrowSVG from '../../../public/icons/arrow.svg';
+import XSVG from '../../../public/icons/x.svg';
 import CheckSVG from '../../../public/icons/check.svg';
 import Loading from '@/components/Loading';
 import { useRouter } from 'next/router';
@@ -13,7 +13,7 @@ const Header = styled.header`
   color: #222;
 
   .icon-wrapper {
-    padding: 13px 8px;
+    padding: 12px 8px;
   }
 `;
 
@@ -60,7 +60,7 @@ const Content = styled.div`
     margin-top: 12px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: 26px;
+    font-size: clamp(24px, 6vw, 26px);
     font-weight: 600;
     line-height: 140%; /* 36.4px */
   }
@@ -68,7 +68,7 @@ const Content = styled.div`
     margin-top: 8px;
     color: var(--gray07, #666);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(16px, 4vw, 20px);
     font-weight: 400;
     line-height: 140%; /* 28px */
   }
@@ -88,7 +88,7 @@ const Content = styled.div`
       background: var(--doranblue02, #e1e2ff);
       color: var(--doranblue, #565bff);
       font-family: 'Pretendard';
-      font-size: 18px;
+      font-size: clamp(16px, 4vw, 18px);
       font-weight: 600;
       line-height: 140%; /* 25.2px */
       letter-spacing: -0.36px;
@@ -98,7 +98,7 @@ const Content = styled.div`
       color: var(--gray09, #222);
       text-align: center;
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(18px, 4vw, 20px);
       font-weight: 500;
       line-height: 150%; /* 30px */
       letter-spacing: -0.4px;
@@ -107,7 +107,7 @@ const Content = styled.div`
       margin-top: 28px;
       color: var(--gray07, #666);
       font-family: 'Pretendard';
-      font-size: 18px;
+      font-size: clamp(16px, 4vw, 18px);
       font-weight: 400;
       line-height: 140%; /* 25.2px */
     }
@@ -125,14 +125,15 @@ const Content = styled.div`
     & > ul > li {
       display: flex;
       height: 60px;
-      padding: 8px 20px;
+      padding: 0 20px;
+
       align-items: center;
       gap: 16px;
       border-radius: 18px;
       background: var(--gray01, #f7f7f7);
       color: var(--gray09, #222);
       font-family: 'Pretendard';
-      font-size: 18px;
+      font-size: clamp(16px, 4vw, 18px);
       font-weight: 500;
       letter-spacing: -0.36px;
 
@@ -170,7 +171,7 @@ const ButtonSection = styled.div`
     border-radius: 18px;
     border: none;
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -197,7 +198,7 @@ const ButtonSection = styled.div`
       border-radius: 18px;
       border: none;
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(16px, 4vw, 20px);
       font-style: normal;
       font-weight: 600;
       line-height: normal;
@@ -290,13 +291,13 @@ const PsychologicalTest = ({ testItmes }: Props) => {
 
   return (
     <div>
-      <Header>
-        <div className='icon-wrapper'>
-          <ArrowSVG width={21} height={21} alt={'prev'} />
-        </div>
-      </Header>
       {currentNumber < 19 && (
         <>
+          <Header>
+            <div className='icon-wrapper'>
+              <XSVG width={18} height={18} alt={'closed'} />
+            </div>
+          </Header>
           <ProgressBarSection>
             <ProgressBar>
               <Progress width={5.55 * currentNumber} />

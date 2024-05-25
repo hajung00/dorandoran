@@ -43,7 +43,7 @@ const NonLogin = () => {
       color: var(--gray09, #222);
       text-align: center;
       font-family: 'Pretendard';
-      font-size: clamp(18px, 2vw, 22px);
+      font-size: clamp(18px, 4.5vw, 22px);
       font-weight: 600;
       line-height: 140%; /* 30.8px */
       letter-spacing: -0.44px;
@@ -57,7 +57,7 @@ const NonLogin = () => {
       margin-top: 50px;
       display: flex;
       width: 100%;
-      padding: 5.5% 4px;
+      padding: 4.7% 4px;
       justify-content: center;
       align-items: center;
       gap: 4px;
@@ -66,7 +66,7 @@ const NonLogin = () => {
       background: #565bff;
       color: var(--white, #fff);
       font-family: 'Pretendard';
-      font-size: clamp(16px, 2vw, 20px);
+      font-size: clamp(16px, 5vw, 20px);
       font-style: normal;
       font-weight: 600;
       letter-spacing: -0.4px;
@@ -120,7 +120,7 @@ const NonTest = () => {
       color: var(--gray09, #222);
       text-align: center;
       font-family: 'Pretendard';
-      font-size: clamp(18px, 2vw, 22px);
+      font-size: clamp(18px, 5vw, 22px);
       font-weight: 600;
       line-height: 140%; /* 30.8px */
       letter-spacing: -0.44px;
@@ -130,7 +130,7 @@ const NonTest = () => {
       margin-top: 29px;
       display: flex;
       width: 260px;
-      padding: 5.5% 4px;
+      padding: 4.5% 4px;
       justify-content: center;
       align-items: center;
       gap: 4px;
@@ -139,7 +139,7 @@ const NonTest = () => {
       background: #565bff;
       color: var(--white, #fff);
       font-family: 'Pretendard';
-      font-size: clamp(16px, 2vw, 20px);
+      font-size: clamp(16px, 5vw, 20px);
       font-style: normal;
       font-weight: 600;
       letter-spacing: -0.4px;
@@ -167,7 +167,7 @@ const NonTest = () => {
   );
 };
 const Counsel = () => {
-  const user = false;
+  const user = true;
 
   return (
     <Layout>

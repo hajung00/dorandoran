@@ -30,7 +30,7 @@ export const StickyHeader = styled.div`
     background: #fff;
     color: var(--gray06, #898989);
     font-family: 'Pretendard';
-    font-size: 16px;
+    font-size: clamp(14px, 4vw, 16px);
     font-weight: 500;
     letter-spacing: -0.32px;
     text-transform: uppercase;
