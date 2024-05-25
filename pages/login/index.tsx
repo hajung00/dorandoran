@@ -7,35 +7,38 @@ import XIcon from '../../public/icons/x.svg';
 import AlertIcon from '../../public/icons/alert-circle.svg';
 import ModalLayout from '@/modal/ModalLayout';
 import LoginAlertModal from '@/modal/LoginAlertModal';
+import { useRouter } from 'next/router';
+import Layout from '@/components/Layout';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
   color: #222;
 
   .icon-wrapper {
-    padding: 13px 8px;
-  }
-
-  .description {
-    margin-top: 22px;
-    color: #222;
-    font-family: 'Pretendard';
-    font-size: 26px;
-    font-weight: 600;
-  }
-
-  .sub-description {
-    margin-top: 12px;
-    color: #666;
-    font-family: 'Pretendard';
-    font-size: 20px;
-    font-weight: 400;
+    padding: 12px 8px;
   }
 `;
 
 const Content = styled.div`
   padding: 0 20px;
-  margin-top: 93px; //65px
+  margin-top: 22px;
+  margin-bottom: 35%;
+
+  .description {
+    color: #222;
+    font-family: 'Pretendard';
+    font-size: clamp(22px, 2vw, 26px);
+    font-weight: 600;
+  }
+
+  .sub-description {
+    margin-top: 12px;
+    margin-bottom: 93px;
+    color: #666;
+    font-family: 'Pretendard';
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 400;
+  }
 
   .enable {
     background: #565bff;
@@ -58,8 +61,7 @@ const Content = styled.div`
     margin-bottom: 24px;
     display: flex;
     width: 100%;
-    height: 66px;
-    padding: 4px;
+    padding: 4.5% 20px;
     justify-content: center;
     align-items: center;
     gap: 4px;
@@ -67,7 +69,7 @@ const Content = styled.div`
     border: none;
     border-radius: 18px;
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 2vw, 22px);
     font-weight: 600;
     letter-spacing: -0.4px;
   }
@@ -94,8 +96,7 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
   & > div > input {
     display: flex;
     width: 100%;
-    height: 66px;
-    padding: 4px 20px;
+    padding: 4.5% 20px;
     align-items: center;
     gap: 4px;
     border-radius: 18px;
@@ -129,6 +130,7 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
 `;
 
 const Login = () => {
+  const router = useRouter();
   const nameRegex = /^[ㄱ-ㅎ|가-힣]/;
   const [nameRegexCheck, setNameRegexCheck] = useState(true);
   const [name, setName] = useState('');
@@ -187,7 +189,7 @@ const Login = () => {
 
   // 인증문자 받기 버튼 클릭
   const onClickReceiveButton = useCallback(() => {
-    const valid = false; // 유효한 이름과 휴대폰 번호인지 확인
+    const valid = true; // 유효한 이름과 휴대폰 번호인지 확인
     // db로 부터 검증 한 후 인증번호 전송
     if (enableRequestButton && valid) {
       // 인증번호 요청 api 요청
@@ -224,11 +226,19 @@ const Login = () => {
   }, [name, phoneNumber]);
 
   return (
-    <div>
+    <Layout>
       <Header>
-        <div className='icon-wrapper'>
+        <div
+          className='icon-wrapper'
+          onClick={() => {
+            router.push('/counsel');
+          }}
+        >
           <XIcon width={18} height={18} alt={'cancel'} stroke={'#666666'} />
         </div>
+      </Header>
+
+      <Content>
         {!requestAuthentication ? (
           <>
             <p className='description'>
@@ -253,8 +263,6 @@ const Login = () => {
             </p>
           </>
         )}
-      </Header>
-      <Content>
         <InputWrapper bordercolor={`${nameRegexCheck}`}>
           <label>이름</label>
           <div>
@@ -307,7 +315,7 @@ const Login = () => {
               <label>인증번호</label>
               <div>
                 <input
-                  type='text'
+                  type='number'
                   placeholder='인증번호를 입력해주세요.'
                   value={authenticationNumber}
                   onChange={onChangeAuthenticationNumber}
@@ -324,7 +332,7 @@ const Login = () => {
         )}
       </Content>
       {loginAlertModal && <LoginAlertModal onClosed={loginAlertModalHandler} />}
-    </div>
+    </Layout>
   );
 };
 

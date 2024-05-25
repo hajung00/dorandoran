@@ -23,7 +23,9 @@ const Content = styled.div`
 
 const NonLogin = () => {
   const NonLoginStyle = styled.div`
-    transform: translateY(60%);
+    transform: translateY(40%);
+    width: 100%;
+    padding: 0 2%;
 
     .icon-wrapper {
       width: 80px;
@@ -41,7 +43,7 @@ const NonLogin = () => {
       color: var(--gray09, #222);
       text-align: center;
       font-family: 'Pretendard';
-      font-size: clamp(15px, 4vw, 22px);
+      font-size: clamp(18px, 2vw, 22px);
       font-weight: 600;
       line-height: 140%; /* 30.8px */
       letter-spacing: -0.44px;
@@ -64,7 +66,7 @@ const NonLogin = () => {
       background: #565bff;
       color: var(--white, #fff);
       font-family: 'Pretendard';
-      font-size: clamp(14px, 4vw, 20px);
+      font-size: clamp(16px, 2vw, 20px);
       font-style: normal;
       font-weight: 600;
       letter-spacing: -0.4px;
@@ -118,7 +120,7 @@ const NonTest = () => {
       color: var(--gray09, #222);
       text-align: center;
       font-family: 'Pretendard';
-      font-size: clamp(15px, 4vw, 22px);
+      font-size: clamp(18px, 2vw, 22px);
       font-weight: 600;
       line-height: 140%; /* 30.8px */
       letter-spacing: -0.44px;
@@ -137,7 +139,7 @@ const NonTest = () => {
       background: #565bff;
       color: var(--white, #fff);
       font-family: 'Pretendard';
-      font-size: clamp(14px, 4vw, 20px);
+      font-size: clamp(16px, 2vw, 20px);
       font-style: normal;
       font-weight: 600;
       letter-spacing: -0.4px;
