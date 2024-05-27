@@ -88,11 +88,16 @@ const Content = styled.div`
 `;
 
 const ChatIntro = () => {
-  const route = useRouter();
+  const router = useRouter();
   return (
     <Layout>
       <Header>
-        <div className='icon-wrapper'>
+        <div
+          className='icon-wrapper'
+          onClick={() => {
+            router.push('/counsel');
+          }}
+        >
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
       </Header>
@@ -122,7 +127,7 @@ const ChatIntro = () => {
         </div>
         <button
           onClick={() => {
-            route.push('/counsel/chat');
+            router.push('/counsel/chat');
           }}
         >
           상담 시작하기
