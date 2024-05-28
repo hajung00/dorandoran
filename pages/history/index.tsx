@@ -50,18 +50,18 @@ const Container = styled.div`
 
 const History = () => {
   const counselItem = [
-    { title: '상담명1', date: '2024년 05월 20일' },
-    { title: '상담명1', date: '2024년 05월 21일' },
-    { title: '상담명1', date: '2024년 05월 22일' },
-    { title: '상담명1', date: '2024년 05월 23일' },
+    { id: 1, title: '상담명1', date: '2024년 05월 20일' },
+    { id: 2, title: '상담명1', date: '2024년 05월 21일' },
+    { id: 3, title: '상담명1', date: '2024년 05월 22일' },
+    { id: 4, title: '상담명1', date: '2024년 05월 23일' },
   ];
 
-  const completeItem = [{ title: '상담명1', date: '2024년 05월 20일' }];
+  const completeItem = [{ id: 1, title: '상담명1', date: '2024년 05월 20일' }];
 
   const [listSection, setListSection] = useState('counseling');
-  const [counselList, setCounselList] = useState<{ [key: string]: string }[]>([
-    ...counselItem,
-  ]);
+  const [counselList, setCounselList] = useState<
+    { [key: string]: string | number }[]
+  >([...counselItem]);
 
   console.log(counselList);
   const handleListSection = useCallback((type: string) => {

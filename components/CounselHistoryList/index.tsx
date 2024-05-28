@@ -1,4 +1,5 @@
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 const ListStyle = styled.div`
@@ -27,12 +28,22 @@ const ListStyle = styled.div`
 `;
 
 interface Props {
-  list: { [key: string]: string };
+  list: { [key: string]: any };
 }
 
 const CounselHistoryList = ({ list }: Props) => {
+  const router = useRouter();
+
+  const moveToCounselDetail = useCallback((id: number) => {
+    router.push(`/history/${id}`);
+  }, []);
+
   return (
-    <ListStyle>
+    <ListStyle
+      onClick={() => {
+        moveToCounselDetail(list.id);
+      }}
+    >
       <p>{list.title}</p>
       <div>{list.date}</div>
     </ListStyle>

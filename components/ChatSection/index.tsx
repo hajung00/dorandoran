@@ -43,7 +43,7 @@ interface Props {
   // setSize: (f: (index: number) => number) => any;
   setSize: any;
   isReachingEnd: boolean;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 const ChatSection = ({
