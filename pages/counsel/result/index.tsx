@@ -24,7 +24,7 @@ const Content = styled.div`
     padding: 0 20px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: 26px;
+    font-size: clamp(20px, 5.5vw, 26px);
     font-weight: 600;
     line-height: 140%; /* 36.4px */
   }
@@ -36,7 +36,7 @@ const Content = styled.div`
     & > p {
       color: var(--gray07, #666);
       font-family: 'Pretendard';
-      font-size: 18px;
+      font-size: clamp(16px, 4vw, 18px);
       font-weight: 600;
       line-height: 150%; /* 27px */
       letter-spacing: -0.36px;
@@ -46,7 +46,7 @@ const Content = styled.div`
       margin-top: 12px;
       border: 10px solid #f7f7f7;
       padding: 16px;
-      height: 248px;
+      height: 228px;
     }
   }
 
@@ -61,7 +61,7 @@ const Content = styled.div`
     background: #fff;
     color: #565bff;
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(16px, 4vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
   }
@@ -69,7 +69,7 @@ const Content = styled.div`
   .counsel-start-button::after {
     content: '';
     display: block;
-    width: 100vw;
+    width: calc(100% + 20px);
     height: 10px;
     background: #f7f7f7;
     position: absolute;
@@ -82,7 +82,7 @@ const Content = styled.div`
     padding: 0 20px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: 24px;
+    font-size: clamp(20px, 5vw, 24px);
     font-weight: 600;
     line-height: 140%; /* 33.6px */
   }
@@ -95,14 +95,14 @@ const Content = styled.div`
       padding: 0 20px;
       color: var(--gray07, #666);
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(16px, 4vw, 20px);
       font-weight: 400;
       line-height: 140%; /* 28px */
     }
 
     .title {
       margin-top: 0px;
-      font-size: 22px;
+      font-size: clamp(18px, 5vw, 22px);
       margin-bottom: 26px;
     }
 
@@ -116,9 +116,10 @@ const Content = styled.div`
     background: #565bff;
     margin: 0 20px;
     width: calc(100% - 40px);
+    max-width: 472px;
     color: #fff;
-    font-family: Pretendard;
-    font-size: 20px;
+    font-family: 'Pretendard';
+    font-size: clamp(16px, 4vw, 20px);
     font-style: normal;
     font-weight: 600;
     line-height: normal;

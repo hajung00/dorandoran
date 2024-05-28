@@ -6,9 +6,9 @@ import moment from 'moment';
 
 export const ChatZone = styled.div`
   width: 100%;
+  // margin-top: 112px;
   display: flex;
   flex: 1;
-
   .custom {
     height: auto !important;
   }
@@ -17,6 +17,7 @@ export const ChatZone = styled.div`
 export const Section = styled.section`
   margin-top: 20px;
   padding: 0 20px;
+  width: 100%;
 `;
 
 export const StickyHeader = styled.div`
@@ -66,21 +67,21 @@ const ChatSection = ({
 
   return (
     <ChatZone>
-      <Scrollbars className='custom' autoHide>
-        {Object.entries(chatSections).map(([date, chats]: any, i) => {
-          return (
-            <Section key={i}>
-              <StickyHeader className={`section-${date}`} key={date}>
-                <button>{moment(date).format('YYYY년 M월 DD일')}</button>
-              </StickyHeader>
-              {chats.map((chat: { [key: string]: string }, idx: number) => (
-                <Chat key={idx} chat={chat} />
-              ))}
-              {isLoading && <Chat chat={undefined} />}
-            </Section>
-          );
-        })}
-      </Scrollbars>
+      {/* <Scrollbars className='custom' autoHide> */}
+      {Object.entries(chatSections).map(([date, chats]: any, i) => {
+        return (
+          <Section key={i}>
+            <StickyHeader className={`section-${date}`} key={date}>
+              <button>{moment(date).format('YYYY년 M월 DD일')}</button>
+            </StickyHeader>
+            {chats.map((chat: { [key: string]: string }, idx: number) => (
+              <Chat key={idx} chat={chat} />
+            ))}
+            {isLoading && <Chat chat={undefined} />}
+          </Section>
+        );
+      })}
+      {/* </Scrollbars> */}
     </ChatZone>
   );
 };

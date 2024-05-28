@@ -318,7 +318,7 @@ const Counsel = () => {
           </CounselStyle>
         )}
       </Content>
-      <Footer />
+      {user && <Footer />}
     </Layout>
   );
 };

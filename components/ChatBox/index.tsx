@@ -10,7 +10,11 @@ const ChatBoxStyle = styled.div`
   padding: 16px 20px 30px 20px;
   display: flex;
   gap: 12px;
-  position: relative;
+  position: fixed;
+  bottom: 0;
+  max-width: 512px;
+  background: #fff;
+  z-index: 999;
 
   .icon-wrapper {
     display: flex;

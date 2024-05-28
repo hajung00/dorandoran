@@ -18,6 +18,8 @@ const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
 
   .icon-wrapper {
     padding: 9.5px 8px;
@@ -136,7 +138,11 @@ const Chat = () => {
           isLoading={isLoading}
         />
       ) : (
-        <ChatVoice moveChatBox={onClickVoice} onSubmitForm={onSubmitForm} />
+        <ChatVoice
+          moveChatBox={onClickVoice}
+          onSubmitForm={onSubmitForm}
+          isLoading={isLoading}
+        />
       )}
       {finishCounselModal && (
         <FinishCounselModal onClosed={handleFinishCounselModal} />

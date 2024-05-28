@@ -20,9 +20,13 @@ const ChatVoiceStyle = styled.div`
       #d4d5ff 100%
     )
   );
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 512px;
 `;
 
-const ChatVoiceStart = styled.div<{ display: string }>`
+const ChatVoiceStart = styled.div<{ display: string; opacity: string }>`
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -31,9 +35,17 @@ const ChatVoiceStart = styled.div<{ display: string }>`
   padding-bottom: 9.8%;
   padding-top: 22px;
 
+  .loading-text {
+    display: ${(props: any) => (props.opacity === 'true' ? 'block' : 'none')};
+    color: var(--gray07, #666);
+    font-family: 'Pretendard';
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 600;
+    letter-spacing: -0.4px;
+  }
+
   .text {
-    visibility: ${(props: any) =>
-      props.display === 'true' ? 'hidden' : 'visible'};
+    display: ${(props: any) => (props.display === 'true' ? 'none' : 'block')};
     position: absolute;
     padding: 12px 18px;
     top: -45px;
@@ -42,9 +54,9 @@ const ChatVoiceStart = styled.div<{ display: string }>`
     border-radius: 100px;
     border: 1px solid var(--doranblue02, #e1e2ff);
     background: var(--white, #fff);
-    olor: var(--gray09, #222);
+    color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: clamp(18px, 4vw, 20px);
+    font-size: clamp(16px, 4vw, 20px);
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -71,6 +83,10 @@ const ChatVoiceStart = styled.div<{ display: string }>`
     width: 19.5%;
     aspect-ratio: 1 / 1;
     background: #ffdcdc;
+    & > svg {
+      width: 32%;
+      height: auto;
+    }
   }
   .mic {
     width: 29.2%;
@@ -79,6 +95,11 @@ const ChatVoiceStart = styled.div<{ display: string }>`
       --gradient,
       linear-gradient(315deg, #565bff 0%, #bcbeff 100%)
     );
+    opacity: ${(props: any) => (props.opacity === 'true' ? '0.3' : '1')};
+    & > svg {
+      width: 32%;
+      height: auto;
+    }
   }
   .send {
     visibility: ${(props: any) =>
@@ -86,13 +107,17 @@ const ChatVoiceStart = styled.div<{ display: string }>`
     width: 19.5%;
     aspect-ratio: 1 / 1;
     background: var(--doranblue02, #e1e2ff);
+    & > svg {
+      width: 32%;
+      height: auto;
+    }
   }
   .move-chat-box {
     visibility: ${(props: any) =>
       props.display === 'true' ? 'visible' : 'hidden'};
     color: var(--gray07, #666);
     font-family: 'Pretendard';
-    font-size: clamp(18px, 4vw, 20px);
+    font-size: clamp(16px, 4vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
   }
@@ -101,8 +126,9 @@ const ChatVoiceStart = styled.div<{ display: string }>`
 interface Props {
   moveChatBox: () => void;
   onSubmitForm: (e: any) => void;
+  isLoading: boolean;
 }
-const ChatVoice = ({ moveChatBox, onSubmitForm }: Props) => {
+const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
   const handleListen = useCallback(() => {
@@ -115,6 +141,7 @@ const ChatVoice = ({ moveChatBox, onSubmitForm }: Props) => {
 
   const handleFormSend = useCallback(() => {
     onSubmitForm(transcript);
+    handleStop();
     resetTranscript();
   }, []);
 
@@ -125,7 +152,8 @@ const ChatVoice = ({ moveChatBox, onSubmitForm }: Props) => {
   console.log(transcript, listening);
   return (
     <ChatVoiceStyle>
-      <ChatVoiceStart display={`${!listening}`}>
+      <ChatVoiceStart display={`${!listening}`} opacity={`${isLoading}`}>
+        <div className='loading-text'>상담원의 답변을 기다리는 중이에요.</div>
         <div className='text'>{transcript ? transcript : '듣고 있어요'}</div>
         <div className='icon-wrapper'>
           <div
@@ -134,13 +162,13 @@ const ChatVoice = ({ moveChatBox, onSubmitForm }: Props) => {
               handleStop();
             }}
           >
-            <XSVG width={21} height={21} alt={'cancel'} color={'#FF2020'} />
+            <XSVG alt={'cancel'} color={'#FF2020'} />
           </div>
           <div className='mic wrapper' onClick={handleListen}>
-            <MicSVG width={32} height={47} alt={'mic'} color={'#FFFFFF'} />
+            <MicSVG alt={'mic'} color={'#FFFFFF'} />
           </div>
           <div className='send wrapper' onClick={handleFormSend}>
-            <SendSVG width={20} height={30} alt={'send'} color={'#565BFF'} />
+            <SendSVG alt={'send'} color={'#565BFF'} />
           </div>
         </div>
         <div className='move-chat-box' onClick={moveChatBox}>

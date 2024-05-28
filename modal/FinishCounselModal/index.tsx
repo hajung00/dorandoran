@@ -85,8 +85,8 @@ const FinishCounselModal = ({ onClosed }: Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const finishCounsel = useCallback(() => {
+    setIsLoading((prev) => !prev);
     const timer = setTimeout(() => {
-      setIsLoading((prev) => !prev);
       router.push('/counsel/result');
     }, 3000);
 
