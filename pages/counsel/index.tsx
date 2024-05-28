@@ -9,7 +9,7 @@ const Header = styled.header`
   padding: 54px 20px 0 20px;
   color: #222;
   font-family: 'Pretendard';
-  font-size: 34px;
+  font-size: clamp(30px, 7vw, 34px);
   font-weight: 700;
 `;
 

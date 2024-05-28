@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 // import svg
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import Layout from '@/components/Layout';
+import { useRouter } from 'next/router';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -46,7 +47,8 @@ const Content = styled.div`
       margin-top: 12px;
       border: 10px solid #f7f7f7;
       padding: 16px;
-      height: 228px;
+      max-height: 248px;
+      min-height: 136px;
     }
   }
 
@@ -133,10 +135,16 @@ const Content = styled.div`
 `;
 
 const Result = () => {
+  const router = useRouter();
+
+  const moveToCounsel = useCallback(() => {
+    router.push('/counsel');
+  }, []);
+
   return (
     <Layout>
       <Header>
-        <div className='icon-wrapper'>
+        <div className='icon-wrapper' onClick={moveToCounsel}>
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
       </Header>
@@ -172,7 +180,9 @@ const Result = () => {
             <div className='content'></div>
           </div>
         </div>
-        <button className='main-button'>메인화면으로 돌아가기</button>
+        <button className='main-button' onClick={moveToCounsel}>
+          메인화면으로 돌아가기
+        </button>
       </Content>
     </Layout>
   );
