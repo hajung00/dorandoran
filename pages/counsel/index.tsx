@@ -14,7 +14,7 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  height: calc(100vh - 94px - 80px);
+  height: calc(100vh - 94px - 74px);
   display: flex;
   flex-direction: column;
   align-items: center;

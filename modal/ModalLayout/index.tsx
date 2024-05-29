@@ -7,7 +7,7 @@ const ModalLayoutStyle = styled.div`
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
-  z-index: 999;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;

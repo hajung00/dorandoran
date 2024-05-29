@@ -10,7 +10,7 @@ import FolderIcon from '../../public/icons/folder.svg';
 import UserIcon from '../../public/icons/user.svg';
 
 const FooterStyle = styled.footer`
-  height: 80px;
+  height: 74px;
   background: yellow;
   position: fixed;
   bottom: 0;
