@@ -9,7 +9,7 @@ import ScrollContainer from 'react-indiana-drag-scroll';
 
 const Content = styled.div`
   height: max-content;
-  margin-bottom: 74px;
+  margin-bottom: 120px;
 `;
 
 const ContentHeader = styled.div`
@@ -25,7 +25,7 @@ const ContentHeader = styled.div`
     background: var(--doranblue02, #f3f3ff);
     color: var(--doranblue, #565bff);
     font-family: 'Pretendard';
-    font-size: 18px;
+    font-size: clamp(16px, 4vw, 18px);
     font-style: normal;
     font-weight: 600;
     line-height: 140%; /* 25.2px */
@@ -40,8 +40,8 @@ const ContentHeader = styled.div`
   & > p {
     padding-top: 37px;
     color: var(--gray09, #222);
-    font-family: Pretendard;
-    font-size: 26px;
+    font-family: 'Pretendard';
+    font-size: clamp(22px, 6vw, 26px);
     font-style: normal;
     font-weight: 600;
     line-height: 140%; /* 36.4px */
@@ -63,7 +63,7 @@ const ContentHeader = styled.div`
       background: var(--doranblue02, #e1e2ff);
       color: var(--doranblue, #565bff);
       font-family: 'Pretendard';
-      font-size: 18px;
+      font-size: clamp(16px, 4vw, 18px);
       font-style: normal;
       font-weight: 600;
       line-height: 140%; /* 25.2px */
@@ -73,7 +73,7 @@ const ContentHeader = styled.div`
     & > p {
       color: var(--gray08, #444);
       font-family: 'Pretendard';
-      font-size: 22px;
+      font-size: clamp(18px, 5vw, 22px);
       font-style: normal;
       font-weight: 600;
       line-height: 140%; /* 30.8px */
@@ -86,7 +86,7 @@ const ContentSection = styled.div`
     padding: 0 20px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: 24px;
+    font-size: clamp(20px, 5vw, 24px);
     font-style: normal;
     font-weight: 600;
     line-height: 140%; /* 33.6px */
@@ -97,7 +97,7 @@ const ContentSection = styled.div`
     margin-top: 8px;
     color: var(--gray07, #666);
     font-family: 'Pretendard';
-    font-size: 18px;
+    font-size: clamp(15px, 4vw, 18px);
     font-style: normal;
     font-weight: 500;
     line-height: 140%; /* 25.2px */
@@ -105,7 +105,6 @@ const ContentSection = styled.div`
 
   .meditation-item-wrapper {
     padding: 0 20px;
-
     display: flex;
     gap: 16px;
     margin-top: 20px;
@@ -114,24 +113,29 @@ const ContentSection = styled.div`
 
   .content-list {
     margin-top: 28px;
-    border-bottom: 4px solid #eaeaea;
 
     & > ul {
       display: flex;
-      gap: 20px;
       list-style: none;
-      padding: 0 20px;
     }
     & > ul > li {
       min-width: fit-content;
-      border-bottom: 4px solid #565bff;
-      padding: 10px 10px 18px 10px;
+      border-bottom: 4px solid #eaeaea;
+      padding: 10px 20px 18px 20px;
       color: var(--gray09, #222);
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(18px, 4vw, 20px);
       font-style: normal;
       font-weight: 600;
       line-height: normal;
+    }
+
+    & > ul > li:first-child {
+      padding: 10px 20px 18px 20px;
+    }
+
+    .current {
+      border-bottom: 4px solid #565bff;
     }
   }
 
@@ -144,8 +148,8 @@ const ContentSection = styled.div`
 `;
 
 const MeditationTime = styled.div<{ color: string }>`
-  min-width: 100px;
-  height: 100px;
+  min-width: 21.6%;
+  aspect-ratio: 1 / 1;
   border: ${(props: any) => props.color && `1px solid ${props.color}`};
   border-radius: 50%;
   display: flex;
@@ -153,7 +157,7 @@ const MeditationTime = styled.div<{ color: string }>`
   justify-content: center;
   color: var(--doranblue, #565bff);
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: clamp(18px, 4vw, 20px);
   font-style: normal;
   font-weight: 500;
   line-height: 140%;
@@ -186,6 +190,9 @@ const Contents = () => {
   const [currentContent, setCurrentContent] = useState(
     psychotherapyList[0].link
   );
+  const [currentPsychotherapyList, setCurrentPsychotherapyList] = useState(
+    psychotherapyContent[0].type
+  );
   const [currentMeditationTime, setCurrentMeditationTime] = useState('3분');
   const [contentModal, setContentModal] = useState(false);
 
@@ -198,6 +205,7 @@ const Contents = () => {
 
   const psychotherapyTypeHandler = useCallback((type: string) => {
     const index = psychotherapyList.findIndex((list) => list.type === type);
+    setCurrentPsychotherapyList(psychotherapyList[index].type);
     setCurrentContent(psychotherapyList[index].link);
   }, []);
 
@@ -265,6 +273,9 @@ const Contents = () => {
             <ul>
               {psychotherapyList.map((item, i) => (
                 <li
+                  className={`${
+                    currentPsychotherapyList === item.type ? 'current' : ''
+                  }`}
                   key={i}
                   onClick={() => {
                     psychotherapyTypeHandler(item.type);
