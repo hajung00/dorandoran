@@ -77,7 +77,12 @@ const Logout = () => {
   return (
     <Layout>
       <Header>
-        <div className='icon-wrapper'>
+        <div
+          className='icon-wrapper'
+          onClick={() => {
+            router.push('/mypage');
+          }}
+        >
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
         <Content>

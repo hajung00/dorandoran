@@ -77,7 +77,12 @@ const DropOut1 = () => {
   return (
     <Layout>
       <Header>
-        <div className='icon-wrapper'>
+        <div
+          className='icon-wrapper'
+          onClick={() => {
+            router.push('/mypage');
+          }}
+        >
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
         <Content>
@@ -97,7 +102,7 @@ const DropOut1 = () => {
           </div>
           <button
             onClick={() => {
-              router.push('/drop-out/section1');
+              router.push('/drop-out/section2');
             }}
           >
             탈퇴할게요

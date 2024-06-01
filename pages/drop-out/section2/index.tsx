@@ -77,7 +77,12 @@ const DropOut2 = () => {
   return (
     <Layout>
       <Header>
-        <div className='icon-wrapper'>
+        <div
+          className='icon-wrapper'
+          onClick={() => {
+            router.push('/drop-out/section1');
+          }}
+        >
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
         <Content>
