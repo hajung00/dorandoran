@@ -240,7 +240,6 @@ const TestResult = () => {
             심리검사 내용은 안전하게 보관돼요.
           </p>
         </div>
-
         <div className='test-result-title'>
           <p>심리검사 결과</p>
           <p>
