@@ -153,12 +153,14 @@ const Result = () => {
           <div className='counsel-title'>
             <p>심리검사 결과</p>
             <p>조성혁님의 심리상태가 더 좋아졌어요!</p>
+            <button className='counsel-start-button'>
+              새로운 상담 시작하기
+            </button>
           </div>
           <div className='counsel-summary'>
             <p>상담 내용 요약</p>
             <div>상담 내용 요약...</div>
           </div>
-          <button className='counsel-start-button'>새로운 상담 시작하기</button>
           <p className='title'>혼자서도 해결해볼 수 있어요.</p>
           <div className='content-wrapper'>
             <div>

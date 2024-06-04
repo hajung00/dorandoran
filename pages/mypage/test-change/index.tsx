@@ -126,11 +126,17 @@ const TestChange = () => {
         <BarGraph clickDate={clickDate} handleClickDate={handleClickDate} />
         <CompleteSection>
           <p className='title'>완료한 상담</p>
-          <div className='consel-wrapper'>
-            <p className='consel-title'>상담명</p>
-            <p className='consel-date'>2024년 05월 16일</p>
-            {/* <p className='consel-date'>{clickDate}</p> */}
-          </div>
+          {clickDate && (
+            <div
+              className='consel-wrapper'
+              onClick={() => {
+                router.push('/history/1');
+              }}
+            >
+              <p className='consel-title'>상담명</p>
+              <p className='consel-date'>{clickDate}</p>
+            </div>
+          )}
         </CompleteSection>
       </Content>
     </Layout>

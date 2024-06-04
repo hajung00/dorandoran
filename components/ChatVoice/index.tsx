@@ -46,12 +46,8 @@ const ChatVoiceStart = styled.div<{ display: string; opacity: string }>`
 
   .text {
     display: ${(props: any) => (props.display === 'true' ? 'none' : 'block')};
-    position: absolute;
     padding: 12px 18px;
-    top: -45px;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    border-radius: 100px;
+    border-radius: 16px;
     border: 1px solid var(--doranblue02, #e1e2ff);
     background: var(--white, #fff);
     color: var(--gray09, #222);
@@ -62,6 +58,10 @@ const ChatVoiceStart = styled.div<{ display: string; opacity: string }>`
     line-height: normal;
     letter-spacing: -0.4px;
     text-transform: uppercase;
+    min-width: min-content;
+    max-width: 448px;
+    min-height: 48px;
+    max-height: 360px;
   }
 
   .icon-wrapper {
@@ -140,10 +140,12 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
   }, []);
 
   const handleFormSend = useCallback(() => {
-    onSubmitForm(transcript);
-    handleStop();
-    resetTranscript();
-  }, []);
+    if (!listening) {
+      onSubmitForm(transcript);
+      handleStop();
+      resetTranscript();
+    }
+  }, [listening]);
 
   const handleStop = () => {
     SpeechRecognition.stopListening();
@@ -152,7 +154,10 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
   console.log(transcript, listening);
   return (
     <ChatVoiceStyle>
-      <ChatVoiceStart display={`${!listening}`} opacity={`${isLoading}`}>
+      <ChatVoiceStart
+        display={`${!(listening || transcript)}`}
+        opacity={`${isLoading}`}
+      >
         <div className='loading-text'>상담원의 답변을 기다리는 중이에요.</div>
         <div className='text'>{transcript ? transcript : '듣고 있어요'}</div>
         <div className='icon-wrapper'>

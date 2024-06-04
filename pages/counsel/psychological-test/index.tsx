@@ -294,7 +294,10 @@ const PsychologicalTest = ({ testItmes }: Props) => {
       {currentNumber < 19 && (
         <>
           <Header>
-            <div className='icon-wrapper'>
+            <div
+              className='icon-wrapper'
+              onClick={() => router.push('/counsel')}
+            >
               <XSVG width={18} height={18} alt={'closed'} />
             </div>
           </Header>

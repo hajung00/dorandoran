@@ -231,7 +231,7 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
         },
         ticks: {
           stepSize: 20,
-          callback: function (value: number) {
+          callback: function (value: any) {
             if (value === 0) return '위험';
             else if (value === 40) return '불안정';
             else if (value === 80) return '안정';
@@ -241,7 +241,11 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
       },
     },
     onClick: (c: any, chart_instances: any) => {
-      handleClickDate(dummy[chart_instances[0].index].date);
+      try {
+        handleClickDate(dummy[chart_instances[0].index].date);
+      } catch (error) {
+        console.log(error);
+      }
     },
   };
 
@@ -254,7 +258,7 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
     []
   );
 
-  const container = useRef(null);
+  const container = useRef<any>(null);
   const [currentMonth, setCurrentMonth] = useState(moment().month() + 1);
   useEffect(() => {
     if (container.current) {
@@ -270,19 +274,9 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
     console.log('데이터 요청', diseaseType, currentMonth);
   }, [diseaseType, currentMonth]);
 
-  useEffect(() => {
-    if (clickDate) {
-      console.log(clickDate);
-      const allDate = dummy.map((item) => item.date);
-      const findDate = allDate.findIndex((item) => item === clickDate);
-      const newColor = color.map((item, i) =>
-        i === findDate ? item : '#E3E3E3'
-      );
-      console.log(newColor);
-      setColor(newColor);
-    }
-  }, [clickDate]);
-
+  const clearClickDate = useCallback(() => {
+    handleClickDate('');
+  }, []);
   return (
     <div>
       <DiseaseTypeWrapper>
@@ -329,7 +323,7 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
           <p id='unstable'>불안정</p>
           <p id='dangers'>위험</p>
         </LegendStyle>
-        {clickDate && <button>선택해제</button>}
+        {clickDate && <button onClick={clearClickDate}>선택해제</button>}
       </GraphBottom>
     </div>
   );

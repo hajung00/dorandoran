@@ -96,7 +96,7 @@ const HistoryId = () => {
         <div
           className='icon-wrapper'
           onClick={() => {
-            router.push('/history');
+            router.back();
           }}
         >
           <ArrowSVG width={21} height={21} alt={'prev'} />

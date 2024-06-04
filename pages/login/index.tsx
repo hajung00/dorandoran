@@ -1,20 +1,23 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
 // import svg
 import XIcon from '../../public/icons/x.svg';
 import AlertIcon from '../../public/icons/alert-circle.svg';
-import ModalLayout from '@/modal/ModalLayout';
-import LoginAlertModal from '@/modal/LoginAlertModal';
-import { useRouter } from 'next/router';
+
+// import components
 import Layout from '@/components/Layout';
+import LoginAlertModal from '@/modal/LoginAlertModal';
+import { loginAPI, requestSMSAPI } from '../api/user';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
   color: #222;
 
   .icon-wrapper {
+    display: inline-block;
     padding: 12px 8px;
   }
 `;
@@ -115,7 +118,7 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
   }
   .alert-icon-wrapper {
     position: absolute;
-    top: 21px;
+    top: 20%;
     right: 20px;
   }
   .alert {
@@ -135,7 +138,7 @@ const Login = () => {
   const [nameRegexCheck, setNameRegexCheck] = useState(true);
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [authenticationNumber, setAuthenticationNumber] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   const [enableRequestButton, setEnableRequestButton] = useState(false); // 인증번호 요청 버튼 활성화 여부
   const [enableCheckButton, setEnableCheckButton] = useState(false); // 인증번호 확인 버튼 활성화 여부
   const [timeLeft, setTimeLeft] = useState(300);
@@ -153,9 +156,9 @@ const Login = () => {
     []
   );
 
-  const onChangeAuthenticationNumber = useCallback(
+  const onChangeVerificationCode = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setAuthenticationNumber(e.target.value);
+      setVerificationCode(e.target.value);
     },
     []
   );
@@ -171,7 +174,7 @@ const Login = () => {
 
   // 인증번호 요청 버튼 활성화 여부 확인
   useEffect(() => {
-    if (name && phoneNumber && !nameRegexCheck) {
+    if (name && phoneNumber.length === 11 && !nameRegexCheck) {
       setEnableRequestButton(true);
     } else {
       setEnableRequestButton(false);
@@ -180,24 +183,30 @@ const Login = () => {
 
   // 인증번호 확인 버튼 활성화 여부 확인
   useEffect(() => {
-    if (authenticationNumber) {
+    if (verificationCode.length === 6) {
       setEnableCheckButton(true);
     } else {
       setEnableCheckButton(false);
     }
-  }, [authenticationNumber]);
+  }, [verificationCode]);
 
   // 인증문자 받기 버튼 클릭
-  const onClickReceiveButton = useCallback(() => {
-    const valid = true; // 유효한 이름과 휴대폰 번호인지 확인
+  const onClickReceiveButton = useCallback(async () => {
     // db로 부터 검증 한 후 인증번호 전송
-    if (enableRequestButton && valid) {
+    if (enableRequestButton) {
       // 인증번호 요청 api 요청
-      setRequestAuthentication((prev) => !prev);
-    } else {
-      setLoginAlertModal(true);
+      const valid = await requestSMSAPI(name, phoneNumber);
+      console.log('valid', valid);
+
+      // 유효한 이름과 휴대폰 번호일 경우 인증번호 시간 카운트
+      if (valid === 200) {
+        setRequestAuthentication((prev) => !prev);
+      } else if (valid === 400) {
+        // 유효하지 않은 이름과 휴대폰 번호일 경우 모달 오픈
+        setLoginAlertModal(true);
+      }
     }
-  }, [enableRequestButton]);
+  }, [name, phoneNumber, enableRequestButton]);
 
   // 인증문자 받기 클릭 후 유효 시간 설정
   useEffect(() => {
@@ -211,12 +220,21 @@ const Login = () => {
   }, [requestAuthentication, timeLeft]);
 
   // 인증문자 확인 버튼 클릭
-  const onClickCheckButton = useCallback(() => {
+  const onClickCheckButton = useCallback(async () => {
     if (enableCheckButton) {
-      // 인증번호 확인 api 요청
-      console.log(authenticationNumber);
+      // 회원가입, 로그인 api 요청
+      const result = await loginAPI(name, phoneNumber, verificationCode);
+      console.log('result', result);
+
+      // 인증번호 확인 성공
+      if (result === 200) {
+        return router.push('/counsel');
+      } else {
+        // 인증번호 확인 실패
+        // 실패 이유 알려주는 모달이 필요해 보임.
+      }
     }
-  }, [enableCheckButton, authenticationNumber]);
+  }, [name, phoneNumber, enableCheckButton, verificationCode]);
 
   // 이름, 휴대폰 번호 일치하지 않을 시 alert 모달 toggle
   const loginAlertModalHandler = useCallback(() => {
@@ -237,7 +255,6 @@ const Login = () => {
           <XIcon width={18} height={18} alt={'cancel'} stroke={'#666666'} />
         </div>
       </Header>
-
       <Content>
         {!requestAuthentication ? (
           <>
@@ -317,8 +334,8 @@ const Login = () => {
                 <input
                   type='number'
                   placeholder='인증번호를 입력해주세요.'
-                  value={authenticationNumber}
-                  onChange={onChangeAuthenticationNumber}
+                  value={verificationCode}
+                  onChange={onChangeVerificationCode}
                 />
               </div>
             </InputWrapper>

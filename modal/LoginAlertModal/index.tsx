@@ -12,6 +12,7 @@ const LoginAlertModalLayout = styled.div`
   gap: 28px;
   border-radius: 18px;
   background: #fff;
+  width: 84.4%;
 
   & > div {
     display: flex;
