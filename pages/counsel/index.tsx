@@ -132,7 +132,7 @@ const Counsel = () => {
   const router = useRouter();
 
   const user = true;
-  const test = true;
+  const test = false;
 
   const data = [
     { summary: '상담 내용 요약', date: '2024년 05월 20일' },

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 // import svg
 import ArrowSVG from '../../../public/icons/arrow.svg';
+import RightArrowSVG from '../../../public/icons/arrow-right.svg';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
 
@@ -32,7 +33,8 @@ const Content = styled.div`
 
   .counsel-summary {
     padding: 0 20px;
-    margin-top: 24px;
+    margin-top: 26px;
+    position: relative;
 
     & > p {
       color: var(--gray07, #666);
@@ -49,33 +51,35 @@ const Content = styled.div`
       padding: 16px;
       max-height: 248px;
       min-height: 136px;
+      height: fit-content;
     }
   }
 
   .counsel-start-button {
-    position: relative;
-    margin: 0 20px;
-    margin-top: 26px;
-    width: calc(100% - 40px);
-    padding: 4.3% 0;
+    margin-top: 16px;
+    padding: 6px 6px 6px 12px;
     border-radius: 18px;
-    border: 1px solid #565bff;
     background: #fff;
     color: #565bff;
     font-family: 'Pretendard';
-    font-size: clamp(16px, 4vw, 20px);
+    font-size: clamp(14px, 4vw, 16px);
     font-weight: 600;
     letter-spacing: -0.4px;
+    border-radius: 6px;
+    background: var(--doranblue03, #f3f3ff);
+    border: none;
+    display: flex;
+    align-items: center;
   }
 
-  .counsel-start-button::after {
+  .counsel-summary::after {
     content: '';
     display: block;
     width: calc(100% + 20px);
-    height: 10px;
+    height: 22px;
     background: #f7f7f7;
     position: absolute;
-    top: 104px;
+    top: 218px;
     left: -20px;
   }
 
@@ -103,7 +107,7 @@ const Content = styled.div`
     }
 
     .title {
-      margin-top: 0px;
+      margin-top: 106px;
       font-size: clamp(18px, 5vw, 22px);
       margin-bottom: 26px;
     }
@@ -155,17 +159,21 @@ const Result = () => {
             <p>조성혁님의 심리상태가 더 좋아졌어요!</p>
             <button className='counsel-start-button'>
               새로운 상담 시작하기
+              <RightArrowSVG width={20} height={20} alt={'arrow'} />
             </button>
           </div>
           <div className='counsel-summary'>
             <p>상담 내용 요약</p>
             <div>상담 내용 요약...</div>
           </div>
-          <p className='title'>혼자서도 해결해볼 수 있어요.</p>
           <div className='content-wrapper'>
             <div>
-              <p className='title'>심리치료 콘텐츠</p>
-              <p>마음상태에 따라 영상을 고르고 시청해보세요.</p>
+              <p className='title'>심리치료 콘텐츠를 시청해보세요.</p>
+              <p>
+                도란도란이 맞춤 콘텐츠를 추천해드릴게요.
+                <br />
+                콘텐츠 탭으로 이동하시면 더 많은 콘텐츠를 보실 수 있어요.
+              </p>
             </div>
             <div className='content'></div>
           </div>

@@ -224,10 +224,17 @@ const PsychologicalTest = ({ testItmes }: Props) => {
   const [analysisTestLoading, setAnalysisTestLoading] = useState(false);
 
   // 답변 클릭 이벤트
-  const onClickAnswer = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
-    const answer = e.target as HTMLLIElement;
-    setCurrentAnswer(answer.innerText);
-  }, []);
+  const onClickAnswer = useCallback(
+    (e: React.MouseEvent<HTMLLIElement>) => {
+      const answer = e.target as HTMLLIElement;
+      if (currentAnswer === answer.innerText) {
+        setCurrentAnswer('');
+      } else {
+        setCurrentAnswer(answer.innerText);
+      }
+    },
+    [currentAnswer]
+  );
 
   // 기존에 답변한 항목인 경우 선택한 항목 표시
   useEffect(() => {
@@ -277,16 +284,16 @@ const PsychologicalTest = ({ testItmes }: Props) => {
 
   // 심리 결과 분석하기 클릭 이벤트
   const analysisTestHandler = useCallback(() => {
-    setAnalysisTestLoading((prev) => !prev);
-    nextQuestionHandler();
+    // setAnalysisTestLoading((prev) => !prev);
+    // nextQuestionHandler();
     console.log('심리 결과 분석', allAnswer);
-    // 심리 결과 분석 api 요청 후, 완료하면 로딩 false 하고 페이지 이동
-    const timer = setTimeout(() => {
-      setAnalysisTestLoading(false);
-      router.push('/counsel/psychological-test-result');
-    }, 3000);
+    // // 심리 결과 분석 api 요청 후, 완료하면 로딩 false 하고 페이지 이동
+    // const timer = setTimeout(() => {
+    //   setAnalysisTestLoading(false);
+    //   router.push('/counsel/psychological-test-result');
+    // }, 3000);
 
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, [allAnswer]);
 
   return (

@@ -238,10 +238,8 @@ const Login = () => {
 
   // 이름, 휴대폰 번호 일치하지 않을 시 alert 모달 toggle
   const loginAlertModalHandler = useCallback(() => {
-    setName('');
-    setPhoneNumber('');
     setLoginAlertModal((prev) => !prev);
-  }, [name, phoneNumber]);
+  }, []);
 
   return (
     <Layout>
