@@ -219,63 +219,58 @@ const PsychologicalTest = ({ testItmes }: Props) => {
   const router = useRouter();
 
   const [currentNumber, setCurrnetNumber] = useState(1); // 현재 심리검사 항목 번호
-  const [currentAnswer, setCurrentAnswer] = useState(''); // 현재 심리검사 항목 답변
+  const [currentAnswer, setCurrentAnswer] = useState<number>(-1); // 현재 심리검사 항목 답변
   const [allAnswer, setAllAnswer] = useState<{ [key: string]: any }[]>([]); // 검사 모든 항목에 대한 답변
   const [analysisTestLoading, setAnalysisTestLoading] = useState(false);
 
   // 답변 클릭 이벤트
   const onClickAnswer = useCallback(
-    (e: React.MouseEvent<HTMLLIElement>) => {
-      const answer = e.target as HTMLLIElement;
-      if (currentAnswer === answer.innerText) {
-        setCurrentAnswer('');
+    (id: number, questionId: number, answerId: number) => {
+      setCurrentAnswer(answerId);
+
+      // 답변한 모든 항목 번호
+      const completeId = allAnswer.map(
+        (answer: { [key: string]: number }) => answer.id
+      );
+
+      // 이전에 답변한 항목이 아닌 경우, 선택한 답변 추가
+      if (!completeId.includes(currentNumber)) {
+        setAllAnswer((prev) => [
+          ...prev,
+          { id: id, questionId: questionId, answerId: answerId },
+        ]);
       } else {
-        setCurrentAnswer(answer.innerText);
+        // 이전에 답변한 항목인 경우, 기존 답변 제거 후 새로운 답변 추가
+        const newAllAnswer = allAnswer.filter(
+          (answer: { [key: string]: number }) => answer.id !== currentNumber
+        );
+        setAllAnswer(() => [
+          ...newAllAnswer,
+          { id: id, questionId: questionId, answerId: answerId },
+        ]);
       }
     },
-    [currentAnswer]
+    [currentNumber, allAnswer]
   );
 
   // 기존에 답변한 항목인 경우 선택한 항목 표시
   useEffect(() => {
     for (let i = 0; i < allAnswer.length; i++) {
-      if (allAnswer[i].number === currentNumber) {
-        setCurrentAnswer(allAnswer[i].answer);
+      if (allAnswer[i].id === currentNumber) {
+        setCurrentAnswer(allAnswer[i].answerId);
         break;
       } else {
-        setCurrentAnswer('');
+        setCurrentAnswer(-1);
       }
     }
   }, [currentNumber, allAnswer]);
 
   // 다음 문항 넘어가기 클릭 이벤트
   const nextQuestionHandler = useCallback(() => {
-    if (currentAnswer) {
+    if (currentAnswer !== -1) {
       setCurrnetNumber((prev) => prev + 1);
-
-      // 답변한 모든 항목 번호
-      const allNumber = allAnswer.map(
-        (answer: { [key: string]: number }) => answer.number
-      );
-
-      // 이전에 답변한 항목이 아닌 경우, 선택한 답변 추가
-      if (!allNumber.includes(currentNumber)) {
-        setAllAnswer((prev) => [
-          ...prev,
-          { number: currentNumber, answer: currentAnswer },
-        ]);
-      } else {
-        // 이전에 답변한 항목인 경우, 기존 답변 제거 후 새로운 답변 추가
-        const newAllAnswer = allAnswer.filter(
-          (answer: { [key: string]: number }) => answer.number !== currentNumber
-        );
-        setAllAnswer(() => [
-          ...newAllAnswer,
-          { number: currentNumber, answer: currentAnswer },
-        ]);
-      }
     }
-  }, [currentNumber, currentAnswer]);
+  }, [currentAnswer]);
 
   // 이전 항목으로 넘어가기 클릭 이벤트
   const prevQuestionHandler = useCallback(() => {
@@ -340,8 +335,14 @@ const PsychologicalTest = ({ testItmes }: Props) => {
                     (item: string, idx: number) => (
                       <li
                         key={idx}
-                        className={currentAnswer === item ? 'active' : ''}
-                        onClick={onClickAnswer}
+                        className={currentAnswer === idx ? 'active' : ''}
+                        onClick={() => {
+                          onClickAnswer(
+                            testItmes[currentNumber - 1].id,
+                            testItmes[currentNumber - 1].number,
+                            idx
+                          );
+                        }}
                       >
                         <div>
                           <CheckSVG
@@ -361,7 +362,7 @@ const PsychologicalTest = ({ testItmes }: Props) => {
           <ButtonSection>
             {currentNumber === 1 ? (
               <button
-                className={currentAnswer ? 'enable' : 'disable'}
+                className={currentAnswer !== -1 ? 'enable' : 'disable'}
                 onClick={nextQuestionHandler}
               >
                 다음 문항으로 넘어가기
@@ -373,14 +374,14 @@ const PsychologicalTest = ({ testItmes }: Props) => {
                 </button>
                 {currentNumber !== 18 ? (
                   <button
-                    className={currentAnswer ? 'enable' : 'disable'}
+                    className={currentAnswer !== -1 ? 'enable' : 'disable'}
                     onClick={nextQuestionHandler}
                   >
                     다음 문항으로 넘어가기
                   </button>
                 ) : (
                   <button
-                    className={currentAnswer ? 'enable' : 'disable'}
+                    className={currentAnswer !== -1 ? 'enable' : 'disable'}
                     onClick={analysisTestHandler}
                   >
                     심리 결과 분석하기
