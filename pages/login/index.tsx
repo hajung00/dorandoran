@@ -11,6 +11,8 @@ import AlertIcon from '../../public/icons/alert-circle.svg';
 import Layout from '@/components/Layout';
 import LoginAlertModal from '@/modal/LoginAlertModal';
 import { loginAPI, requestSMSAPI } from '../api/user';
+import { getCookieValue } from '@/utils/getCookieValue';
+import useUserAccount from '@/hooks/useUserAccount';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -103,11 +105,13 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
     align-items: center;
     gap: 4px;
     border-radius: 18px;
-    border: 1px solid #d9d9d9;
+    border: ${(props: any) =>
+      props.bordercolor === 'true' ? '1px solid #FF2020' : '1px solid #d9d9d9'};
     background: #fff;
     outline-color: ${(props: any) =>
       props.bordercolor === 'true' ? '#FF2020' : '#565bff'};
-    color: var(--gray08, #444);
+    color: ${(props: any) =>
+      props.bordercolor === 'true' ? '#FF2020' : '#444'};
     font-family: 'Pretendard';
     font-size: 20px;
     font-weight: 500;
@@ -132,8 +136,13 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
   }
 `;
 
-const Login = () => {
+interface Props {
+  token: string;
+}
+
+const Login = ({ token }: Props) => {
   const router = useRouter();
+  const { initializeUserAccount } = useUserAccount();
   const nameRegex = /^[ㄱ-ㅎ|가-힣]/;
   const [nameRegexCheck, setNameRegexCheck] = useState(true);
   const [name, setName] = useState('');
@@ -144,6 +153,13 @@ const Login = () => {
   const [timeLeft, setTimeLeft] = useState(300);
   const [requestAuthentication, setRequestAuthentication] = useState(false); // 인증번호 요청 여부
   const [loginAlertModal, setLoginAlertModal] = useState(false);
+  const [authenticationError, setAuthenticationError] = useState(false);
+
+  useEffect(() => {
+    if (token) {
+      router.push('/counsel');
+    }
+  }, []);
 
   const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -159,6 +175,7 @@ const Login = () => {
   const onChangeVerificationCode = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setVerificationCode(e.target.value);
+      setAuthenticationError(false);
     },
     []
   );
@@ -222,17 +239,23 @@ const Login = () => {
   // 인증문자 확인 버튼 클릭
   const onClickCheckButton = useCallback(async () => {
     if (enableCheckButton) {
+      initializeUserAccount({
+        name: name,
+        phoneNumber: phoneNumber,
+        verificationCode: verificationCode,
+      });
+      router.push('/login/select-organization');
       // 회원가입, 로그인 api 요청
-      const result = await loginAPI(name, phoneNumber, verificationCode);
-      console.log('result', result);
+      // const result = await loginAPI(name, phoneNumber, verificationCode);
+      // console.log('result', result);
 
       // 인증번호 확인 성공
-      if (result === 200) {
-        return router.push('/counsel');
-      } else {
-        // 인증번호 확인 실패
-        // 실패 이유 알려주는 모달이 필요해 보임.
-      }
+      // if (result === 200) {
+      //   return router.push('/login/select-organization');
+      // } else {
+      //   // 인증번호 확인 실패
+      //   setAuthenticationError(true);
+      // }
     }
   }, [name, phoneNumber, enableCheckButton, verificationCode]);
 
@@ -326,7 +349,7 @@ const Login = () => {
               인증문자 다시 받기 ({Math.floor(timeLeft / 60)}분{' '}
               {Math.floor(timeLeft % 60)}초)
             </button>
-            <InputWrapper>
+            <InputWrapper bordercolor={`${authenticationError}`}>
               <label>인증번호</label>
               <div>
                 <input
@@ -335,6 +358,16 @@ const Login = () => {
                   value={verificationCode}
                   onChange={onChangeVerificationCode}
                 />
+                {authenticationError && (
+                  <div className='alert-icon-wrapper'>
+                    <AlertIcon width={24} height={24} alt={'alert'} />
+                  </div>
+                )}
+                {authenticationError && (
+                  <p className='alert'>
+                    인증번호가 정확하지 않아요. 다시 입력해주세요.
+                  </p>
+                )}
               </div>
             </InputWrapper>
             <button
@@ -349,6 +382,19 @@ const Login = () => {
       {loginAlertModal && <LoginAlertModal onClosed={loginAlertModalHandler} />}
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default Login;

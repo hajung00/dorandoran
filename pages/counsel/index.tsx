@@ -139,10 +139,6 @@ const Counsel = ({ token }: Props) => {
   const router = useRouter();
   const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
 
-  if (!token) {
-    return router.push('/login');
-  }
-
   const data = [
     { summary: '상담 내용 요약', date: '2024년 05월 20일' },
     { summary: '상담 내용 요약', date: '2024년 05월 25일' },

@@ -3,7 +3,6 @@ import { backUrl } from '../config/config';
 import Cookies from 'js-cookie';
 
 let token = Cookies.get('token');
-console.log(token);
 
 const headers = {
   Authorization: `Bearer ${token}`,
@@ -11,6 +10,7 @@ const headers = {
 };
 
 const fetcher = (url: string) =>
+  token &&
   axios
     .get(`${backUrl}${url}`, {
       headers,

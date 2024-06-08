@@ -22,6 +22,7 @@ const TestLoadingStyle = styled.div`
   top: 0;
   z-index: 999;
   width: 100%;
+  max-width: 512px;
   height: 100vh;
   background: white;
   display: flex;
