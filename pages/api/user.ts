@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { backUrl } from '../../config/config';
+import Cookies from 'js-cookie';
 
 // SMS 인증번호 요청
 export const requestSMSAPI = async (name: string, phoneNumber: string) => {
@@ -36,13 +37,17 @@ export const loginAPI = async (
     name: name,
     phoneNumber: phoneNumber,
     verificationCode: verificationCode,
+    userAgency: 'VISION_TRAINING_CENTER',
   };
 
   const result = await axios
     .post(`${backUrl}/api/user/login`, params)
     .then((response: any) => {
-      console.log(response);
       if (response.status == 200) {
+        const token = response.headers.get('Authorization');
+        if (token) {
+          Cookies.set('token', token, { expires: 14 }); // 만료 날짜를 30일로 설정
+        }
         return response.status;
       }
     })

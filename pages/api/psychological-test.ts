@@ -2,42 +2,64 @@ import axios from 'axios';
 import { backUrl } from '../../config/config';
 
 // 심리검사 결과 분석
-export const testAPI = async (answer: { [key: string]: any }) => {
+export const testAPI = async (
+  token: string,
+  basicAnswer: { [key: string]: any }[],
+  depression: { [key: string]: any }[],
+  stress: { [key: string]: any }[],
+  anxiety: { [key: string]: any }[]
+) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json', // 요청의 Content-Type을 지정할 수 있음
+  };
+
   const params = [
     {
       category: 'BASIC',
-      questionAnswers: answer.silce(0, 3),
+      questionAnswers: basicAnswer.map((answer) => {
+        delete answer.type;
+        delete answer.id;
+        return answer;
+      }),
     },
     {
       category: 'DEPRESSION',
-      questionAnswers: answer.silce(3, 8),
+      questionAnswers: depression.map((answer) => {
+        delete answer.type;
+        delete answer.id;
+        return answer;
+      }),
     },
     {
       category: 'STRESS',
-      questionAnswers: answer.silce(8, 13),
+      questionAnswers: stress.map((answer) => {
+        delete answer.type;
+        delete answer.id;
+        return answer;
+      }),
     },
     {
       category: 'ANXIETY',
-      questionAnswers: answer.silce(13, 18),
+      questionAnswers: anxiety.map((answer) => {
+        delete answer.type;
+        delete answer.id;
+        return answer;
+      }),
     },
   ];
 
-  console.log(params);
-
-  //   const result = await axios
-  //     .post(`${backUrl}/api/user/send-sms`, params)
-  //     .then((response: any) => {
-  //       if (response.status == 200) {
-  //         return response.status;
-  //       }
-  //     })
-  //     .catch((error: any) => {
-  //       // 에러 처리
-  //       if (error.response.status === 400) {
-  //         return error.response.status;
-  //       }
-  //       console.error('SMS 인증번호 요청 API 실패', error);
-  //     });
-  //   console.log('SMS 인증번호 요청', result);
-  //   return result;
+  const result = await axios
+    .post(`${backUrl}/api/assessment/analysis`, params, { headers })
+    .then((response: any) => {
+      if (response.status == 200) {
+        return response.data.data;
+      }
+    })
+    .catch((error: any) => {
+      // 에러 처리
+      console.error('심리검사 결과 분석 API 실패', error);
+    });
+  console.log('심리검사 결과 분석', result);
+  return result;
 };

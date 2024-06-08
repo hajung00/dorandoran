@@ -7,6 +7,8 @@ import moment from 'moment';
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import FileSVG from '../../../public/icons/file.svg';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
+import { TEST_RESULT_KEY } from '@/hooks/useTestResult';
 
 const Header = styled.header`
   padding: 126px 20px 0 20px;
@@ -156,12 +158,7 @@ const TestItem = styled.div<{ background: string; color: string }>`
 
 const PsychologicalTestResult = () => {
   const route = useRouter();
-
-  const data = [
-    { type: '우울함', score: 80, percent: 20 },
-    { type: '우울함', score: 56, percent: 44 },
-    { type: '우울함', score: 13, percent: 87 },
-  ];
+  const { data: testResult } = useSWR(TEST_RESULT_KEY);
 
   const typeByScore = [
     { background: '#E1E2FF', color: '#565BFF', text: '안정' },
@@ -179,6 +176,12 @@ const PsychologicalTestResult = () => {
     }
   }, []);
 
+  const toKorean = useCallback((category: string) => {
+    if (category === 'DEPRESSION') return '우울함';
+    else if (category === 'STRESS') return '스트레스';
+    else if (category === 'ANXIETY') return '불안감';
+  }, []);
+
   return (
     <div>
       <Header></Header>
@@ -186,15 +189,15 @@ const PsychologicalTestResult = () => {
         <div className='test-result-title'>
           <p>심리검사 결과</p>
           <p>
-            조성혁님의 심리상태는 <Point>안정적</Point>이에요.
+            {testResult.name}님의 심리상태는 <Point>안정적</Point>이에요.
           </p>
         </div>
         <div className='test-date'>
           <FileSVG width={26} height={26} alt={'file'} />
-          <span>{moment().format('YYYY년 M월 DD일')}의 심리검사 결과</span>
+          <span>{testResult.testDate}의 심리검사 결과</span>
         </div>
         <div className='test-item-section'>
-          {data.map((item, i) => {
+          {testResult.result.map((item: { [key: string]: any }, i: number) => {
             const current = sortScore(item.score);
             return (
               <>
@@ -205,12 +208,12 @@ const PsychologicalTestResult = () => {
                 >
                   <div className='item-wrapper'>
                     <div className='item-title'>
-                      <div className='item-type'>{item.type}</div>
+                      <div className='item-type'>{toKorean(item.category)}</div>
                       <span>{current.text}</span>
                     </div>
                     <div className='item-description'>
-                      표준보다 <span>{item.percent}%</span> {item.type}을 느끼고
-                      있어요.
+                      표준보다 <span>{item.percent}%</span>{' '}
+                      {toKorean(item.category)}을 느끼고 있어요.
                     </div>
                   </div>
                   <div className='item-score'>{item.score}점</div>
@@ -222,7 +225,7 @@ const PsychologicalTestResult = () => {
         <div className='test-description'>
           심리검사 결과는
           <br />
-          ‘마이페이지 - 나의 첫 심리검사 결과 조회하기’ 에서
+          ‘마이페이지 &gt; 나의 첫 심리검사 결과 조회하기’ 에서
           <br />
           다시 보실 수 있어요.
         </div>

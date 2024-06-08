@@ -98,7 +98,7 @@ const Chat = () => {
     const timer = setTimeout(() => {
       setIsLoading((prev) => !prev);
       setChat('');
-    }, 3000);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, []);

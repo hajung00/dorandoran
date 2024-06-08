@@ -7,6 +7,9 @@ import XSVG from '../../../public/icons/x.svg';
 import CheckSVG from '../../../public/icons/check.svg';
 import Loading from '@/components/Loading';
 import { useRouter } from 'next/router';
+import { testAPI } from '@/pages/api/psychological-test';
+import { getCookieValue } from '@/utils/getCookieValue';
+import useTestResult from '@/hooks/useTestResult';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -212,12 +215,14 @@ const ButtonSection = styled.div`
   }
 `;
 interface Props {
+  token: string;
   testItmes: { [key: string]: any }[];
 }
 
-const PsychologicalTest = ({ testItmes }: Props) => {
+const PsychologicalTest = ({ token, testItmes }: Props) => {
   const router = useRouter();
 
+  const { initializeTestResult } = useTestResult();
   const [currentNumber, setCurrnetNumber] = useState(1); // 현재 심리검사 항목 번호
   const [currentAnswer, setCurrentAnswer] = useState<number>(-1); // 현재 심리검사 항목 답변
   const [allAnswer, setAllAnswer] = useState<{ [key: string]: any }[]>([]); // 검사 모든 항목에 대한 답변
@@ -225,8 +230,8 @@ const PsychologicalTest = ({ testItmes }: Props) => {
 
   // 답변 클릭 이벤트
   const onClickAnswer = useCallback(
-    (id: number, questionId: number, answerId: number) => {
-      setCurrentAnswer(answerId);
+    (type: string, id: number, questionId: number, answerId: number) => {
+      setCurrentAnswer(answerId - 1);
 
       // 답변한 모든 항목 번호
       const completeId = allAnswer.map(
@@ -237,7 +242,12 @@ const PsychologicalTest = ({ testItmes }: Props) => {
       if (!completeId.includes(currentNumber)) {
         setAllAnswer((prev) => [
           ...prev,
-          { id: id, questionId: questionId, answerId: answerId },
+          {
+            type: type,
+            id: id,
+            questionId: questionId,
+            answerId: answerId,
+          },
         ]);
       } else {
         // 이전에 답변한 항목인 경우, 기존 답변 제거 후 새로운 답변 추가
@@ -246,7 +256,12 @@ const PsychologicalTest = ({ testItmes }: Props) => {
         );
         setAllAnswer(() => [
           ...newAllAnswer,
-          { id: id, questionId: questionId, answerId: answerId },
+          {
+            type: type,
+            id: id,
+            questionId: questionId,
+            answerId: answerId,
+          },
         ]);
       }
     },
@@ -257,7 +272,7 @@ const PsychologicalTest = ({ testItmes }: Props) => {
   useEffect(() => {
     for (let i = 0; i < allAnswer.length; i++) {
       if (allAnswer[i].id === currentNumber) {
-        setCurrentAnswer(allAnswer[i].answerId);
+        setCurrentAnswer(allAnswer[i].answerId - 1);
         break;
       } else {
         setCurrentAnswer(-1);
@@ -278,17 +293,35 @@ const PsychologicalTest = ({ testItmes }: Props) => {
   }, []);
 
   // 심리 결과 분석하기 클릭 이벤트
-  const analysisTestHandler = useCallback(() => {
-    // setAnalysisTestLoading((prev) => !prev);
-    // nextQuestionHandler();
-    console.log('심리 결과 분석', allAnswer);
-    // // 심리 결과 분석 api 요청 후, 완료하면 로딩 false 하고 페이지 이동
-    // const timer = setTimeout(() => {
-    //   setAnalysisTestLoading(false);
-    //   router.push('/counsel/psychological-test-result');
-    // }, 3000);
+  const analysisTestHandler = useCallback(async () => {
+    setAnalysisTestLoading((prev) => !prev);
 
-    // return () => clearTimeout(timer);
+    const basicAnswer = allAnswer
+      .filter((item) => item.type === '기본질문')
+      .sort((a, b) => a.id - b.id);
+    const depression = allAnswer
+      .filter((item) => item.type === '우울척도 검사')
+      .sort((a, b) => a.id - b.id);
+    const stress = allAnswer
+      .filter((item) => item.type === '스트레스척도 검사')
+      .sort((a, b) => a.id - b.id);
+    const anxiety = allAnswer
+      .filter((item) => item.type === '불안척도 검사')
+      .sort((a, b) => a.id - b.id);
+
+    const result = await testAPI(
+      token,
+      basicAnswer,
+      depression,
+      stress,
+      anxiety
+    );
+
+    if (result) {
+      setAnalysisTestLoading(false);
+      initializeTestResult(result);
+      router.push('/counsel/psychological-test-result');
+    }
   }, [allAnswer]);
 
   return (
@@ -338,9 +371,10 @@ const PsychologicalTest = ({ testItmes }: Props) => {
                         className={currentAnswer === idx ? 'active' : ''}
                         onClick={() => {
                           onClickAnswer(
+                            testItmes[currentNumber - 1].type,
                             testItmes[currentNumber - 1].id,
                             testItmes[currentNumber - 1].number,
-                            idx
+                            idx + 1
                           );
                         }}
                       >
@@ -401,11 +435,17 @@ const PsychologicalTest = ({ testItmes }: Props) => {
 };
 
 export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
   const testItmes = (await import('../../../public/test_items/test_item.json'))
     .default;
 
   return {
     props: {
+      token,
       testItmes,
     },
   };

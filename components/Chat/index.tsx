@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import Lottie from 'lottie-react';
+import animationData from '../../public/test.json';
 
 const ChatStyle = styled.div`
   margin-bottom: 16px;
@@ -40,6 +42,25 @@ const ChatStyle = styled.div`
       background: var(--gray01, #f7f7f7);
     }
   }
+
+  .loading {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    border-radius: 16px 16px 16px 0px;
+    color: var(--gray09, #222);
+    clear: right;
+
+    .profile {
+      width: 68px;
+      height: 76px;
+      background: var(--gray01, #f7f7f7);
+    }
+    .content {
+      width: 86px;
+      background: var(--gray01, #f7f7f7);
+    }
+  }
 `;
 
 interface Props {
@@ -60,9 +81,11 @@ const Chat = ({ chat }: Props) => {
           </div>
         )
       ) : (
-        <div className='receiver'>
+        <div className='loading'>
           <div className='profile'></div>
-          <div className='content'>...</div>
+          <div className='content animation'>
+            <Lottie color={'red'} animationData={animationData} />
+          </div>
         </div>
       )}
     </ChatStyle>

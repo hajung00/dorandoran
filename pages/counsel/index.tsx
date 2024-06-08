@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
@@ -8,6 +8,9 @@ import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
 import NonLogin from '@/components/NonLogin';
 import NonTest from '@/components/NonTest';
+import { getCookieValue } from '@/utils/getCookieValue';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
@@ -128,11 +131,17 @@ const CounselStyle = styled.div`
   }
 `;
 
-const Counsel = () => {
-  const router = useRouter();
+interface Props {
+  token: string;
+}
 
-  const user = true;
-  const test = false;
+const Counsel = ({ token }: Props) => {
+  const router = useRouter();
+  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
+
+  if (!token) {
+    return router.push('/login');
+  }
 
   const data = [
     { summary: '상담 내용 요약', date: '2024년 05월 20일' },
@@ -144,9 +153,9 @@ const Counsel = () => {
     <Layout>
       <Header>상담</Header>
       <Content>
-        {!user ? (
+        {!token ? (
           <NonLogin />
-        ) : !test ? (
+        ) : !testCheck ? (
           <NonTest />
         ) : (
           <CounselStyle>
@@ -181,9 +190,22 @@ const Counsel = () => {
           </CounselStyle>
         )}
       </Content>
-      {user && <Footer />}
+      {token && <Footer />}
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default Counsel;
