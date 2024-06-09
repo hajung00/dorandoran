@@ -178,10 +178,13 @@ const SelectOrganization = ({ organizationList }: Props) => {
   }, [selectedEn]);
 
   const onClickCompelete = useCallback(() => {
-    const addedInfo = { ...account };
-    addedInfo.userAgency = selectedEn;
-    initializeUserAccount(addedInfo);
-  }, [account, selectedEn]);
+    if (enableButton) {
+      const addedInfo = { ...account };
+      addedInfo.userAgency = selectedEn;
+      initializeUserAccount(addedInfo);
+      router.push('/login/agreement');
+    }
+  }, [enableButton, account, selectedEn]);
 
   return (
     <Layout>
@@ -213,9 +216,9 @@ const SelectOrganization = ({ organizationList }: Props) => {
             <div className={`selected ${selectedEn ? 'true' : ''}`}>
               <div className='selected-value'>{selectedKo}</div>
               {toggle ? (
-                <ArrowUp width={24} heightL={24} alt={'list-up'} />
+                <ArrowUp width={24} height={24} alt={'list-up'} />
               ) : (
-                <ArrowDown width={24} heightL={24} alt={'list-down'} />
+                <ArrowDown width={24} height={24} alt={'list-down'} />
               )}
             </div>
             <ul>
