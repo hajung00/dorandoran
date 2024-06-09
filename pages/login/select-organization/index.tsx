@@ -26,7 +26,7 @@ const Header = styled.header`
 const Content = styled.div`
   padding: 0 20px;
   margin-top: 22px;
-  margin-bottom: 35%;
+  margin-bottom: 12.5%;
 
   .description {
     color: #222;
@@ -37,15 +37,48 @@ const Content = styled.div`
 
   .sub-description {
     margin-top: 12px;
-    margin-bottom: 93px;
+    margin-bottom: 48px;
     color: #666;
     font-family: 'Pretendard';
     font-size: clamp(16px, 5vw, 20px);
     font-weight: 400;
   }
+
+  & > button {
+    width: 100%;
+    padding: 4.5%;
+    border-radius: 18px;
+    background: #e3e3e3;
+    border: none;
+    color: #b2b2b2;
+    font-family: 'Pretendard';
+    font-size: clamp(18px, 4vw, 20px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.4px;
+  }
+
+  .enable {
+    background: var(--doranblue, #565bff);
+    color: var(--white, #fff);
+    cursor: pointer;
+  }
 `;
 
 const SelectSection = styled.div`
+  margin-bottom: 121%;
+
+  & > p {
+    color: var(--gray07, #666);
+    font-family: 'Pretendard';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.36px;
+    margin-bottom: 14px;
+  }
   .select ul {
     display: none;
   }
@@ -56,40 +89,59 @@ const SelectSection = styled.div`
 
   .select {
     display: inline-block;
-    width: 120px;
-    border: 1px solid #999;
+    width: 100%;
+    border-radius: 18px;
+    border: 1px solid var(--gray04, #d9d9d9);
   }
 
   .select .selected {
     display: flex;
     justify-content: space-between;
-    padding: 8px 5px;
+    padding: 4.5% 4.3%;
   }
 
   .select .selected .selected-value {
-    max-width: 90px;
+    color: var(--gray08, #444);
+    font-family: 'Pretendard';
+    font-size: clamp(18px, 4vw, 20px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.4px;
   }
 
   .select ul {
-    width: 120px;
+    width: calc(100% - 40px);
     max-height: 36.7%;
     overflow: auto;
-    border: 1px solid #999;
+    border: 1px solid var(--gray04, #d9d9d9);
     position: absolute;
-    background: #fff;
-    border-top: none;
     margin: 1px 0 0 -1px;
     cursor: pointer;
+    margin-top: 18px;
+    border-radius: 18px;
   }
 
   .select ul li {
-    padding: 8px 5px;
+    padding: 4.5% 4.3%;
+    color: var(--gray08, #444);
+    font-family: 'Pretendard';
+    font-size: clamp(18px, 4vw, 20px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.4px;
+    border-bottom: 1px solid var(--gray04, #d9d9d9);
   }
   .select ul li,
   .select .selected .selected-value {
     white-space: nowrap; /* 줄바꿈 안함 */
     overflow: hidden;
     text-overflow: ellipsis; /* 말줄임 적용 */
+  }
+  .true {
+    border-radius: 18px;
+    border: 1px solid var(--doranblue, #565bff);
   }
   .select ul li:hover,
   .seleted-list {
@@ -156,8 +208,9 @@ const SelectOrganization = ({ organizationList }: Props) => {
             setToggle((prev) => !prev);
           }}
         >
+          <p>소속기관</p>
           <div className={`select ${toggle ? 'active' : ''}`}>
-            <div className='selected'>
+            <div className={`selected ${selectedEn ? 'true' : ''}`}>
               <div className='selected-value'>{selectedKo}</div>
               {toggle ? (
                 <ArrowUp width={24} heightL={24} alt={'list-up'} />
