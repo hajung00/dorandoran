@@ -95,7 +95,7 @@ const DropOut2 = () => {
           </div>
           <button
             onClick={() => {
-              router.push('/mypage');
+              router.push('/counsel');
             }}
           >
             메인화면으로 이동

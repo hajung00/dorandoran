@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 // import svg
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
+import { getCookieValue } from '@/utils/getCookieValue';
+import { dropOutAPI } from '@/pages/api/user';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -71,8 +73,23 @@ const Content = styled.div`
     padding: 4.5% 0;
   }
 `;
-const DropOut1 = () => {
+
+interface Props {
+  token: string;
+}
+const DropOut1 = ({ token }: Props) => {
   const router = useRouter();
+
+  // 회원 탈퇴
+  const DropOutHandler = useCallback(async () => {
+    if (token) {
+      const result = await dropOutAPI(token);
+      console.log(result);
+      if (result === 200) {
+        router.push('/drop-out/section2');
+      }
+    }
+  }, [token]);
 
   return (
     <Layout>
@@ -100,17 +117,24 @@ const DropOut1 = () => {
               원치 않으신다면 뒤로가기 버튼을 눌러주세요.
             </p>
           </div>
-          <button
-            onClick={() => {
-              router.push('/drop-out/section2');
-            }}
-          >
-            탈퇴할게요
-          </button>
+          <button onClick={DropOutHandler}>탈퇴할게요</button>
         </Content>
       </Header>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default DropOut1;

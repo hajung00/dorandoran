@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 // import svg
 import ArrowSVG from '../../public/icons/arrow.svg';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
+import { getCookieValue } from '@/utils/getCookieValue';
+import { logoutAPI } from '../api/user';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -71,8 +73,22 @@ const Content = styled.div`
   }
 `;
 
-const Logout = () => {
+interface Props {
+  token: string;
+}
+
+const Logout = ({ token }: Props) => {
   const router = useRouter();
+
+  const logoutHandler = useCallback(async () => {
+    if (token) {
+      const result = await logoutAPI(token);
+      console.log(result);
+      if (result === 200) {
+        router.push('/counsel');
+      }
+    }
+  }, [token]);
 
   return (
     <Layout>
@@ -97,17 +113,24 @@ const Logout = () => {
               원치 않으신다면 뒤로가기 버튼을 눌러주세요.
             </p>
           </div>
-          <button
-            onClick={() => {
-              router.push('/login');
-            }}
-          >
-            로그아웃 할게요
-          </button>
+          <button onClick={logoutHandler}>로그아웃 할게요</button>
         </Content>
       </Header>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default Logout;

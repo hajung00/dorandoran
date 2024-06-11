@@ -27,24 +27,59 @@ export const requestSMSAPI = async (name: string, phoneNumber: string) => {
   return result;
 };
 
-// 회원가입, 로그인 요청
+// 인증번호 확인, 로그인 요청
 export const loginAPI = async (
-  name: string,
   phoneNumber: string,
   verificationCode: string
 ) => {
   const params = {
-    name: name,
     phoneNumber: phoneNumber,
     verificationCode: verificationCode,
-    userAgency: 'VISION_TRAINING_CENTER',
   };
 
   const result = await axios
-    .post(`${backUrl}/api/user/login`, params)
+    .post(`${backUrl}/api/user/verify-code`, params)
     .then((response: any) => {
       if (response.status == 200) {
-        const token = response.headers.get('Authorization');
+        const token = response.headers.get('Authorization')
+          ? response.headers.get('Authorization')
+          : null;
+        if (token) {
+          Cookies.set('token', token, { expires: 14 }); // 만료 날짜를 30일로 설정
+        }
+        return { status: response.status, token: token };
+      }
+    })
+    .catch((error: any) => {
+      // 에러 처리
+      if (error.response.status === 400) {
+        return error.response.status;
+      }
+      console.error('회원가입/로그인 요청 API 실패', error);
+    });
+  console.log('회원가입/로그인 요청', result);
+  return result;
+};
+
+// 회원가입
+export const joinAPI = async (
+  name: string,
+  phoneNumber: string,
+  userAgency: string
+) => {
+  const params = {
+    name: name,
+    phoneNumber: phoneNumber,
+    userAgency: userAgency,
+  };
+
+  const result = await axios
+    .post(`${backUrl}/api/user/join`, params)
+    .then((response: any) => {
+      if (response.status == 200) {
+        const token = response.headers.get('Authorization')
+          ? response.headers.get('Authorization')
+          : null;
         if (token) {
           Cookies.set('token', token, { expires: 14 }); // 만료 날짜를 30일로 설정
         }
@@ -54,10 +89,62 @@ export const loginAPI = async (
     .catch((error: any) => {
       // 에러 처리
       if (error.response.status === 400) {
-        return error.response.data.message;
+        return error.response.status;
       }
-      console.error('회원가입/로그인 요청 API 실패', error);
+      console.error('회원가입 API 실패', error);
     });
-  console.log('회원가입/로그인 요청', result);
+  console.log('회원가입', result);
+  return result;
+};
+
+// 회원 탈퇴
+export const dropOutAPI = async (token: string) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json', // 요청의 Content-Type을 지정할 수 있음
+  };
+
+  const result = await axios
+    .post(`${backUrl}/api/mypage/sign-out`, '', { headers })
+    .then((response: any) => {
+      if (response.status == 200) {
+        Cookies.remove('token');
+        return response.status;
+      }
+    })
+    .catch((error: any) => {
+      // 에러 처리
+      if (error.response.status === 400) {
+        return error.response.status;
+      }
+      console.error('회원 탈퇴 API 실패', error);
+    });
+  console.log('회원 탈퇴', result);
+  return result;
+};
+
+// 로그아웃
+export const logoutAPI = async (token: string) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json', // 요청의 Content-Type을 지정할 수 있음
+  };
+
+  const result = await axios
+    .post(`${backUrl}/api/mypage/logout`, '', { headers })
+    .then((response: any) => {
+      if (response.status == 200) {
+        Cookies.remove('token');
+        return response.status;
+      }
+    })
+    .catch((error: any) => {
+      // 에러 처리
+      if (error.response.status === 400) {
+        return error.response.status;
+      }
+      console.error('로그아웃 API 실패', error);
+    });
+  console.log('로그아웃', result);
   return result;
 };

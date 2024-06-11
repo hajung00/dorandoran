@@ -242,20 +242,22 @@ const Login = ({ token }: Props) => {
       initializeUserAccount({
         name: name,
         phoneNumber: phoneNumber,
-        verificationCode: verificationCode,
       });
-      router.push('/login/select-organization');
-      // 회원가입, 로그인 api 요청
-      // const result = await loginAPI(name, phoneNumber, verificationCode);
-      // console.log('result', result);
 
-      // 인증번호 확인 성공
-      // if (result === 200) {
-      //   return router.push('/login/select-organization');
-      // } else {
-      //   // 인증번호 확인 실패
-      //   setAuthenticationError(true);
-      // }
+      // 인증번호 확인, 로그인 api 요청
+      const result = await loginAPI(phoneNumber, verificationCode);
+      console.log('result', result);
+
+      // 인증번호 확인 성공 및 로그인
+      if (result.status === 200 && result.token) {
+        return router.push('/counsel');
+      } else if (result.status === 200 && !result.token) {
+        // 인증번호 확인 성공 및 로그인
+        return router.push('/login/select-organization');
+      } else if (result === 400) {
+        // 인증번호 확인 실패
+        setAuthenticationError(true);
+      }
     }
   }, [name, phoneNumber, enableCheckButton, verificationCode]);
 

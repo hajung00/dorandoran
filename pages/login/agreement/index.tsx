@@ -9,6 +9,9 @@ import CheckIcon from '../../../public/icons/check.svg';
 // import components
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
+import { joinAPI } from '@/pages/api/user';
+import useSWR from 'swr';
+import { USER_ACCOUNT_KEY } from '@/hooks/useUserAccount';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -112,6 +115,7 @@ const Content = styled.div`
 
 const Agreement = () => {
   const router = useRouter();
+  const { data: account } = useSWR(USER_ACCOUNT_KEY);
 
   const [checked, setChecked] = useState(false);
   const [enableButton, setEnableButton] = useState(false);
@@ -124,11 +128,24 @@ const Agreement = () => {
     }
   }, [checked]);
 
-  const onClickJoinHandler = useCallback(() => {
-    if (enableButton) {
+  console.log(account);
+  const onClickJoinHandler = useCallback(async () => {
+    if (checked) {
       // 회원가입 api 적용
+      const result = await joinAPI(
+        account.name,
+        account.phoneNumber,
+        account.userAgency
+      );
+
+      console.log(result);
+      if (result === 200) {
+        router.push('/counsel');
+      } else {
+        console.error('회원가입 실패');
+      }
     }
-  }, [enableButton]);
+  }, [checked]);
 
   return (
     <Layout>
