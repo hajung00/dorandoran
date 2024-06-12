@@ -11,6 +11,9 @@ import { testAPI } from '@/pages/api/psychological-test';
 import { getCookieValue } from '@/utils/getCookieValue';
 import useTestResult from '@/hooks/useTestResult';
 
+// import animation
+import AnimationData from '../../../public/animation/analysis-loading.json';
+
 const Header = styled.header`
   padding: 60px 20px 0 20px;
   color: #222;
@@ -383,7 +386,7 @@ const PsychologicalTest = ({ token, testItmes }: Props) => {
                             width={19}
                             height={19}
                             alt={'check'}
-                            color={'#e3e3e3'}
+                            stroke={'#e3e3e3'}
                           />
                         </div>
                         {item}
@@ -428,7 +431,10 @@ const PsychologicalTest = ({ token, testItmes }: Props) => {
       )}
 
       {analysisTestLoading && (
-        <Loading text={`상담 결과를 분석중이에요. 잠시만 기다려주세요!`} />
+        <Loading
+          text={`상담 결과를 분석중이에요. 잠시만 기다려주세요!`}
+          animationData={AnimationData}
+        />
       )}
     </div>
   );

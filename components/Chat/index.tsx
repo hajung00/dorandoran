@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import Lottie from 'lottie-react';
-import animationData from '../../public/test.json';
+import animationData from '../../public/animation/gpt-loading.json';
+import Image from 'next/image';
+
+// import image
+import CounselorPNG from '../../public/image/counselor.png';
 
 const ChatStyle = styled.div`
   margin-bottom: 16px;
@@ -27,7 +31,7 @@ const ChatStyle = styled.div`
   .receiver {
     display: flex;
     align-items: flex-end;
-    gap: 14px;
+    gap: 13px;
     border-radius: 16px 16px 16px 0px;
     color: var(--gray09, #222);
     clear: right;
@@ -39,6 +43,7 @@ const ChatStyle = styled.div`
     }
 
     .content {
+      border-radius: 16px 16px 16px 0px;
       background: var(--gray01, #f7f7f7);
     }
   }
@@ -51,14 +56,11 @@ const ChatStyle = styled.div`
     color: var(--gray09, #222);
     clear: right;
 
-    .profile {
-      width: 68px;
-      height: 76px;
-      background: var(--gray01, #f7f7f7);
-    }
     .content {
       width: 86px;
+      height: 52px;
       background: var(--gray01, #f7f7f7);
+      border-radius: 16px 16px 16px 0px;
     }
   }
 `;
@@ -76,13 +78,13 @@ const Chat = ({ chat }: Props) => {
           <div className='sender content'>{chat.content}</div>
         ) : (
           <div className='receiver'>
-            <div className='profile'></div>
+            <Image src={CounselorPNG} width={40} height={40} alt='profile' />
             <div className='content'>{chat.content}</div>
           </div>
         )
       ) : (
         <div className='loading'>
-          <div className='profile'></div>
+          <Image src={CounselorPNG} width={40} height={40} alt='profile' />
           <div className='content animation'>
             <Lottie color={'red'} animationData={animationData} />
           </div>

@@ -4,6 +4,8 @@ import ModalLayout from '../ModalLayout';
 import Loading from '@/components/Loading';
 import { useRouter } from 'next/router';
 
+// import animation
+
 const FinishCounselModalStyle = styled.div`
   display: flex;
   padding: 40px 30px 26px 30px;
@@ -87,11 +89,11 @@ const FinishCounselModal = ({ onClosed }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const finishCounsel = useCallback(() => {
     setIsLoading((prev) => !prev);
-    const timer = setTimeout(() => {
-      router.push('/counsel/result');
-    }, 3000);
+    // const timer = setTimeout(() => {
+    //   router.push('/counsel/result');
+    // }, 3000);
 
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, []);
 
   return (

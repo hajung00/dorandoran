@@ -4,11 +4,15 @@ import styled from 'styled-components';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
+import Lottie from 'lottie-react';
 
 // import svg
 import MicSVG from '../../public/icons/mic.svg';
 import XSVG from '../../public/icons/x.svg';
 import SendSVG from '../../public/icons/send.svg';
+
+// import animation
+import RecordingAnimation from '../../public/animation/recording.json';
 
 const ChatVoiceStyle = styled.div`
   background: var(
@@ -140,12 +144,10 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
   }, []);
 
   const handleFormSend = useCallback(() => {
-    if (!listening) {
-      onSubmitForm(transcript);
-      handleStop();
-      resetTranscript();
-    }
-  }, [listening]);
+    onSubmitForm(transcript);
+    handleStop();
+    resetTranscript();
+  }, []);
 
   const handleStop = () => {
     SpeechRecognition.stopListening();
@@ -170,7 +172,14 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
             <XSVG alt={'cancel'} color={'#FF2020'} />
           </div>
           <div className='mic wrapper' onClick={handleListen}>
-            <MicSVG alt={'mic'} color={'#FFFFFF'} />
+            {listening ? (
+              <Lottie
+                style={{ width: 200 }}
+                animationData={RecordingAnimation}
+              />
+            ) : (
+              <MicSVG alt={'mic'} color={'#FFFFFF'} />
+            )}
           </div>
           <div className='send wrapper' onClick={handleFormSend}>
             <SendSVG alt={'send'} color={'#565BFF'} />

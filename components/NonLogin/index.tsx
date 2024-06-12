@@ -1,16 +1,17 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import Image from 'next/image';
+
+// import image
+import NonLoginPNG from '../../public/image/nonlogin.png';
 
 const NonLoginStyle = styled.div`
-  margin-top: 51%;
+  margin-top: 38.2%;
   width: 100%;
   padding: 0 2%;
-
-  .icon-wrapper {
-    width: 80px;
-    height: 80px;
-    background: #eaeaea;
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
   .description {
     display: flex;
@@ -58,7 +59,12 @@ const NonLogin = () => {
   return (
     <NonLoginStyle>
       <div className='description'>
-        <div className='icon-wrapper'></div>
+        <Image
+          src={NonLoginPNG}
+          width={160}
+          height={160}
+          alt='non-login-image'
+        />
         <p>
           상담을 하기 위해서는 로그인 상태여야 해요! <br />
           아래 버튼을 눌러 로그인을 진행해주세요.

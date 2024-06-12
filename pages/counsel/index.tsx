@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import styled from 'styled-components';
 
 // import components
@@ -12,6 +13,9 @@ import { getCookieValue } from '@/utils/getCookieValue';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 
+// import image
+import LogoPNG from '../../public/image/logo.png';
+
 const Header = styled.header`
   padding: 54px 20px 0 20px;
   color: #222;
@@ -21,10 +25,11 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  height: calc(100vh - 94px - 74px);
+  // height: calc(100vh - 94px - 74px);
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex: 1;
+  // flex-direction: column;
+  // align-items: center;
   padding: 0 20px;
 `;
 
@@ -61,18 +66,12 @@ const CounselStyle = styled.div`
     }
   }
 
-  .icon-wrapper {
-    width: 80px;
-    height: 80px;
-    background: #eaeaea;
-  }
-
   .description {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 18px;
+    gap: 12px;
     border-radius: 16px;
     color: var(--gray09, #222);
     text-align: center;
@@ -149,15 +148,15 @@ const Counsel = ({ token }: Props) => {
     <Layout>
       <Header>상담</Header>
       <Content>
-        {!token ? (
+        {token ? (
           <NonLogin />
-        ) : !testCheck ? (
+        ) : testCheck ? (
           <NonTest />
         ) : (
           <CounselStyle>
             <div className='counsel-start-section'>
               <div className='description'>
-                <div className='icon-wrapper'></div>
+                <Image src={LogoPNG} width={100} height={48} alt='logo-png' />
                 <p>새로운 상담 시작하기</p>
               </div>
               <button

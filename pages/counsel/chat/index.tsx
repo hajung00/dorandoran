@@ -64,6 +64,98 @@ const Chat = () => {
       createdAt: '2024-05-24T13:03:34.000Z',
       type: 'sender',
     },
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
+    {
+      content: '나는 gpt',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'receiver',
+    },
+    {
+      content: '나는 하정이',
+      createdAt: '2024-05-24T13:03:34.000Z',
+      type: 'sender',
+    },
   ];
   const setSize = 1;
 

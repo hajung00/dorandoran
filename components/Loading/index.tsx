@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 // import svg
 import ArrowSVG from '../../public/icons/arrow.svg';
+import Lottie from 'lottie-react';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -30,14 +31,8 @@ const TestLoadingStyle = styled.div`
   align-items: center;
   justify-content: center;
 
-  .icon {
-    width: 80px;
-    height: 80px;
-    background: var(--gray02, #eaeaea);
-  }
-
   & > p {
-    margin-top: 63px;
+    margin-top: 21px;
     color: var(--gray09, #222);
     text-align: center;
     font-family: 'Pretendard';
@@ -49,12 +44,13 @@ const TestLoadingStyle = styled.div`
 
 interface Props {
   text: string;
+  animationData?: any;
 }
 
-const Loading = ({ text }: Props) => {
+const Loading = ({ text, animationData }: Props) => {
   return (
     <TestLoadingStyle>
-      <div className='icon'></div>
+      <Lottie style={{ width: '160px' }} animationData={animationData} />
       <p>
         {text.split('.')[0]}.
         <br />

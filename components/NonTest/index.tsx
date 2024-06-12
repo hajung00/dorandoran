@@ -1,6 +1,10 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
+// import image
+import NonTestPNG from '../../public/image/nontest.png';
+import Image from 'next/image';
+
 const NonTestStyle = styled.div`
   width: 100%;
   margin-top: 30px;
@@ -10,19 +14,14 @@ const NonTestStyle = styled.div`
   align-items: center;
   border-radius: 26px;
   background: var(--gray01, #f7f7f7);
-
-  .icon-wrapper {
-    width: 80px;
-    height: 80px;
-    background: #eaeaea;
-  }
+  height: 100%;
 
   .description {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 18px;
+    gap: 12px;
     border-radius: 16px;
     color: var(--gray09, #222);
     text-align: center;
@@ -58,7 +57,7 @@ const NonTest = () => {
   return (
     <NonTestStyle>
       <div className='description'>
-        <div className='icon-wrapper'></div>
+        <Image src={NonTestPNG} width={80} height={80} alt='non-test-png' />
         <p>
           심리검사로 <br />
           현재 내 마음상태 알아보기

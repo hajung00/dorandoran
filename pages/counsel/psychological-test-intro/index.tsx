@@ -18,10 +18,14 @@ const Header = styled.header`
 
 const Content = styled.div`
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex: 1;
 
   .description {
     padding: 0 25px;
-    margin-top: 55px;
+    margin-top: 11.7%;
     color: var(--gray09, #222);
     text-align: center;
     font-family: 'Pretendard';
@@ -32,29 +36,38 @@ const Content = styled.div`
     letter-spacing: -0.44px;
   }
 
+  .animation-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .animation-wrapper {
     width: 78%;
     aspect-ratio: 1 / 1;
-    margin: 0 auto;
-    margin-top: 23%;
     background: var(--gray02, #eaeaea);
   }
 
-  & > button {
-    margin-top: 45.8%;
-    margin-bottom: 13.7%;
-    width: 100%;
-    padding: 4.9% 4px;
-    gap: 4px;
-    border-radius: 18px;
-    background: var(--doranblue, #565bff);
-    color: var(--white, #fff);
-    font-family: 'Pretendard';
-    font-size: clamp(18px, 2vw, 22px);
-    font-weight: 600;
-    letter-spacing: -0.4px;
-    border: none;
-    cursor: pointer;
+  .button-section {
+    height: 130px;
+
+    & > button {
+      position: absolute;
+      bottom: 64px;
+      width: calc(100% - 40px);
+      padding: 4.5% 4px;
+      gap: 4px;
+      border-radius: 18px;
+      background: var(--doranblue, #565bff);
+      color: var(--white, #fff);
+      font-family: 'Pretendard';
+      font-size: clamp(18px, 2vw, 22px);
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      border: none;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -76,14 +89,19 @@ const PsychologicalTestIntro = () => {
           <br />
           나의 마음을 그대로 떠올리며 검사를 진행해주세요.
         </p>
-        <div className='animation-wrapper'></div>
-        <button
-          onClick={() => {
-            router.push('/counsel/psychological-test');
-          }}
-        >
-          심리검사 시작하기
-        </button>
+        <div className='animation-section'>
+          <div className='animation-wrapper'></div>
+        </div>
+        <div className='button-section'>
+          {' '}
+          <button
+            onClick={() => {
+              router.push('/counsel/psychological-test');
+            }}
+          >
+            심리검사 시작하기
+          </button>
+        </div>
       </Content>
     </Layout>
   );

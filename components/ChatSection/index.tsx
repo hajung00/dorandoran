@@ -6,7 +6,7 @@ import moment from 'moment';
 
 export const ChatZone = styled.div`
   width: 100%;
-  // margin-top: 112px;
+  margin-bottom: 94px;
   display: flex;
   flex: 1;
   .custom {
