@@ -10,7 +10,9 @@ export const testAPI = async (
   anxiety: { [key: string]: any }[]
 ) => {
   const headers = {
-    Authorization: `Bearer ${token}`,
+    // Authorization: `Bearer ${token}`,
+    Authorization:
+      'Bearer eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0',
     'Content-Type': 'application/json', // 요청의 Content-Type을 지정할 수 있음
   };
 

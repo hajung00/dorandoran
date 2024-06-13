@@ -15,6 +15,7 @@ import fetcher from '@/utils/fetchers';
 
 // import image
 import LogoPNG from '../../public/image/logo.png';
+import CounselWarning from '@/components/CounselWarning';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
@@ -137,7 +138,9 @@ interface Props {
 const Counsel = ({ token }: Props) => {
   const router = useRouter();
   const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
+  // const { data: counselWarning } = useSWR('/api/counsel/suggest', fetcher);
 
+  const counselWarning = true;
   const data = [
     { summary: '상담 내용 요약', date: '2024년 05월 20일' },
     { summary: '상담 내용 요약', date: '2024년 05월 25일' },
@@ -148,12 +151,13 @@ const Counsel = ({ token }: Props) => {
     <Layout>
       <Header>상담</Header>
       <Content>
-        {token ? (
+        {!token ? (
           <NonLogin />
         ) : testCheck ? (
           <NonTest />
         ) : (
           <CounselStyle>
+            {counselWarning && <CounselWarning name='조성혁' />}
             <div className='counsel-start-section'>
               <div className='description'>
                 <Image src={LogoPNG} width={100} height={48} alt='logo-png' />
@@ -194,7 +198,9 @@ export const getServerSideProps = async (context: any) => {
   // 로그인 여부 확인
   const cookie = context.req ? context.req.headers.cookie : '';
 
-  let token = cookie ? getCookieValue(cookie, 'token') : null;
+  let token = cookie
+    ? getCookieValue(cookie, 'token')
+    : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0.fwmTq0K5AOQoS7ceDbCI-2hoqKPbHDTxe1jDI3kx9PqJP0DYLPdaqyKhGS4wrfiXkXey2PTFdDPUx6-DZXv50w';
 
   return {
     props: {
