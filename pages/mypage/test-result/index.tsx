@@ -7,6 +7,9 @@ import Layout from '@/components/Layout';
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import FileSVG from '../../../public/icons/file.svg';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
+import MypageNonTest from '@/components/MyPageNonTest';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -23,13 +26,11 @@ const Point = styled.span`
 
 const Content = styled.div`
   padding: 22px 20px 64px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
   .content-header {
-    margin-bottom: 54px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
     .title {
       color: var(--gray09, #222);
       font-family: 'Pretendard';
@@ -38,14 +39,16 @@ const Content = styled.div`
       font-weight: 600;
       line-height: 140%; /* 36.4px */
     }
-    .description {
-      color: var(--gray07, #666);
-      font-family: 'Pretendard';
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 140%; /* 25.2px */
-    }
+  }
+
+  .description {
+    margin-top: 8px;
+    color: var(--gray07, #666);
+    font-family: 'Pretendard';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 25.2px */
 
     &::after {
       content: '';
@@ -56,6 +59,7 @@ const Content = styled.div`
       background: #f7f7f7;
       transform: translateX(-20px);
       margin-top: 62px;
+      margin-bottom: 54px;
     }
   }
 
@@ -196,6 +200,7 @@ const TestItem = styled.div<{ background: string; color: string }>`
 
 const TestResult = () => {
   const router = useRouter();
+  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
 
   const data = [
     { type: '우울함', score: 80, percent: 20 },
@@ -234,48 +239,54 @@ const TestResult = () => {
       <Content>
         <div className='content-header'>
           <p className='title'>나의 첫 심리검사 결과</p>
-          <p className='description'>
-            조성혁님의 첫 심리검사 결과는 아래와 같아요.
-            <br />
-            심리검사 내용은 안전하게 보관돼요.
-          </p>
         </div>
-        <div className='test-result-title'>
-          <p>심리검사 결과</p>
-          <p>
-            조성혁님의 심리상태는 <Point>안정적</Point>이에요.
-          </p>
-        </div>
-        <div className='test-date'>
-          <FileSVG width={26} height={26} alt={'file'} />
-          <span>{moment().format('YYYY년 M월 DD일')}의 심리검사 결과</span>
-        </div>
-        <div className='test-item-section'>
-          {data.map((item, i) => {
-            const current = sortScore(item.score);
-            return (
-              <>
-                <TestItem
-                  key={i}
-                  background={current.background}
-                  color={current.color}
-                >
-                  <div className='item-wrapper'>
-                    <div className='item-title'>
-                      <div className='item-type'>{item.type}</div>
-                      <span>{current.text}</span>
-                    </div>
-                    <div className='item-description'>
-                      표준보다 <span>{item.percent}%</span> {item.type}을 느끼고
-                      있어요.
-                    </div>
-                  </div>
-                  <div className='item-score'>{item.score}점</div>
-                </TestItem>
-              </>
-            );
-          })}
-        </div>
+        {!testCheck ? (
+          <MypageNonTest />
+        ) : (
+          <>
+            <p className='description'>
+              조성혁님의 첫 심리검사 결과는 아래와 같아요.
+              <br />
+              심리검사 내용은 안전하게 보관돼요.
+            </p>
+            <div className='test-result-title'>
+              <p>심리검사 결과</p>
+              <p>
+                조성혁님의 심리상태는 <Point>안정적</Point>이에요.
+              </p>
+            </div>
+            <div className='test-date'>
+              <FileSVG width={26} height={26} alt={'file'} />
+              <span>{moment().format('YYYY년 M월 DD일')}의 심리검사 결과</span>
+            </div>
+            <div className='test-item-section'>
+              {data.map((item, i) => {
+                const current = sortScore(item.score);
+                return (
+                  <>
+                    <TestItem
+                      key={i}
+                      background={current.background}
+                      color={current.color}
+                    >
+                      <div className='item-wrapper'>
+                        <div className='item-title'>
+                          <div className='item-type'>{item.type}</div>
+                          <span>{current.text}</span>
+                        </div>
+                        <div className='item-description'>
+                          표준보다 <span>{item.percent}%</span> {item.type}을
+                          느끼고 있어요.
+                        </div>
+                      </div>
+                      <div className='item-score'>{item.score}점</div>
+                    </TestItem>
+                  </>
+                );
+              })}
+            </div>
+          </>
+        )}
       </Content>
     </Layout>
   );

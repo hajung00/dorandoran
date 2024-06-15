@@ -430,12 +430,7 @@ const PsychologicalTest = ({ token, testItmes }: Props) => {
         </>
       )}
 
-      {analysisTestLoading && (
-        <Loading
-          text={`상담 결과를 분석중이에요. 잠시만 기다려주세요!`}
-          animationData={AnimationData}
-        />
-      )}
+      {analysisTestLoading && <Loading text={`심리검사`} />}
     </div>
   );
 };

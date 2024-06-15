@@ -48,6 +48,45 @@ const Container = styled.div`
   margin-bottom: 120px;
 `;
 
+const NonListStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  transform: translateY(-7%);
+
+  .icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gray02, #eaeaea);
+  }
+  & > p {
+    margin-top: 38px;
+    color: var(--gray09, #222);
+    text-align: center;
+    font-family: 'Pretendard';
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 33px */
+  }
+  & > button {
+    border-radius: 18px;
+    background: var(--doranblue, #565bff);
+    border: none;
+    color: var(--white, #fff);
+    font-family: 'Pretendard';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.4px;
+    padding: 4.5% 0;
+    width: 260px;
+    margin-top: 26px;
+  }
+`;
 const History = () => {
   const counselItem = [
     { id: 1, title: '상담명1', date: '2024년 05월 20일' },
@@ -97,9 +136,28 @@ const History = () => {
         </ul>
       </SubNav>
       <Container>
-        {counselList.map((item, i) => (
-          <CounselHistoryList list={item} key={i} />
-        ))}
+        {!counselList ? (
+          counselList.map((item, i) => (
+            <CounselHistoryList list={item} key={i} />
+          ))
+        ) : (
+          <NonListStyle>
+            <div className='icon'></div>
+            {listSection === 'counseling' ? (
+              <p>
+                심리검사 후 상담을 완료하면 <br />
+                상담 내역이 나타나요.
+              </p>
+            ) : (
+              <p>
+                아직 상담을 해보지 않으셨군요,
+                <br />
+                지금바로 상담을 시작해볼까요?
+              </p>
+            )}
+            <button>심리검사 하러가기</button>
+          </NonListStyle>
+        )}
       </Container>
       <Footer />
     </Layout>

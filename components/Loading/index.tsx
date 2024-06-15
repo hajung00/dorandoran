@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import Lottie from 'lottie-react';
 
 // import svg
 import ArrowSVG from '../../public/icons/arrow.svg';
-import Lottie from 'lottie-react';
+import LoadinganimationData from '../../public/animation/loading.json';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -44,17 +45,16 @@ const TestLoadingStyle = styled.div`
 
 interface Props {
   text: string;
-  animationData?: any;
 }
 
-const Loading = ({ text, animationData }: Props) => {
+const Loading = ({ text }: Props) => {
   return (
     <TestLoadingStyle>
-      <Lottie style={{ width: '160px' }} animationData={animationData} />
+      <Lottie style={{ width: '80px' }} animationData={LoadinganimationData} />
       <p>
-        {text.split('.')[0]}.
+        {text} 결과를 분석중이에요.
         <br />
-        {text.split('.')[1]}
+        잠시만 기다려주세요!
       </p>
     </TestLoadingStyle>
   );

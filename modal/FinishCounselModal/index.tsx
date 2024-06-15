@@ -111,12 +111,7 @@ const FinishCounselModal = ({ onClosed }: Props) => {
           <button onClick={finishCounsel}>네 종료할게요</button>
         </div>
       </FinishCounselModalStyle>
-      {isLoading && (
-        <Loading
-          text='상담 결과를 분석중이에요.
-        잠시만 기다려주세요!'
-        />
-      )}
+      {isLoading && <Loading text='상담 결과' />}
     </ModalLayout>
   );
 };

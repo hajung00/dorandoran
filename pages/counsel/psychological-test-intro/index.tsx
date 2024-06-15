@@ -1,10 +1,14 @@
 'use client';
 import React from 'react';
 import styled from 'styled-components';
+import Lottie from 'lottie-react';
+import { useRouter } from 'next/router';
 
 // import svg
 import XSVG from '../../../public/icons/x.svg';
-import { useRouter } from 'next/router';
+import PsychometryAnimation from '../../../public/animation/psychometry.json';
+
+// import components
 import Layout from '@/components/Layout';
 
 const Header = styled.header`
@@ -24,16 +28,24 @@ const Content = styled.div`
   flex: 1;
 
   .description {
-    padding: 0 25px;
-    margin-top: 11.7%;
+    margin-top: 4.7%;
     color: var(--gray09, #222);
-    text-align: center;
     font-family: 'Pretendard';
-    font-size: clamp(18px, 5vw, 22px);
+    font-size: clamp(22px, 5vw, 26px);
     font-style: normal;
     font-weight: 600;
     line-height: 150%; /* 33px */
     letter-spacing: -0.44px;
+  }
+
+  .sub-description {
+    margin-top: 8px;
+    color: var(--gray07, #666);
+    font-family: 'Pretendard';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 28px */
   }
 
   .animation-section {
@@ -86,14 +98,14 @@ const PsychologicalTestIntro = () => {
           심리검사를 통해
           <br />
           현재 마음상태를 확인해볼게요.
-          <br />
-          나의 마음을 그대로 떠올리며 검사를 진행해주세요.
+          <p className='sub-description'>
+            나의 마음을 그대로 떠올리며 검사를 진행해주세요.
+          </p>
         </p>
         <div className='animation-section'>
-          <div className='animation-wrapper'></div>
+          <Lottie style={{ width: 300 }} animationData={PsychometryAnimation} />
         </div>
         <div className='button-section'>
-          {' '}
           <button
             onClick={() => {
               router.push('/counsel/psychological-test');

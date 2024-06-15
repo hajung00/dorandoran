@@ -6,6 +6,9 @@ import styled from 'styled-components';
 // import svg
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import BarGraph from '@/components/BarGraph';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
+import MypageNonTest from '@/components/MyPageNonTest';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -18,14 +21,13 @@ const Header = styled.header`
 
 const Content = styled.div`
   padding: 22px 20px 64px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
   .content-header {
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
     .title {
+      margin-bottom: 8px;
       color: var(--gray09, #222);
       font-family: 'Pretendard';
       font-size: 26px;
@@ -33,14 +35,15 @@ const Content = styled.div`
       font-weight: 600;
       line-height: 140%; /* 36.4px */
     }
-    .description {
-      color: var(--gray07, #666);
-      font-family: 'Pretendard';
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 140%; /* 25.2px */
-    }
+  }
+  .description {
+    color: var(--gray07, #666);
+    font-family: 'Pretendard';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 25.2px */
+    margin-bottom: 40px;
   }
 `;
 
@@ -92,6 +95,7 @@ const CompleteSection = styled.div`
 `;
 const TestChange = () => {
   const router = useRouter();
+  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
 
   const [clickDate, setClickDate] = useState('');
   const handleClickDate = useCallback((date: string) => {
@@ -117,27 +121,33 @@ const TestChange = () => {
       <Content>
         <div className='content-header'>
           <p className='title'>나의 심리변화 추이</p>
-          <p className='description'>
-            상담 종료 후 도란도란에서 분석한
-            <br />
-            조성혁님의 심리변화 추이에요.
-          </p>
         </div>
-        <BarGraph clickDate={clickDate} handleClickDate={handleClickDate} />
-        <CompleteSection>
-          <p className='title'>완료한 상담</p>
-          {clickDate && (
-            <div
-              className='consel-wrapper'
-              onClick={() => {
-                router.push('/history/1');
-              }}
-            >
-              <p className='consel-title'>상담명</p>
-              <p className='consel-date'>{clickDate}</p>
-            </div>
-          )}
-        </CompleteSection>
+        {testCheck ? (
+          <MypageNonTest />
+        ) : (
+          <>
+            <p className='description'>
+              상담 종료 후 도란도란에서 분석한
+              <br />
+              조성혁님의 심리변화 추이에요.
+            </p>
+            <BarGraph clickDate={clickDate} handleClickDate={handleClickDate} />
+            <CompleteSection>
+              <p className='title'>완료한 상담</p>
+              {clickDate && (
+                <div
+                  className='consel-wrapper'
+                  onClick={() => {
+                    router.push('/history/1');
+                  }}
+                >
+                  <p className='consel-title'>상담명</p>
+                  <p className='consel-date'>{clickDate}</p>
+                </div>
+              )}
+            </CompleteSection>
+          </>
+        )}
       </Content>
     </Layout>
   );

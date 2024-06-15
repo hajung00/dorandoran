@@ -8,6 +8,9 @@ import Link from 'next/link';
 // import svg
 import ArrowSVG from '../../public/icons/arrow-right.svg';
 import { useRouter } from 'next/router';
+import { getCookieValue } from '@/utils/getCookieValue';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
 
 const Header = styled.header`
   padding: 24% 20px 30px 20px;
@@ -78,8 +81,14 @@ const Content = styled.div`
   }
 `;
 
-const MyPage = () => {
+interface Props {
+  token: string;
+}
+
+const MyPage = ({ token }: Props) => {
   const router = useRouter();
+
+  const { data: userData } = useSWR('/api/mypage/main', fetcher);
 
   return (
     <Layout>
@@ -120,6 +129,21 @@ const MyPage = () => {
       <Footer />
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie
+    ? getCookieValue(cookie, 'token')
+    : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0.fwmTq0K5AOQoS7ceDbCI-2hoqKPbHDTxe1jDI3kx9PqJP0DYLPdaqyKhGS4wrfiXkXey2PTFdDPUx6-DZXv50w';
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default MyPage;
