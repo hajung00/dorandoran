@@ -122,7 +122,7 @@ const TestChange = () => {
         <div className='content-header'>
           <p className='title'>나의 심리변화 추이</p>
         </div>
-        {testCheck ? (
+        {!testCheck ? (
           <MypageNonTest />
         ) : (
           <>

@@ -1,15 +1,20 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 // import svg
-import ArrowSVG from '../../../public/icons/arrow.svg';
+import ArrowSVG from '../../../../public/icons/arrow.svg';
 import ChatSection from '@/components/ChatSection';
 import ChatBox from '@/components/ChatBox';
 import makeSection from '@/utils/makeSection';
 import Layout from '@/components/Layout';
 import ChatVoice from '@/components/ChatVoice';
 import FinishCounselModal from '@/modal/FinishCounselModal';
+import { getCookieValue } from '@/utils/getCookieValue';
+import { useRouter } from 'next/router';
+import fetcher from '@/utils/fetchers';
+import useSWR from 'swr';
+import { chatCounselAPI } from '@/pages/api/counsel';
 
 const Header = styled.header`
   padding: 60px 20px 10px 20px;
@@ -52,128 +57,50 @@ const Header = styled.header`
   }
 `;
 
-const Chat = () => {
+interface Props {
+  token: string;
+}
+
+const Chat = ({ token }: Props) => {
+  const router = useRouter();
+  const counselId: any = router.query.id!;
+  // const {
+  //   data: chatData,
+  //   mutate: mutateChat,
+  //   revalidate,
+  // } = useSWR(`/api/counsel/proceed/${counselId}`, fetcher);
+
   const chatData = [
     {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
+      role: '상담원',
+      message:
+        '안녕하세요 조성혁님! 어떤 내용이든 좋으니, 저에게 마음편히 이야기해주세요.',
+      date: '2024-05-24T13:03:34.000Z',
     },
     {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
+      role: '내담자',
+      message: '나는 하정이',
+      date: '2024-05-24T13:03:34.000Z',
     },
     {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
+      role: '상담원',
+      message: '나는 상담원',
+      date: '2024-06-18T13:03:34.000Z',
     },
     {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
-    },
-    {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
-    },
-    {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
+      role: '내담자',
+      message: '나는 하정이',
+      date: '2024-06-18T13:03:34.000Z',
     },
   ];
-  const setSize = 1;
 
-  //   const {
-  //     data: chatData,
-  //     mutate: mutateChat,
-  //     revalidate,
-  //     setSize,
-  //   } = useSWRInfinite<IDM[]>(
-  //     (index) => `/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=${index + 1}`,
-  //     fetcher,
-  //   );
+  const setSize = 1;
 
   const isEmpty = chatData?.length === 0;
   const isReachingEnd = isEmpty || (chatData && chatData?.length < 20) || false;
   const scrollbarRef = useRef<Scrollbars>(null);
 
-  const chatSections = makeSection(chatData ? chatData.flat().reverse() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
+  const chatSections = makeSection(chatData ? chatData.flat() : []);
 
   const [chat, setChat] = useState('');
 
@@ -182,9 +109,30 @@ const Chat = () => {
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-  const onSubmitForm = useCallback((chat: string) => {
+  const onSubmitForm = useCallback(async (chat: string) => {
     console.log('채팅 전송', chat);
     setIsLoading((prev) => !prev);
+    // if (chat.trim() && chatData) {
+    //   const savedChat = chat;
+    //   mutateChat((prevChatData: any) => {
+    //     prevChatData.push({
+    //       counselId: counselId,
+    //       message: savedChat,
+    //       date: new Date(),
+    //     });
+    //     return prevChatData;
+    //   }).then(() => {
+    //     setIsLoading((prev) => !prev);
+    //     setChat('');
+    //     scrollbarRef.current?.scrollToBottom();
+    //   });
+
+    //   const result = await chatCounselAPI(token, counselId, savedChat);
+    //   if (result === 200) {
+    //     setIsLoading((prev) => !prev);
+    //     revalidate();
+    //   }
+    // }
 
     // 채팅 전송 api
     const timer = setTimeout(() => {
@@ -237,10 +185,27 @@ const Chat = () => {
         />
       )}
       {finishCounselModal && (
-        <FinishCounselModal onClosed={handleFinishCounselModal} />
+        <FinishCounselModal
+          token={token}
+          counselId={counselId}
+          onClosed={handleFinishCounselModal}
+        />
       )}
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default Chat;

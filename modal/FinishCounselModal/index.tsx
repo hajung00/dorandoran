@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ModalLayout from '../ModalLayout';
 import Loading from '@/components/Loading';
 import { useRouter } from 'next/router';
+import { endCounselAPI } from '@/pages/api/counsel';
 
 // import animation
 
@@ -77,9 +78,11 @@ const FinishCounselModalStyle = styled.div`
 `;
 
 interface Props {
+  token: string;
+  counselId: string;
   onClosed: () => void;
 }
-const FinishCounselModal = ({ onClosed }: Props) => {
+const FinishCounselModal = ({ token, counselId, onClosed }: Props) => {
   const router = useRouter();
 
   const stopPropagation = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -87,13 +90,13 @@ const FinishCounselModal = ({ onClosed }: Props) => {
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-  const finishCounsel = useCallback(() => {
+  const finishCounsel = useCallback(async () => {
     setIsLoading((prev) => !prev);
-    // const timer = setTimeout(() => {
-    //   router.push('/counsel/result');
-    // }, 3000);
 
-    // return () => clearTimeout(timer);
+    const result = await endCounselAPI(token, counselId);
+    if (result === 200) {
+      router.push(`/counsel/result/${counselId}`);
+    }
   }, []);
 
   return (

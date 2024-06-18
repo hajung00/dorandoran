@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
@@ -28,24 +29,32 @@ const ListStyle = styled.div`
 `;
 
 interface Props {
+  type: string;
   list: { [key: string]: any };
 }
 
-const CounselHistoryList = ({ list }: Props) => {
+const CounselHistoryList = ({ type, list }: Props) => {
   const router = useRouter();
 
-  const moveToCounselDetail = useCallback((id: number) => {
-    router.push(`/history/${id}`);
-  }, []);
+  const moveToCounselDetail = useCallback(
+    (id: number) => {
+      if (type === 'counsel') {
+        router.push(`counsel/chat/${id}`);
+      } else {
+        router.push(`/history/${id}`);
+      }
+    },
+    [type]
+  );
 
   return (
     <ListStyle
       onClick={() => {
-        moveToCounselDetail(list.id);
+        moveToCounselDetail(list.counselId);
       }}
     >
       <p>{list.title}</p>
-      <div>{list.date}</div>
+      <div>{moment(list.date).format('YYYY년 MM월 DD일')}</div>
     </ListStyle>
   );
 };

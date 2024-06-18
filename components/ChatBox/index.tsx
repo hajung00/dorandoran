@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Cookies from 'js-cookie';
 
 // import svg
 import MicSVG from '../../public/icons/mic.svg';
 import SendSVG from '../../public/icons/send.svg';
+import { getCookieValue } from '@/utils/getCookieValue';
+import useMicDiscription, {
+  SHOW_DESCRIPTION_KEY,
+} from '@/hooks/useMicDiscription';
+import useSWR from 'swr';
 
 const ChatBoxStyle = styled.div`
   width: 100%;
@@ -125,11 +131,20 @@ const ChatBox = ({
   onSubmitForm,
   isLoading,
 }: Props) => {
-  const [description, setDescription] = useState(true);
+  const { enableMicDiscription, disableMicDiscription } = useMicDiscription();
+  const { data: showdiscription } = useSWR(SHOW_DESCRIPTION_KEY);
+
+  const removeDescription = useCallback(() => {
+    disableMicDiscription();
+  }, []);
+
+  useEffect(() => {
+    enableMicDiscription();
+  }, []);
 
   return (
     <ChatBoxStyle>
-      {description && <Description />}
+      {showdiscription && <Description />}
       <div className='icon-wrapper' onClick={onClickVoice}>
         <MicSVG
           width={15}
@@ -145,9 +160,7 @@ const ChatBox = ({
           value={isLoading ? 'AI의 답변을 기다리는 중이에요.' : chat}
           onChange={onChangeChat}
           placeholder='메세지를 입력해주세요.'
-          onFocus={() => {
-            setDescription(false);
-          }}
+          onFocus={removeDescription}
         />
         <button
           onClick={() => {

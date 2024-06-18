@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 // import svg
@@ -9,6 +9,8 @@ import Lottie from 'lottie-react';
 
 // import animation
 import CounselIntroAnimation from '../../../public/animation/counsel-intro.json';
+import { startCounselAPI } from '@/pages/api/counsel';
+import { getCookieValue } from '@/utils/getCookieValue';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -106,9 +108,20 @@ const ButtonSection = styled.div`
     letter-spacing: -0.4px;
   }
 `;
+interface Props {
+  token: string;
+}
 
-const ChatIntro = () => {
+const ChatIntro = ({ token }: Props) => {
   const router = useRouter();
+
+  const startCounselHandler = useCallback(async () => {
+    const result = await startCounselAPI(token);
+    if (result) {
+      router.push(`/counsel/chat/${result.counselId}`);
+    }
+  }, [token]);
+
   return (
     <Layout>
       <Header>
@@ -153,17 +166,24 @@ const ChatIntro = () => {
           />
         </AniMationSection>
         <ButtonSection>
-          <button
-            onClick={() => {
-              router.push('/counsel/chat');
-            }}
-          >
-            상담 시작하기
-          </button>
+          <button onClick={startCounselHandler}>상담 시작하기</button>
         </ButtonSection>
       </Content>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default ChatIntro;

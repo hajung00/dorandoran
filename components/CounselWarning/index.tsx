@@ -32,14 +32,14 @@ const CounselWarningStyle = styled.div`
   .description {
     color: var(--gray09, #222);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(17px, 4vw, 20px) !important;
     font-style: normal;
     font-weight: 500;
     line-height: 140%; /* 28px */
     letter-spacing: -0.4px;
     text-transform: uppercase;
-    text-align: left;
-    align-items: start;
+    text-align: left !important;
+    align-items: start !important;
   }
 
   .button-section {
@@ -55,7 +55,7 @@ const CounselWarningStyle = styled.div`
     & > button {
       color: var(--doranblue, #565bff);
       font-family: 'Pretendard';
-      font-size: 16px;
+      font-size: clamp(12px, 4vw, 16px);
       font-style: normal;
       font-weight: 600;
       line-height: 140%;
@@ -75,9 +75,9 @@ const CounselWarningStyle = styled.div`
 `;
 
 interface Props {
-  name: string;
+  comment: string;
 }
-const CounselWarning = ({ name }: Props) => {
+const CounselWarning = ({ comment }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -111,10 +111,7 @@ const CounselWarning = ({ name }: Props) => {
         <AlertSVG width={24} height={24} alt='alert' />
         알림
       </p>
-      <p className='description'>
-        {name}님, 심리상태가 불안정한 것 같아요. <br />
-        전문적인 상담을 받아보시는 것을 추천드려요.
-      </p>
+      <p className='description'>{comment}</p>
       <div className='button-section'>
         {isMobile ? (
           <>

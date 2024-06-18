@@ -6,6 +6,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ArrowSVG from '../../public/icons/arrow-right.svg';
 import ContentModal from '@/modal/ContentModal';
 import ScrollContainer from 'react-indiana-drag-scroll';
+import { getCookieValue } from '@/utils/getCookieValue';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
 
 const Content = styled.div`
   height: max-content;
@@ -71,9 +74,10 @@ const ContentHeader = styled.div`
     }
 
     & > p {
+      max-width: 400px;
       color: var(--gray08, #444);
       font-family: 'Pretendard';
-      font-size: clamp(18px, 5vw, 22px);
+      font-size: clamp(16px, 4.5vw, 22px);
       font-style: normal;
       font-weight: 600;
       line-height: 140%; /* 30.8px */
@@ -112,7 +116,16 @@ const ContentSection = styled.div`
   }
 
   .content-list {
+    margin: 0 10px;
     margin-top: 28px;
+
+    & > ul,
+    li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      box-sizing: border-box;
+    }
 
     & > ul {
       display: flex;
@@ -163,9 +176,11 @@ const MeditationTime = styled.div<{ color: string }>`
   line-height: 140%;
 `;
 
-const Contents = () => {
-  const user = true;
-  // const user = false;
+interface Props {
+  token: string;
+}
+const Contents = ({ token }: Props) => {
+  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
 
   const meditationTime = [
     { type: '3분', color: '#E1E2FF' },
@@ -197,11 +212,11 @@ const Contents = () => {
   const [contentModal, setContentModal] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    if (!testCheck) {
       const newList = psychotherapyList.slice(1, 7);
       setPsychotherapyList([...newList]);
     }
-  }, [user]);
+  }, [testCheck]);
 
   const psychotherapyTypeHandler = useCallback((type: string) => {
     const index = psychotherapyList.findIndex((list) => list.type === type);
@@ -218,12 +233,12 @@ const Contents = () => {
     <Layout>
       <Content>
         <ContentHeader>
-          {user ? (
+          {testCheck ? (
             <div className='today-famous'>
               <div>오늘의 명언</div>
               <p>
-                당신의 가치는 당신이 처한 상황으로 결정되지
-                <br /> 않습니다. 당신은 그 이상입니다.
+                당신의 가치는 당신이 처한 상황으로 결정되지 않습니다. 당신은 그
+                이상입니다.
               </p>
             </div>
           ) : (
@@ -302,6 +317,19 @@ const Contents = () => {
       )}
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default Contents;

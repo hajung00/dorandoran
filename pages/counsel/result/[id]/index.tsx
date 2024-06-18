@@ -2,10 +2,14 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 // import svg
-import ArrowSVG from '../../../public/icons/arrow.svg';
-import RightArrowSVG from '../../../public/icons/arrow-right.svg';
+import ArrowSVG from '../../../../public/icons/arrow.svg';
+import RightArrowSVG from '../../../../public/icons/arrow-right.svg';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
+import { getCookieValue } from '@/utils/getCookieValue';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
+import { startCounselAPI } from '@/pages/api/counsel';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -138,8 +142,15 @@ const Content = styled.div`
   }
 `;
 
-const Result = () => {
+interface Props {
+  token: string;
+}
+
+const Result = ({ token }: Props) => {
   const router = useRouter();
+  const counselId: any = router.query.id!;
+
+  const { data: result } = useSWR(`/api/counsel/finish/${counselId}`, fetcher);
 
   const moveToCounsel = useCallback(() => {
     router.push('/counsel');
@@ -157,14 +168,19 @@ const Result = () => {
           <div className='counsel-title'>
             <p>심리검사 결과</p>
             <p>조성혁님의 심리상태가 더 좋아졌어요!</p>
-            <button className='counsel-start-button'>
+            <button
+              className='counsel-start-button'
+              onClick={() => {
+                router.push('/counsel/chat-intro');
+              }}
+            >
               새로운 상담 시작하기
               <RightArrowSVG width={20} height={20} alt={'arrow'} />
             </button>
           </div>
           <div className='counsel-summary'>
             <p>상담 내용 요약</p>
-            <div>상담 내용 요약...</div>
+            <div>{result?.summary}</div>
           </div>
           <div className='content-wrapper'>
             <div>
@@ -177,18 +193,14 @@ const Result = () => {
             </div>
             <div className='content'></div>
           </div>
-          <div className='content-wrapper'>
-            <p className='title'>심리치료 유튜브 제묵</p>
-            <div className='content'></div>
-          </div>
-          <div className='content-wrapper'>
-            <p className='title'>심리치료 유튜브 제묵</p>
-            <div className='content'></div>
-          </div>
-          <div className='content-wrapper'>
-            <p className='title'>심리치료 유튜브 제묵</p>
-            <div className='content'></div>
-          </div>
+          {result?.contents.map(
+            (content: { [key: string]: string }, i: number) => (
+              <div key={i} className='content-wrapper'>
+                <p className='title'>{content.title}</p>
+                <div className='content'></div>
+              </div>
+            )
+          )}
         </div>
         <button className='main-button' onClick={moveToCounsel}>
           메인화면으로 돌아가기
@@ -196,6 +208,19 @@ const Result = () => {
       </Content>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default Result;

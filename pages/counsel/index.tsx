@@ -138,9 +138,8 @@ interface Props {
 const Counsel = ({ token }: Props) => {
   const router = useRouter();
   const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
-  // const { data: counselWarning } = useSWR('/api/counsel/suggest', fetcher);
+  const { data: counselWarning } = useSWR('/api/counsel/suggest', fetcher);
 
-  const counselWarning = true;
   const data = [
     { summary: '상담 내용 요약', date: '2024년 05월 20일' },
     { summary: '상담 내용 요약', date: '2024년 05월 25일' },
@@ -151,13 +150,15 @@ const Counsel = ({ token }: Props) => {
     <Layout>
       <Header>상담</Header>
       <Content>
-        {!token ? (
+        {token ? (
           <NonLogin />
         ) : testCheck ? (
           <NonTest />
         ) : (
           <CounselStyle>
-            {counselWarning && <CounselWarning name='조성혁' />}
+            {counselWarning?.suggestVisit && (
+              <CounselWarning comment={counselWarning?.comment} />
+            )}
             <div className='counsel-start-section'>
               <div className='description'>
                 <Image src={LogoPNG} width={100} height={48} alt='logo-png' />

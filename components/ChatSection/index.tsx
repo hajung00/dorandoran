@@ -9,6 +9,9 @@ export const ChatZone = styled.div`
   margin-bottom: 94px;
   display: flex;
   flex: 1;
+  flex-direction: column;
+  padding: 0 20px;
+
   .custom {
     height: auto !important;
   }
@@ -16,7 +19,6 @@ export const ChatZone = styled.div`
 
 export const Section = styled.section`
   margin-top: 20px;
-  padding: 0 20px;
   width: 100%;
 `;
 
@@ -77,10 +79,10 @@ const ChatSection = ({
             {chats.map((chat: { [key: string]: string }, idx: number) => (
               <Chat key={idx} chat={chat} />
             ))}
-            {isLoading && <Chat chat={undefined} />}
           </Section>
         );
       })}
+      {isLoading && <Chat chat={undefined} />}
       {/* </Scrollbars> */}
     </ChatZone>
   );

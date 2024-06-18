@@ -4,6 +4,9 @@ import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
 import React, { useCallback, useState } from 'react';
 import CounselHistoryList from '@/components/CounselHistoryList';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
+import { getCookieValue } from '@/utils/getCookieValue';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
@@ -54,7 +57,6 @@ const NonListStyle = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-  transform: translateY(-7%);
 
   .icon {
     width: 80px;
@@ -66,7 +68,7 @@ const NonListStyle = styled.div`
     color: var(--gray09, #222);
     text-align: center;
     font-family: 'Pretendard';
-    font-size: 22px;
+    font-size: clamp(18px, 5vw, 22px);
     font-style: normal;
     font-weight: 600;
     line-height: 150%; /* 33px */
@@ -77,7 +79,7 @@ const NonListStyle = styled.div`
     border: none;
     color: var(--white, #fff);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -87,25 +89,34 @@ const NonListStyle = styled.div`
     margin-top: 26px;
   }
 `;
-const History = () => {
+interface Props {
+  token: string;
+}
+
+const History = ({ token }: Props) => {
   const counselItem = [
-    { id: 1, title: '상담명1', date: '2024년 05월 20일' },
-    { id: 2, title: '상담명1', date: '2024년 05월 21일' },
-    { id: 3, title: '상담명1', date: '2024년 05월 22일' },
-    { id: 4, title: '상담명1', date: '2024년 05월 23일' },
+    { counselId: 1, title: '상담명1', date: '2024-05-20' },
+    { counselId: 2, title: '상담명2', date: '2024-05-21' },
+    { counselId: 3, title: '상담명3', date: '2024-05-22' },
+    { counselId: 4, title: '상담명4', date: '2024-05-23' },
   ];
 
-  const completeItem = [{ id: 1, title: '상담명1', date: '2024년 05월 20일' }];
+  const completeItem = [{ counselId: 1, title: '상담명1', date: '2024-05-20' }];
 
-  const [listSection, setListSection] = useState('counseling');
+  const [listSection, setListSection] = useState('counsel');
   const [counselList, setCounselList] = useState<
     { [key: string]: string | number }[]
   >([...counselItem]);
 
-  console.log(counselList);
+  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
+  const { data: listData } = useSWR(
+    `/api/counsel/history/${listSection}`,
+    fetcher
+  );
+
   const handleListSection = useCallback((type: string) => {
     setListSection(type);
-    if (type === 'counseling') {
+    if (type === 'counsel') {
       setCounselList([...counselItem]);
     } else {
       setCounselList([...completeItem]);
@@ -118,9 +129,9 @@ const History = () => {
       <SubNav>
         <ul>
           <li
-            className={`${listSection === 'counseling' && 'focus'}`}
+            className={`${listSection === 'counsel' && 'focus'}`}
             onClick={() => {
-              handleListSection('counseling');
+              handleListSection('counsel');
             }}
           >
             진행중인 상담
@@ -136,32 +147,50 @@ const History = () => {
         </ul>
       </SubNav>
       <Container>
-        {!counselList ? (
+        {testCheck ? (
+          <NonListStyle>
+            <div className='icon'></div>
+            <p>
+              심리검사 후 상담을 완료하면 <br />
+              상담 내역이 나타나요.
+            </p>
+            <button>심리검사 하러가기</button>
+          </NonListStyle>
+        ) : counselList ? (
+          // listData.counselHistories로 변경하기
           counselList.map((item, i) => (
-            <CounselHistoryList list={item} key={i} />
+            <CounselHistoryList type={listSection} list={item} key={i} />
           ))
         ) : (
           <NonListStyle>
             <div className='icon'></div>
-            {listSection === 'counseling' ? (
-              <p>
-                심리검사 후 상담을 완료하면 <br />
-                상담 내역이 나타나요.
-              </p>
-            ) : (
-              <p>
-                아직 상담을 해보지 않으셨군요,
-                <br />
-                지금바로 상담을 시작해볼까요?
-              </p>
-            )}
-            <button>심리검사 하러가기</button>
+            <p>
+              아직 상담을 해보지 않으셨군요,
+              <br />
+              지금바로 상담을 시작해볼까요?
+            </p>
+            <button>상담 시작하기</button>
           </NonListStyle>
         )}
       </Container>
       <Footer />
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie
+    ? getCookieValue(cookie, 'token')
+    : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0.fwmTq0K5AOQoS7ceDbCI-2hoqKPbHDTxe1jDI3kx9PqJP0DYLPdaqyKhGS4wrfiXkXey2PTFdDPUx6-DZXv50w';
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default History;

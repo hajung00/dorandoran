@@ -11,6 +11,7 @@ const ChatStyle = styled.div`
   margin-bottom: 16px;
 
   .content {
+    max-width: 312px;
     padding: 14px;
     font-family: 'Pretendard';
     font-size: clamp(16px, 4vw, 20px);
@@ -74,12 +75,12 @@ const Chat = ({ chat }: Props) => {
   return (
     <ChatStyle>
       {chat ? (
-        chat.type === 'sender' ? (
-          <div className='sender content'>{chat.content}</div>
+        chat.role === '내담자' ? (
+          <div className='sender content'>{chat.message}</div>
         ) : (
           <div className='receiver'>
             <Image src={CounselorPNG} width={40} height={40} alt='profile' />
-            <div className='content'>{chat.content}</div>
+            <div className='content'>{chat.message}</div>
           </div>
         )
       ) : (

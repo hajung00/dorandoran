@@ -7,6 +7,8 @@ import Layout from '@/components/Layout';
 import ChatSection from '@/components/ChatSection';
 import Scrollbars from 'react-custom-scrollbars';
 import makeSection from '@/utils/makeSection';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -54,6 +56,8 @@ const CounselResultSection = styled.div`
 const CounselChatHistory = styled.div`
   padding: 0 20px;
   margin-top: 38px;
+  display: flex;
+  flex-direction: column;
 
   .title {
     color: var(--gray09, #222);
@@ -67,18 +71,42 @@ const CounselChatHistory = styled.div`
 
 const HistoryId = () => {
   const router = useRouter();
-  console.log(router.query.id);
+  const counselId: any = router.query.id!;
+  const { data: result } = useSWR(`/api/counsel/finish/${counselId}`, fetcher);
+
+  // const chatData = result?.messages
 
   const chatData = [
     {
-      content: '나는 gpt',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'receiver',
+      role: '상담원',
+      message:
+        '안녕하세요 조성혁님! 어떤 내용이든 좋으니, 저에게 마음편히 이야기해주세요.',
+      date: '2024-05-24T13:03:34.000Z',
     },
     {
-      content: '나는 하정이',
-      createdAt: '2024-05-24T13:03:34.000Z',
-      type: 'sender',
+      role: '내담자',
+      message: '나는 하정이',
+      date: '2024-05-24T13:03:34.000Z',
+    },
+    {
+      role: '상담원',
+      message: '나는 상담원',
+      date: '2024-06-18T13:03:34.000Z',
+    },
+    {
+      role: '내담자',
+      message: '나는 하정이',
+      date: '2024-06-18T13:03:34.000Z',
+    },
+    {
+      role: '상담원',
+      message: '나는 상담원',
+      date: '2024-06-18T13:03:34.000Z',
+    },
+    {
+      role: '내담자',
+      message: '나는 하정이',
+      date: '2024-06-18T13:03:34.000Z',
     },
   ];
 
@@ -86,7 +114,7 @@ const HistoryId = () => {
   const isReachingEnd = isEmpty || (chatData && chatData?.length < 20) || false;
   const scrollbarRef = useRef<Scrollbars>(null);
 
-  const chatSections = makeSection(chatData ? chatData.flat().reverse() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
+  const chatSections = makeSection(chatData ? chatData.flat() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
 
   const setSize = 1;
 
@@ -109,7 +137,7 @@ const HistoryId = () => {
         </div>
         <div className='counsel-summary'>
           <p>상담 내용 요약</p>
-          <div>상담 내용 요약...</div>
+          <div>{result?.summary}</div>
         </div>
       </CounselResultSection>
       <CounselChatHistory>
