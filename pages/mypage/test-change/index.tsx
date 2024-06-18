@@ -48,7 +48,7 @@ const Content = styled.div`
 `;
 
 const CompleteSection = styled.div`
-  margin-top: 87px;
+  margin-top: 54px;
 
   .title {
     margin-bottom: 18px;

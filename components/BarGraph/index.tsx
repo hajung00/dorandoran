@@ -81,7 +81,7 @@ const GraphBottom = styled.div`
   margin-top: 44px;
   margin-bottom: 33px;
   min-height: 36.8px;
-
+  position: relative;
   &::after {
     content: '';
     display: block;
@@ -145,6 +145,28 @@ const LegendStyle = styled.div`
     background: #ffcece;
   }
 `;
+
+const BarStyle = styled.div`
+  position: relative;
+  .chartjs-tooltip {
+    position: absolute;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--gray04, #d9d9d9);
+    background: var(--gray01, #f7f7f7);
+    color: var(--gray07, #666);
+    font-family: 'Pretendard';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%; /* 22.4px */
+    display: none;
+  }
+
+  .visible {
+    display: block;
+  }
+`;
 interface Props {
   clickDate: string;
   handleClickDate: (date: string) => void;
@@ -179,8 +201,9 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
   const month = Array(12)
     .fill(0)
     .map((item: number, i: number) => i + 1);
-
+  const chartRef = useRef(null);
   const [color, setColor] = useState<string[]>([]);
+  const [clickedIndex, setClickedIndex] = useState(-1);
 
   useEffect(() => {
     const data = dummy.map((item) => item.data);
@@ -203,7 +226,16 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
         label: '분류 1', //그래프 분류되는 항목
         data: dummy.map((item) => item.data), //실제 그려지는 데이터(Y축 숫자)
         borderColor: color, //그래프 선 color
-        backgroundColor: color, //마우스 호버시 나타나는 분류네모 표시 bg
+        backgroundColor: function (context: any) {
+          const index = context.dataIndex;
+          return clickedIndex !== index
+            ? color[index]
+            : color[index] === '#FFCECE'
+            ? '#FF7979'
+            : color[index] === '#F9ECBD'
+            ? '#F5D565'
+            : '#9597FF';
+        },
         borderRadius: 12,
       },
     ],
@@ -242,7 +274,23 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
     },
     onClick: (c: any, chart_instances: any) => {
       try {
-        handleClickDate(dummy[chart_instances[0].index].date);
+        if (chart_instances.length > 0) {
+          const chart: any = chartRef.current;
+          console.log(
+            chart_instances[0].index,
+            dummy[chart_instances[0].index].data
+          );
+          const scoreElement = document.getElementById(
+            'chartjs-tooltip'
+          ) as HTMLDivElement;
+
+          scoreElement.style.left = `calc(${chart_instances[0].element.x}px - 24px)`;
+          scoreElement.style.top = `calc(${chart_instances[0].element.y}px - 48px)`;
+
+          handleClickDate(dummy[chart_instances[0].index].date);
+          setClickedIndex(chart_instances[0].index);
+          chart.update();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -277,6 +325,7 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
   const clearClickDate = useCallback(() => {
     handleClickDate('');
   }, []);
+
   return (
     <div>
       <DiseaseTypeWrapper>
@@ -316,7 +365,22 @@ const BarGraph = ({ clickDate, handleClickDate }: Props) => {
           ))}
         </ul>
       </ScrollContainerCustom>
-      <Bar data={data} width={300} height={200} options={options} />
+      <BarStyle>
+        <Bar
+          ref={chartRef}
+          data={data}
+          width={300}
+          height={200}
+          options={options}
+        />
+        <div
+          id='chartjs-tooltip'
+          className={`chartjs-tooltip ${clickedIndex >= 0 && 'visible'}`}
+        >
+          {clickedIndex >= 0 ? `${dummy[clickedIndex].data}점` : ''}
+        </div>
+      </BarStyle>
+
       <GraphBottom>
         <LegendStyle>
           <p id='stable'>안정</p>
