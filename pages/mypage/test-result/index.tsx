@@ -201,18 +201,35 @@ const TestItem = styled.div<{ background: string; color: string }>`
 const TestResult = () => {
   const router = useRouter();
   const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
-
-  const data = [
-    { type: '우울함', score: 80, percent: 20 },
-    { type: '우울함', score: 56, percent: 44 },
-    { type: '우울함', score: 13, percent: 87 },
-  ];
+  // const { data: testResult } = useSWR('/api/mypage/first-assessment-result', fetcher);
 
   const typeByScore = [
     { background: '#E1E2FF', color: '#565BFF', text: '안정' },
     { background: '#FFF3C8', color: '#BA9100', text: '불안정' },
     { background: '#FDD', color: '#F25151', text: '위험' },
   ];
+
+  const testResult = {
+    name: '김하정',
+    testDate: '2024년 06월 16일',
+    result: [
+      {
+        category: 'ANXIETY',
+        score: 73,
+        percent: 27,
+      },
+      {
+        category: 'DEPRESSION',
+        score: 67,
+        percent: 33,
+      },
+      {
+        category: 'STRESS',
+        score: 60,
+        percent: 40,
+      },
+    ],
+  };
 
   const sortScore = useCallback((score: number) => {
     if (score >= 80) {
@@ -222,6 +239,12 @@ const TestResult = () => {
     } else {
       return typeByScore[2];
     }
+  }, []);
+
+  const toKorean = useCallback((category: string) => {
+    if (category === 'DEPRESSION') return '우울함';
+    else if (category === 'STRESS') return '스트레스';
+    else if (category === 'ANXIETY') return '불안감';
   }, []);
 
   return (
@@ -245,22 +268,22 @@ const TestResult = () => {
         ) : (
           <>
             <p className='description'>
-              조성혁님의 첫 심리검사 결과는 아래와 같아요.
+              {testResult.name}님의 첫 심리검사 결과는 아래와 같아요.
               <br />
               심리검사 내용은 안전하게 보관돼요.
             </p>
             <div className='test-result-title'>
               <p>심리검사 결과</p>
               <p>
-                조성혁님의 심리상태는 <Point>안정적</Point>이에요.
+                {testResult.name}님의 심리상태는 <Point>안정적</Point>이에요.
               </p>
             </div>
             <div className='test-date'>
               <FileSVG width={26} height={26} alt={'file'} />
-              <span>{moment().format('YYYY년 M월 DD일')}의 심리검사 결과</span>
+              <span>{testResult.testDate}의 심리검사 결과</span>
             </div>
             <div className='test-item-section'>
-              {data.map((item, i) => {
+              {testResult.result.map((item, i) => {
                 const current = sortScore(item.score);
                 return (
                   <>
@@ -271,12 +294,14 @@ const TestResult = () => {
                     >
                       <div className='item-wrapper'>
                         <div className='item-title'>
-                          <div className='item-type'>{item.type}</div>
+                          <div className='item-type'>
+                            {toKorean(item.category)}
+                          </div>
                           <span>{current.text}</span>
                         </div>
                         <div className='item-description'>
-                          표준보다 <span>{item.percent}%</span> {item.type}을
-                          느끼고 있어요.
+                          표준보다 <span>{item.percent}%</span>
+                          {toKorean(item.category)}을 느끼고 있어요.
                         </div>
                       </div>
                       <div className='item-score'>{item.score}점</div>

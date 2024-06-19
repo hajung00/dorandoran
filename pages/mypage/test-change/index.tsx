@@ -9,6 +9,8 @@ import BarGraph from '@/components/BarGraph';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 import MypageNonTest from '@/components/MyPageNonTest';
+import { getCookieValue } from '@/utils/getCookieValue';
+import { completeCounselAPI } from '@/pages/api/counsel';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -93,17 +95,38 @@ const CompleteSection = styled.div`
     }
   }
 `;
-const TestChange = () => {
+
+interface Props {
+  token: string;
+}
+
+const TestChange = ({ token }: Props) => {
   const router = useRouter();
   const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
 
   const [clickDate, setClickDate] = useState('');
+  const [completeCounselList, setCompleteCounselList] =
+    useState<{ [key: string]: any }[]>();
   const handleClickDate = useCallback((date: string) => {
+    console.log(date);
     setClickDate(date);
   }, []);
 
   useEffect(() => {
     // 선택한 날짜 바뀔 때마다 상담 정보 가져오기
+    const fetchData = async () => {
+      try {
+        const response = await completeCounselAPI(token, clickDate);
+        console.log('선택한 날짜', response);
+        setCompleteCounselList(response);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (clickDate) {
+      fetchData();
+    }
   }, [clickDate]);
 
   return (
@@ -122,7 +145,7 @@ const TestChange = () => {
         <div className='content-header'>
           <p className='title'>나의 심리변화 추이</p>
         </div>
-        {!testCheck ? (
+        {testCheck ? (
           <MypageNonTest />
         ) : (
           <>
@@ -131,26 +154,47 @@ const TestChange = () => {
               <br />
               조성혁님의 심리변화 추이에요.
             </p>
-            <BarGraph clickDate={clickDate} handleClickDate={handleClickDate} />
+            <BarGraph
+              token={token}
+              clickDate={clickDate}
+              handleClickDate={handleClickDate}
+            />
             <CompleteSection>
               <p className='title'>완료한 상담</p>
-              {clickDate && (
-                <div
-                  className='consel-wrapper'
-                  onClick={() => {
-                    router.push('/history/1');
-                  }}
-                >
-                  <p className='consel-title'>상담명</p>
-                  <p className='consel-date'>{clickDate}</p>
-                </div>
-              )}
+              {clickDate &&
+                completeCounselList?.map((list) => (
+                  <div
+                    key={list.counselId}
+                    className='consel-wrapper'
+                    onClick={() => {
+                      router.push(`/history/${list.counselId}`);
+                    }}
+                  >
+                    <p className='consel-title'>{list.title}상담명</p>
+                    <p className='consel-date'>{list.createdDate}</p>
+                  </div>
+                ))}
             </CompleteSection>
           </>
         )}
       </Content>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie
+    ? getCookieValue(cookie, 'token')
+    : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0.fwmTq0K5AOQoS7ceDbCI-2hoqKPbHDTxe1jDI3kx9PqJP0DYLPdaqyKhGS4wrfiXkXey2PTFdDPUx6-DZXv50w';
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default TestChange;
