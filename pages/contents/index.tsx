@@ -9,6 +9,7 @@ import ScrollContainer from 'react-indiana-drag-scroll';
 import { getCookieValue } from '@/utils/getCookieValue';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
+import makeEmbedUrl from '@/utils/makeEmbedUrl';
 
 const Content = styled.div`
   height: max-content;
@@ -180,8 +181,6 @@ interface Props {
   token: string;
 }
 const Contents = ({ token }: Props) => {
-  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
-
   const meditationTime = [
     { type: '3분', color: '#E1E2FF' },
     { type: '5분', color: '#BEC0FF' },
@@ -191,37 +190,89 @@ const Contents = ({ token }: Props) => {
   ];
 
   const psychotherapyContent = [
-    { type: '당신을 위한 콘텐츠', link: 'link1' },
-    { type: '우울증', link: 'link2' },
-    { type: '스트레스', link: 'link3' },
-    { type: '불안증', link: 'link4' },
-    { type: '알코올 중독', link: 'link5' },
-    { type: '흡연 중독', link: 'link6' },
+    { en: 'personal', ko: '당신을 위한 콘텐츠' },
+    { en: 'depression', ko: '우울증' },
+    {
+      en: 'stress',
+      ko: '스트레스',
+    },
+    {
+      en: 'anxiety',
+      ko: '불안증',
+    },
+    {
+      en: 'alcoholism',
+      ko: '알코올 중독',
+    },
+    {
+      en: 'smoking',
+      ko: '흡연 중독',
+    },
+  ];
+
+  const responseData = [
+    {
+      title:
+        '당장 내일 죽을 수도 있다는 의사 말에도 끊지 못하는 술│알코올 의존증 치료하는 과정│국가에서 지정한 알콜 치료 병원의 모습│다큐 시선│#EBS건강',
+      link: 'https://www.youtube.com/watch?v=L_xmM9_iRJQ',
+      thumbnailLink: 'https://img.youtube.com/vi/L_xmM9_iRJQ/0.jpg',
+    },
+    {
+      title: '[ 새해계획 ] 의사가 알려주는 확실한 금연 방법 !',
+      link: 'https://www.youtube.com/watch?v=I0ypGCXTGww',
+      thumbnailLink: 'https://img.youtube.com/vi/I0ypGCXTGww/0.jpg',
+    },
+    {
+      title:
+        '혼술이 알코올 중독의 시작이다? l 건강한 음주습관 l #신신당부 17화',
+      link: 'https://www.youtube.com/watch?v=6fKph4n74Rg',
+      thumbnailLink: 'https://img.youtube.com/vi/6fKph4n74Rg/0.jpg',
+    },
+    {
+      title: '[알코올중독 치료] 알코올 의존증 증상 완벽하게 치료하고 싶으세요?',
+      link: 'https://www.youtube.com/watch?v=0hNDg7s4K-0',
+      thumbnailLink: 'https://img.youtube.com/vi/0hNDg7s4K-0/0.jpg',
+    },
+    {
+      title: '금연의 이익ㅣ금연 EP.3',
+      link: 'https://www.youtube.com/watch?v=cu8irdThyJE',
+      thumbnailLink: 'https://img.youtube.com/vi/cu8irdThyJE/0.jpg',
+    },
   ];
 
   const [psychotherapyList, setPsychotherapyList] = useState([
     ...psychotherapyContent,
   ]);
-  const [currentContent, setCurrentContent] = useState(
-    psychotherapyList[0].link
+
+  const [currentContentCategory, setCurrentContentCategory] = useState(
+    psychotherapyContent[0].en
   );
-  const [currentPsychotherapyList, setCurrentPsychotherapyList] = useState(
-    psychotherapyContent[0].type
+
+  const { data: testCheck, isLoading } = useSWR(
+    '/api/assessment/has-result',
+    fetcher
   );
+  const { data: contentsData } = useSWR(
+    `/api/contents/main/${currentContentCategory}`,
+    fetcher
+  );
+
+  // contentsData로 변경하기!!
+  const embedUrlData = makeEmbedUrl(responseData);
+
   const [currentMeditationTime, setCurrentMeditationTime] = useState('3분');
   const [contentModal, setContentModal] = useState(false);
 
   useEffect(() => {
-    if (!testCheck) {
+    if (!isLoading && testCheck) {
       const newList = psychotherapyList.slice(1, 7);
       setPsychotherapyList([...newList]);
+      setCurrentContentCategory('depression');
     }
   }, [testCheck]);
 
   const psychotherapyTypeHandler = useCallback((type: string) => {
-    const index = psychotherapyList.findIndex((list) => list.type === type);
-    setCurrentPsychotherapyList(psychotherapyList[index].type);
-    setCurrentContent(psychotherapyList[index].link);
+    setCurrentContentCategory(type);
   }, []);
 
   const handelContentModal = useCallback((type: string) => {
@@ -233,13 +284,10 @@ const Contents = ({ token }: Props) => {
     <Layout>
       <Content>
         <ContentHeader>
-          {testCheck ? (
+          {!testCheck ? (
             <div className='today-famous'>
               <div>오늘의 명언</div>
-              <p>
-                당신의 가치는 당신이 처한 상황으로 결정되지 않습니다. 당신은 그
-                이상입니다.
-              </p>
+              {/* <p>{contentsData?.quotation}</p> */}
             </div>
           ) : (
             <>
@@ -289,20 +337,33 @@ const Contents = ({ token }: Props) => {
               {psychotherapyList.map((item, i) => (
                 <li
                   className={`${
-                    currentPsychotherapyList === item.type ? 'current' : ''
+                    currentContentCategory === item.en ? 'current' : ''
                   }`}
                   key={i}
                   onClick={() => {
-                    psychotherapyTypeHandler(item.type);
+                    psychotherapyTypeHandler(item.en);
                   }}
                 >
-                  {item.type}
+                  {item.ko}
                 </li>
               ))}
             </ul>
           </ScrollContainer>
-          <div className='content-wrapper'>{currentContent}</div>
-          <p className='title'>심리치료 유튜브 제목</p>
+          {embedUrlData.map((item, i) => (
+            <>
+              <div className='content-wrapper'>
+                <iframe
+                  width={'100%'}
+                  height='290'
+                  src={item.embedUrl}
+                  title='YouTube video player'
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <p className='title'>{item.title}</p>
+            </>
+          ))}
         </ContentSection>
       </Content>
 

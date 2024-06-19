@@ -68,19 +68,19 @@ const MeditationContent = ({ time }: Props) => {
   useEffect(() => {
     switch (time) {
       case '3분':
-        setContentLink('link 3분');
+        setContentLink('https://www.youtube.com/embed/L_xmM9_iRJQ');
         break;
       case '5분':
-        setContentLink('link 5분');
+        setContentLink('https://www.youtube.com/embed/I0ypGCXTGww');
         break;
       case '10분':
-        setContentLink('link 10분');
+        setContentLink('https://www.youtube.com/embed/6fKph4n74Rg');
         break;
       case '30분':
-        setContentLink('link 30분');
+        setContentLink('https://www.youtube.com/embed/0hNDg7s4K-0');
         break;
       case '1시간':
-        setContentLink('link 1시간');
+        setContentLink('https://www.youtube.com/embed/cu8irdThyJE');
         break;
     }
   }, [time]);
@@ -106,7 +106,16 @@ const MeditationContent = ({ time }: Props) => {
             화면은 잠시 꺼두어도 좋아요.
           </p>
         </div>
-        <div className='content'>{contentLink}</div>
+        <div className='content'>
+          <iframe
+            width={'100%'}
+            height='290'
+            src={contentLink}
+            title='YouTube video player'
+            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+            allowFullScreen
+          ></iframe>
+        </div>
         <p className='content-title'>영상 유튜브 제목</p>
       </ContentWrapper>
     </Layout>
