@@ -7,6 +7,8 @@ import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
 import { getCookieValue } from '@/utils/getCookieValue';
 import { dropOutAPI } from '@/pages/api/user';
+import useSWR from 'swr';
+import fetcher from '@/utils/fetchers';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -18,17 +20,40 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  height: calc(100vh - 105px);
-  position: relative;
+  flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  padding: 0 20px;
+
+  .title {
+    margin-top: 24px;
+    color: var(--gray09, #222);
+    font-family: 'Pretendard';
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 39px */
+    letter-spacing: -0.52px;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 22px;
+      background: #f7f7f7;
+      position: absolute;
+      left: 0;
+      margin-top: 24px;
+      margin-bottom: 30px;
+    }
+  }
 
   .description {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    align-items: center;
-    transform: translateY(-30%);
+    align-items: start;
+    margin-top: 76px;
 
     .icon {
       width: 80px;
@@ -43,12 +68,11 @@ const Content = styled.div`
       font-size: 22px;
       font-weight: 600;
       line-height: 150%; /* 33px */
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .sub-description {
       color: var(--gray06, #898989);
-      text-align: center;
-      font-family: Pretendard;
+      font-family: 'Pretendard';
       font-size: 18px;
       font-style: normal;
       font-weight: 500;
@@ -67,7 +91,6 @@ const Content = styled.div`
     font-size: 20px;
     font-weight: 600;
     letter-spacing: -0.4px;
-    position: absolute;
     bottom: 0;
     margin-bottom: 26px;
     padding: 4.5% 0;
@@ -79,6 +102,7 @@ interface Props {
 }
 const DropOut1 = ({ token }: Props) => {
   const router = useRouter();
+  const { data: userData } = useSWR('/api/mypage/main', fetcher);
 
   // 회원 탈퇴
   const DropOutHandler = useCallback(async () => {
@@ -102,24 +126,25 @@ const DropOut1 = ({ token }: Props) => {
         >
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
-        <Content>
-          <div className='description'>
-            <div className='icon'></div>
-            <p className='main-description'>도란도란 회원을 탈퇴하시면,</p>
-            <p className='sub-description'>
-              도란도란에서 그동안 상담하셨던 내역들과
-              <br />
-              심리검사 결과들이 모두 사라져요.
-              <br />
-              정말 탈퇴하시겠어요?
-            </p>
-            <p className='sub-description'>
-              원치 않으신다면 뒤로가기 버튼을 눌러주세요.
-            </p>
-          </div>
-          <button onClick={DropOutHandler}>탈퇴할게요</button>
-        </Content>
       </Header>
+      <Content>
+        <div className='title'>
+          {userData?.name}님,
+          <br />
+          헤어져야한다니 아쉬워요.
+        </div>
+        <div className='description'>
+          <p className='main-description'>도란도란을 탈퇴하시게 되면,</p>
+          <p className='sub-description'>
+            도란도란에서 그동안 상담하셨던 내역들과
+            <br />
+            심리검사 결과 및 변화추이들이 모두 사라져요.
+            <br />
+          </p>
+          <p className='sub-description'>정말 탈퇴하시겠어요?</p>
+        </div>
+        <button onClick={DropOutHandler}>탈퇴할게요</button>
+      </Content>
     </Layout>
   );
 };

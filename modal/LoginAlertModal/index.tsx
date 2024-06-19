@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import ModalLayout from '../ModalLayout';
 
-const LoginAlertModalLayout = styled.div`
+const LoginAlertModalStyle = styled.div`
   display: flex;
   padding: 40px 30px 26px 30px;
   flex-direction: column;
@@ -70,7 +70,7 @@ const LoginAlertModal = ({ onClosed }: Props) => {
 
   return (
     <ModalLayout onClosed={onClosed}>
-      <LoginAlertModalLayout onClick={stopPropagation}>
+      <LoginAlertModalStyle onClick={stopPropagation}>
         <div>
           <p className='main-description'>
             이름과 휴대폰번호가 일치하지 않아요.
@@ -78,7 +78,7 @@ const LoginAlertModal = ({ onClosed }: Props) => {
           <p className='sub-description'>다시 한번 입력해주세요.</p>
         </div>
         <button onClick={onClosed}>다시 입력하기</button>
-      </LoginAlertModalLayout>
+      </LoginAlertModalStyle>
     </ModalLayout>
   );
 };

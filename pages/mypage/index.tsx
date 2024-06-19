@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 
 // import svg
@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { getCookieValue } from '@/utils/getCookieValue';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
+import LogoutModal from '@/modal/LogoutModal';
 
 const Header = styled.header`
   padding: 24% 20px 30px 20px;
@@ -90,17 +91,16 @@ const MyPage = ({ token }: Props) => {
 
   const { data: userData } = useSWR('/api/mypage/main', fetcher);
 
+  const [logoutModal, setLogoutModal] = useState(false);
+  const logoutModalHandler = useCallback(() => {
+    setLogoutModal((prev) => !prev);
+  }, []);
+
   return (
     <Layout>
       <Header>
-        <p>조성혁님</p>
-        <button
-          onClick={() => {
-            router.push('/logout');
-          }}
-        >
-          로그아웃
-        </button>
+        <p>{userData?.name}님</p>
+        <button onClick={logoutModalHandler}>로그아웃</button>
       </Header>
       <Content>
         <div className='section'>
@@ -127,6 +127,9 @@ const MyPage = ({ token }: Props) => {
         </div>
       </Content>
       <Footer />
+      {logoutModal && (
+        <LogoutModal token={token} onClosed={logoutModalHandler} />
+      )}
     </Layout>
   );
 };

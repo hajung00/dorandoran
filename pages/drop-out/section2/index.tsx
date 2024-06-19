@@ -16,17 +16,18 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  height: calc(100vh - 105px);
-  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex: 1;
 
   .description {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translateY(-30%);
+    flex: 1;
+    justify-content: center;
 
     .icon {
       width: 80px;
@@ -38,37 +39,42 @@ const Content = styled.div`
       color: var(--gray09, #222);
       text-align: center;
       font-family: 'Pretendard';
-      font-size: 22px;
+      font-size: 26px;
+      font-style: normal;
       font-weight: 600;
-      line-height: 150%; /* 33px */
+      line-height: 150%; /* 39px */
+      letter-spacing: -0.52px;
       margin-bottom: 14px;
     }
     .sub-description {
-      color: var(--gray06, #898989);
+      color: var(--gray08, #444);
       text-align: center;
-      font-family: Pretendard;
-      font-size: 18px;
+      font-family: 'Pretendard';
+      font-size: 20px;
       font-style: normal;
       font-weight: 500;
-      line-height: 150%; /* 27px */
-      margin-bottom: 14px;
+      line-height: 150%; /* 30px */
+      margin-bottom: 22px;
     }
   }
 
-  & > button {
+  .button-section {
+    padding: 0 20px;
     width: 100%;
-    border-radius: 18px;
-    background: #565bff;
-    border: none;
-    color: #fff;
-    font-family: 'Pretendard';
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: -0.4px;
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 26px;
-    padding: 4.5% 0;
+
+    & > button {
+      width: 100%;
+      border-radius: 18px;
+      background: #565bff;
+      border: none;
+      color: #fff;
+      font-family: 'Pretendard';
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      margin-bottom: 26px;
+      padding: 4.5% 0;
+    }
   }
 `;
 const DropOut2 = () => {
@@ -76,23 +82,18 @@ const DropOut2 = () => {
 
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.push('/drop-out/section1');
-          }}
-        >
-          <ArrowSVG width={21} height={21} alt={'prev'} />
+      <Content>
+        <div className='description'>
+          <p className='main-description'>
+            회원 탈퇴가 <br />
+            정상적으로 처리되었어요.
+          </p>
+          <p className='sub-description'>
+            다시 이야기하고 싶을 땐<br />
+            언제든지 도란도란을 찾아와주세요!
+          </p>
         </div>
-        <Content>
-          <div className='description'>
-            <div className='icon'></div>
-            <p className='main-description'>다음에 또 만나요!</p>
-            <p className='sub-description'>
-              회원 탈퇴가 정상적으로 완료되었어요.
-            </p>
-          </div>
+        <div className='button-section'>
           <button
             onClick={() => {
               router.push('/counsel');
@@ -100,8 +101,8 @@ const DropOut2 = () => {
           >
             메인화면으로 이동
           </button>
-        </Content>
-      </Header>
+        </div>
+      </Content>
     </Layout>
   );
 };

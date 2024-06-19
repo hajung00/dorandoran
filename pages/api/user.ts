@@ -97,32 +97,6 @@ export const joinAPI = async (
   return result;
 };
 
-// 회원 탈퇴
-export const dropOutAPI = async (token: string) => {
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json', // 요청의 Content-Type을 지정할 수 있음
-  };
-
-  const result = await axios
-    .post(`${backUrl}/api/mypage/sign-out`, '', { headers })
-    .then((response: any) => {
-      if (response.status == 200) {
-        Cookies.remove('token');
-        return response.status;
-      }
-    })
-    .catch((error: any) => {
-      // 에러 처리
-      if (error.response.status === 400) {
-        return error.response.status;
-      }
-      console.error('회원 탈퇴 API 실패', error);
-    });
-  console.log('회원 탈퇴', result);
-  return result;
-};
-
 // 로그아웃
 export const logoutAPI = async (token: string) => {
   const headers = {
@@ -146,5 +120,31 @@ export const logoutAPI = async (token: string) => {
       console.error('로그아웃 API 실패', error);
     });
   console.log('로그아웃', result);
+  return result;
+};
+
+// 회원 탈퇴
+export const dropOutAPI = async (token: string) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json', // 요청의 Content-Type을 지정할 수 있음
+  };
+
+  const result = await axios
+    .post(`${backUrl}/api/mypage/sign-out`, '', { headers })
+    .then((response: any) => {
+      if (response.status == 200) {
+        Cookies.remove('token');
+        return response.status;
+      }
+    })
+    .catch((error: any) => {
+      // 에러 처리
+      if (error.response.status === 400) {
+        return error.response.status;
+      }
+      console.error('회원 탈퇴 API 실패', error);
+    });
+  console.log('회원 탈퇴', result);
   return result;
 };
