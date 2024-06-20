@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import Layout from '@/components/Layout';
 import ChatSection from '@/components/ChatSection';
-import Scrollbars from 'react-custom-scrollbars';
+// import Scrollbars from 'react-custom-scrollbars';
 import makeSection from '@/utils/makeSection';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
@@ -112,7 +112,7 @@ const HistoryId = () => {
 
   const isEmpty = chatData?.length === 0;
   const isReachingEnd = isEmpty || (chatData && chatData?.length < 20) || false;
-  const scrollbarRef = useRef<Scrollbars>(null);
+  // const scrollbarRef = useRef<Scrollbars>(null);
 
   const chatSections = makeSection(chatData ? chatData.flat() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
 
@@ -144,7 +144,7 @@ const HistoryId = () => {
         <div className='title'>대화 내역</div>
         <ChatSection
           chatSections={chatSections}
-          ref={scrollbarRef}
+          // ref={scrollbarRef}
           setSize={setSize}
           isReachingEnd={isReachingEnd}
         />

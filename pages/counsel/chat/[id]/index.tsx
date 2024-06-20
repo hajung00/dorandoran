@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 // import svg
 import ArrowSVG from '../../../../public/icons/arrow.svg';
@@ -98,7 +97,7 @@ const Chat = ({ token }: Props) => {
 
   const isEmpty = chatData?.length === 0;
   const isReachingEnd = isEmpty || (chatData && chatData?.length < 20) || false;
-  const scrollbarRef = useRef<Scrollbars>(null);
+  // const scrollbarRef = useRef<Scrollbars>(null);
 
   const chatSections = makeSection(chatData ? chatData.flat() : []);
 
@@ -164,7 +163,7 @@ const Chat = ({ token }: Props) => {
       </Header>
       <ChatSection
         chatSections={chatSections}
-        ref={scrollbarRef}
+        // ref={scrollbarRef}
         setSize={setSize}
         isReachingEnd={isReachingEnd}
         isLoading={isLoading}

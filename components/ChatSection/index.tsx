@@ -1,6 +1,5 @@
 import React, { MutableRefObject, forwardRef, useCallback } from 'react';
 import Chat from '../Chat';
-import { Scrollbars } from 'react-custom-scrollbars';
 import styled from 'styled-components';
 import moment from 'moment';
 
