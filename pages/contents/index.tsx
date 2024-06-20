@@ -252,13 +252,16 @@ const Contents = ({ token }: Props) => {
     '/api/assessment/has-result',
     fetcher
   );
-  const { data: contentsData } = useSWR(
+  const { data: contentsData, isLoading: contentsLoading } = useSWR(
     `/api/contents/main/${currentContentCategory}`,
     fetcher
   );
+  const [embedUrlData, setEmbedUrlData] = useState<any>();
 
-  // contentsData로 변경하기!!
-  const embedUrlData = makeEmbedUrl(responseData);
+  useEffect(() => {
+    contentsData &&
+      setEmbedUrlData(makeEmbedUrl(contentsData?.psychotherapyContents));
+  }, [contentsLoading, contentsData]);
 
   const [currentMeditationTime, setCurrentMeditationTime] = useState('3분');
   const [contentModal, setContentModal] = useState(false);
@@ -273,8 +276,10 @@ const Contents = ({ token }: Props) => {
 
   const psychotherapyTypeHandler = useCallback((type: string) => {
     setCurrentContentCategory(type);
+    setEmbedUrlData([]);
   }, []);
 
+  console.log(embedUrlData);
   const handelContentModal = useCallback((type: string) => {
     setCurrentMeditationTime(type);
     setContentModal((prev) => !prev);
@@ -349,21 +354,22 @@ const Contents = ({ token }: Props) => {
               ))}
             </ul>
           </ScrollContainer>
-          {embedUrlData.map((item, i) => (
-            <>
-              <div className='content-wrapper'>
-                <iframe
-                  width={'100%'}
-                  height='290'
-                  src={item.embedUrl}
-                  title='YouTube video player'
-                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                  allowFullScreen
-                ></iframe>
-              </div>
-              <p className='title'>{item.title}</p>
-            </>
-          ))}
+          {embedUrlData &&
+            embedUrlData.map((item: { [key: string]: any }, i: number) => (
+              <>
+                <div className='content-wrapper'>
+                  <iframe
+                    width={'100%'}
+                    height='290'
+                    src={item.embedUrl}
+                    title='YouTube video player'
+                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <p className='title'>{item.title}</p>
+              </>
+            ))}
         </ContentSection>
       </Content>
 

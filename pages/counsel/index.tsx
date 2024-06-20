@@ -181,7 +181,9 @@ const Counsel = ({ token }: Props) => {
                     <div
                       key={item.counselId}
                       className='counsel-list'
-                      onClick={() => router.push(`/history/${item.counselId}`)}
+                      onClick={() =>
+                        router.push(`/counsel/chat/${item.counselId}`)
+                      }
                     >
                       <div className='counsel-title'>{item.title}</div>
                       <div className='counsel-date'>{item.date}</div>
