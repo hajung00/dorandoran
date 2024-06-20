@@ -139,6 +139,7 @@ const Counsel = ({ token }: Props) => {
   const router = useRouter();
   const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
   const { data: counselWarning } = useSWR('/api/counsel/suggest', fetcher);
+  const { data: listData } = useSWR(`/api/counsel/history/counsel`, fetcher);
 
   const data = [
     { summary: '상담 내용 요약', date: '2024년 05월 20일' },
@@ -175,6 +176,7 @@ const Counsel = ({ token }: Props) => {
             <div className='counsel-list-section'>
               <p className='title'>현재 진행중인 상담</p>
               <div className='counsel-list-wrapper'>
+                {/* listData.counselHistories로 변경하기 */}
                 {data.map((item, i) => (
                   <div
                     key={i}

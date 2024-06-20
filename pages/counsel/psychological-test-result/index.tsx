@@ -189,15 +189,15 @@ const PsychologicalTestResult = () => {
         <div className='test-result-title'>
           <p>심리검사 결과</p>
           <p>
-            {testResult.name}님의 심리상태는 <Point>안정적</Point>이에요.
+            {testResult?.name}님의 심리상태는 <Point>안정적</Point>이에요.
           </p>
         </div>
         <div className='test-date'>
           <FileSVG width={26} height={26} alt={'file'} />
-          <span>{testResult.testDate}의 심리검사 결과</span>
+          <span>{testResult?.testDate}의 심리검사 결과</span>
         </div>
         <div className='test-item-section'>
-          {testResult.result.map((item: { [key: string]: any }, i: number) => {
+          {testResult?.result.map((item: { [key: string]: any }, i: number) => {
             const current = sortScore(item.score);
             return (
               <>
