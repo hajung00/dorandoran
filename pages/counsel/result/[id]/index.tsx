@@ -150,7 +150,7 @@ const Result = ({ token }: Props) => {
   const router = useRouter();
   const counselId: any = router.query.id!;
 
-  const { data: result } = useSWR(`/api/counsel/finish/${counselId}`, fetcher);
+  const { data: result } = useSWR(`/api/counsel/end/${counselId}`, fetcher);
 
   const moveToCounsel = useCallback(() => {
     router.push('/counsel');

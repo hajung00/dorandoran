@@ -155,7 +155,12 @@ const Chat = ({ token }: Props) => {
   return (
     <Layout>
       <Header>
-        <div className='icon-wrapper'>
+        <div
+          className='icon-wrapper'
+          onClick={() => {
+            router.back();
+          }}
+        >
           <ArrowSVG width={21} height={21} alt={'prev'} />
         </div>
         <div className='title'>상담 진행중</div>

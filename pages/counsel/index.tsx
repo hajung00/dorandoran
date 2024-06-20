@@ -151,9 +151,9 @@ const Counsel = ({ token }: Props) => {
     <Layout>
       <Header>상담</Header>
       <Content>
-        {token ? (
+        {!token ? (
           <NonLogin />
-        ) : testCheck ? (
+        ) : !testCheck ? (
           <NonTest />
         ) : (
           <CounselStyle>
@@ -176,17 +176,18 @@ const Counsel = ({ token }: Props) => {
             <div className='counsel-list-section'>
               <p className='title'>현재 진행중인 상담</p>
               <div className='counsel-list-wrapper'>
-                {/* listData.counselHistories로 변경하기 */}
-                {data.map((item, i) => (
-                  <div
-                    key={i}
-                    className='counsel-list'
-                    onClick={() => router.push('/history/1')}
-                  >
-                    <div className='counsel-title'>{item.summary}</div>
-                    <div className='counsel-date'>{item.date}</div>
-                  </div>
-                ))}
+                {listData?.counselHistories.map(
+                  (item: { [key: string]: any }) => (
+                    <div
+                      key={item.counselId}
+                      className='counsel-list'
+                      onClick={() => router.push(`/history/${item.counselId}`)}
+                    >
+                      <div className='counsel-title'>{item.title}</div>
+                      <div className='counsel-date'>{item.date}</div>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </CounselStyle>
@@ -201,9 +202,7 @@ export const getServerSideProps = async (context: any) => {
   // 로그인 여부 확인
   const cookie = context.req ? context.req.headers.cookie : '';
 
-  let token = cookie
-    ? getCookieValue(cookie, 'token')
-    : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0.fwmTq0K5AOQoS7ceDbCI-2hoqKPbHDTxe1jDI3kx9PqJP0DYLPdaqyKhGS4wrfiXkXey2PTFdDPUx6-DZXv50w';
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
 
   return {
     props: {

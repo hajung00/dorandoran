@@ -15,7 +15,10 @@ const fetcher = (url: string) =>
     .get(`${backUrl}${url}`, {
       headers,
     })
-    .then((response) => response.data.data)
+    .then((response) => {
+      console.log(response);
+      return response.data.data;
+    })
     .catch((error) => console.error(error));
 
 export default fetcher;

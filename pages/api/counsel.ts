@@ -18,12 +18,7 @@ export const startCounselAPI = async (token: string) => {
       console.error('상담 시작 요청 API 실패', error);
     });
   console.log('상담 시작 요청', result);
-  //   return result;
-  return {
-    counselId: 3,
-    message:
-      '안녕하세요 김하정님! 어떤 내용이든 좋으니, 저에게 마음편히 이야기해주세요.',
-  };
+  return result;
 };
 
 // 상담 채팅 요청
@@ -52,8 +47,7 @@ export const chatCounselAPI = async (
       console.error('상담 채팅 요청 API 실패', error);
     });
   console.log('상담 채팅 요청', result);
-  //   return result;
-  return 200;
+  return result;
 };
 
 // 상담 종료 요청
@@ -73,8 +67,7 @@ export const endCounselAPI = async (token: string, counselId: string) => {
       console.error('상담 종료 요청 API 실패', error);
     });
   console.log('상담 종료 요청', result);
-  //   return result;
-  return 200;
+  return result;
 };
 
 // 심리변화 추이 조회 요청
@@ -106,17 +99,7 @@ export const trendCounselAPI = async (
     });
   console.log('심리변화 추이 조회 요청', result);
 
-  // return result;
-  return [
-    {
-      dayOfMonth: 16,
-      score: 73,
-    },
-    {
-      dayOfMonth: 19,
-      score: 73,
-    },
-  ];
+  return result;
 };
 
 // 완료한 상담 목록 조회 요청
@@ -146,12 +129,5 @@ export const completeCounselAPI = async (
     });
   console.log('완료한 상담 목록 조회 요청', result);
 
-  // return result;
-  return [
-    {
-      counselId: 3,
-      title: null,
-      createdDate: '2024년 06월 16일',
-    },
-  ];
+  return result;
 };

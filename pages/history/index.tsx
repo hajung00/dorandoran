@@ -94,19 +94,7 @@ interface Props {
 }
 
 const History = ({ token }: Props) => {
-  const counselItem = [
-    { counselId: 1, title: '상담명1', date: '2024-05-20' },
-    { counselId: 2, title: '상담명2', date: '2024-05-21' },
-    { counselId: 3, title: '상담명3', date: '2024-05-22' },
-    { counselId: 4, title: '상담명4', date: '2024-05-23' },
-  ];
-
-  const completeItem = [{ counselId: 1, title: '상담명1', date: '2024-05-20' }];
-
   const [listSection, setListSection] = useState('counsel');
-  const [counselList, setCounselList] = useState<
-    { [key: string]: string | number }[]
-  >([...counselItem]);
 
   const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
   const { data: listData } = useSWR(
@@ -116,11 +104,6 @@ const History = ({ token }: Props) => {
 
   const handleListSection = useCallback((type: string) => {
     setListSection(type);
-    if (type === 'counsel') {
-      setCounselList([...counselItem]);
-    } else {
-      setCounselList([...completeItem]);
-    }
   }, []);
 
   return (
@@ -147,7 +130,7 @@ const History = ({ token }: Props) => {
         </ul>
       </SubNav>
       <Container>
-        {testCheck ? (
+        {!testCheck ? (
           <NonListStyle>
             <div className='icon'></div>
             <p>
@@ -156,11 +139,12 @@ const History = ({ token }: Props) => {
             </p>
             <button>심리검사 하러가기</button>
           </NonListStyle>
-        ) : counselList ? (
-          // listData.counselHistories로 변경하기
-          counselList.map((item, i) => (
-            <CounselHistoryList type={listSection} list={item} key={i} />
-          ))
+        ) : listData?.counselHistories.length !== 0 ? (
+          listData?.counselHistories.map(
+            (item: { [key: string]: any }, i: number) => (
+              <CounselHistoryList type={listSection} list={item} key={i} />
+            )
+          )
         ) : (
           <NonListStyle>
             <div className='icon'></div>
@@ -182,9 +166,7 @@ export const getServerSideProps = async (context: any) => {
   // 로그인 여부 확인
   const cookie = context.req ? context.req.headers.cookie : '';
 
-  let token = cookie
-    ? getCookieValue(cookie, 'token')
-    : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0.fwmTq0K5AOQoS7ceDbCI-2hoqKPbHDTxe1jDI3kx9PqJP0DYLPdaqyKhGS4wrfiXkXey2PTFdDPUx6-DZXv50w';
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
 
   return {
     props: {

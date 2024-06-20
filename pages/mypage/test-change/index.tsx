@@ -145,7 +145,7 @@ const TestChange = ({ token }: Props) => {
         <div className='content-header'>
           <p className='title'>나의 심리변화 추이</p>
         </div>
-        {testCheck ? (
+        {!testCheck ? (
           <MypageNonTest />
         ) : (
           <>
@@ -186,9 +186,7 @@ export const getServerSideProps = async (context: any) => {
   // 로그인 여부 확인
   const cookie = context.req ? context.req.headers.cookie : '';
 
-  let token = cookie
-    ? getCookieValue(cookie, 'token')
-    : 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTgyNjUwNDIsImV4cCI6MTcxOTQ3NDY0Mn0.fwmTq0K5AOQoS7ceDbCI-2hoqKPbHDTxe1jDI3kx9PqJP0DYLPdaqyKhGS4wrfiXkXey2PTFdDPUx6-DZXv50w';
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
 
   return {
     props: {

@@ -72,7 +72,7 @@ const CounselChatHistory = styled.div`
 const HistoryId = () => {
   const router = useRouter();
   const counselId: any = router.query.id!;
-  const { data: result } = useSWR(`/api/counsel/finish/${counselId}`, fetcher);
+  const { data: result } = useSWR(`/api/counsel/end/${counselId}`, fetcher);
 
   // const chatData = result?.messages
 

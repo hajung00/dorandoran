@@ -264,7 +264,7 @@ const Contents = ({ token }: Props) => {
   const [contentModal, setContentModal] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && testCheck) {
+    if (!isLoading && !testCheck) {
       const newList = psychotherapyList.slice(1, 7);
       setPsychotherapyList([...newList]);
       setCurrentContentCategory('depression');
@@ -284,7 +284,7 @@ const Contents = ({ token }: Props) => {
     <Layout>
       <Content>
         <ContentHeader>
-          {!testCheck ? (
+          {testCheck ? (
             <div className='today-famous'>
               <div>오늘의 명언</div>
               {/* <p>{contentsData?.quotation}</p> */}
