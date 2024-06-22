@@ -9,7 +9,7 @@ export const startCounselAPI = async (token: string) => {
   };
 
   const result = await axios
-    .post(`${backUrl}/api/counsel/start`, '', { headers })
+    .get(`${backUrl}/api/counsel/start`, { headers })
     .then((response: any) => {
       return response.data.data;
     })
@@ -40,7 +40,7 @@ export const chatCounselAPI = async (
   const result = await axios
     .post(`${backUrl}/api/counsel/chat`, params, { headers })
     .then((response: any) => {
-      return response.state;
+      return response.data.data;
     })
     .catch((error: any) => {
       // 에러 처리
@@ -58,9 +58,9 @@ export const endCounselAPI = async (token: string, counselId: string) => {
   };
 
   const result = await axios
-    .post(`${backUrl}/api/counsel/end/${parseInt(counselId)}`, '', { headers })
+    .get(`${backUrl}/api/counsel/end/${parseInt(counselId)}`, { headers })
     .then((response: any) => {
-      return response.state;
+      return response.status;
     })
     .catch((error: any) => {
       // 에러 처리

@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import fetcher from '@/utils/fetchers';
 import useSWR from 'swr';
 import { chatCounselAPI } from '@/pages/api/counsel';
+import moment from 'moment';
 
 const Header = styled.header`
   padding: 60px 20px 10px 20px;
@@ -63,43 +64,16 @@ interface Props {
 const Chat = ({ token }: Props) => {
   const router = useRouter();
   const counselId: any = router.query.id!;
-  // const {
-  //   data: chatData,
-  //   mutate: mutateChat,
-  //   revalidate,
-  // } = useSWR(`/api/counsel/proceed/${counselId}`, fetcher);
 
-  const chatData = [
-    {
-      role: '상담원',
-      message:
-        '안녕하세요 조성혁님! 어떤 내용이든 좋으니, 저에게 마음편히 이야기해주세요.',
-      date: '2024-05-24T13:03:34.000Z',
-    },
-    {
-      role: '내담자',
-      message: '나는 하정이',
-      date: '2024-05-24T13:03:34.000Z',
-    },
-    {
-      role: '상담원',
-      message: '나는 상담원',
-      date: '2024-06-18T13:03:34.000Z',
-    },
-    {
-      role: '내담자',
-      message: '나는 하정이',
-      date: '2024-06-18T13:03:34.000Z',
-    },
-  ];
+  const { data: chatData, mutate: mutateChat } = useSWR(
+    `/api/counsel/proceed/${counselId}`,
+    fetcher
+  );
 
-  const setSize = 1;
-
-  const isEmpty = chatData?.length === 0;
-  const isReachingEnd = isEmpty || (chatData && chatData?.length < 20) || false;
-  // const scrollbarRef = useRef<Scrollbars>(null);
-
-  const chatSections = makeSection(chatData ? chatData.flat() : []);
+  const messagesEndRef = useRef<any>(null);
+  const chatSections = makeSection(
+    chatData?.messages ? chatData.messages.flat() : []
+  );
 
   const [chat, setChat] = useState('');
 
@@ -108,39 +82,54 @@ const Chat = ({ token }: Props) => {
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-  const onSubmitForm = useCallback(async (chat: string) => {
-    console.log('채팅 전송', chat);
-    setIsLoading((prev) => !prev);
-    // if (chat.trim() && chatData) {
-    //   const savedChat = chat;
-    //   mutateChat((prevChatData: any) => {
-    //     prevChatData.push({
-    //       counselId: counselId,
-    //       message: savedChat,
-    //       date: new Date(),
-    //     });
-    //     return prevChatData;
-    //   }).then(() => {
-    //     setIsLoading((prev) => !prev);
-    //     setChat('');
-    //     scrollbarRef.current?.scrollToBottom();
-    //   });
-
-    //   const result = await chatCounselAPI(token, counselId, savedChat);
-    //   if (result === 200) {
-    //     setIsLoading((prev) => !prev);
-    //     revalidate();
-    //   }
-    // }
-
-    // 채팅 전송 api
-    const timer = setTimeout(() => {
+  const onSubmitForm = useCallback(
+    async (chat: string) => {
       setIsLoading((prev) => !prev);
-      setChat('');
-    }, 10000);
 
-    return () => clearTimeout(timer);
-  }, []);
+      if (chat.trim() && chatData?.messages) {
+        const savedChat = chat;
+        mutateChat((prevChatData: any) => {
+          prevChatData.messages.push({
+            role: '내담자',
+            message: savedChat,
+            date: moment().format('YYYY-MM-DD'),
+          });
+          return prevChatData;
+        }).then(() => {
+          setChat('');
+          scrollToBottom();
+        });
+
+        const result = await chatCounselAPI(token, counselId, chat);
+
+        if (result) {
+          mutateChat((prevChatData: any) => {
+            prevChatData.messages.push({
+              role: '상담원',
+              message: result,
+              date: moment().format('YYYY-MM-DD'),
+            });
+            return prevChatData;
+          }).then(() => {
+            setChat('');
+            scrollToBottom();
+            setIsLoading((prev) => !prev);
+          });
+        }
+      }
+    },
+    [chat, chatData]
+  );
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatData]);
 
   const [isVoice, setIsVoice] = useState(false);
   const onClickVoice = useCallback(() => {
@@ -168,10 +157,8 @@ const Chat = ({ token }: Props) => {
       </Header>
       <ChatSection
         chatSections={chatSections}
-        // ref={scrollbarRef}
-        setSize={setSize}
-        isReachingEnd={isReachingEnd}
         isLoading={isLoading}
+        ref={messagesEndRef}
       />
       {!isVoice ? (
         <ChatBox

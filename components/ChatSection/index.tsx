@@ -1,4 +1,11 @@
-import React, { MutableRefObject, forwardRef, useCallback } from 'react';
+import React, {
+  MutableRefObject,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import Chat from '../Chat';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -10,10 +17,6 @@ export const ChatZone = styled.div`
   flex: 1;
   flex-direction: column;
   padding: 0 20px;
-
-  .custom {
-    height: auto !important;
-  }
 `;
 
 export const Section = styled.section`
@@ -41,50 +44,34 @@ export const StickyHeader = styled.div`
 
 interface Props {
   chatSections: any;
-  // setSize: (f: (index: number) => number) => any;
-  setSize: any;
-  isReachingEnd: boolean;
   isLoading?: boolean;
 }
 
-const ChatSection = ({
-  chatSections,
-  setSize,
-  isReachingEnd,
-  isLoading,
-}: any) => {
-  // 채팅을 위로 올렸을 때, 이전 채팅 가져오기
-  // const onScroll = useCallback((values) => {
-  //   if (values.scrollTop === 0 && !isReachingEnd) {
-  //     setSize((prevSize) => prevSize + 1).then(() => {
-  //       //스크롤 위치 유지
-  //       const current = (scrollRef as MutableRefObject<Scrollbars>)?.current;
-  //       if (current) {
-  //         current.scrollTop(current.getScrollHeight() - values.scrollHeight);
-  //       }
-  //     });
-  //   }
-  // }, []);
+const ChatSection = forwardRef<HTMLDivElement, Props>(
+  ({ chatSections, isLoading }, ref) => {
+    console.log(ref);
 
-  return (
-    <ChatZone>
-      {/* <Scrollbars className='custom' autoHide> */}
-      {Object.entries(chatSections).map(([date, chats]: any, i) => {
-        return (
-          <Section key={i}>
-            <StickyHeader className={`section-${date}`} key={date}>
-              <button>{moment(date).format('YYYY년 M월 DD일')}</button>
-            </StickyHeader>
-            {chats.map((chat: { [key: string]: string }, idx: number) => (
-              <Chat key={idx} chat={chat} />
-            ))}
-          </Section>
-        );
-      })}
-      {isLoading && <Chat chat={undefined} />}
-      {/* </Scrollbars> */}
-    </ChatZone>
-  );
-};
+    return (
+      <ChatZone>
+        {Object.entries(chatSections).map(([date, chats]: any, i) => {
+          return (
+            <Section key={i}>
+              <StickyHeader className={`section-${date}`} key={date}>
+                <button>{moment(date).format('YYYY년 M월 DD일')}</button>
+              </StickyHeader>
+              {chats.map((chat: { [key: string]: string }, idx: number) => (
+                <Chat key={idx} chat={chat} />
+              ))}
+            </Section>
+          );
+        })}
+        {isLoading && <Chat chat={undefined} />}
+        <div ref={ref}></div>
+      </ChatZone>
+    );
+  }
+);
+
+ChatSection.displayName = 'ChatSection';
 
 export default ChatSection;

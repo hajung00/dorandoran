@@ -55,69 +55,36 @@ const CounselResultSection = styled.div`
 
 const CounselChatHistory = styled.div`
   padding: 0 20px;
-  margin-top: 38px;
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 436px);
+  overflow: auto;
 
   .title {
+    padding-top: 38px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';
     font-size: clamp(20px, 5vw, 24px);
     font-weight: 600;
     line-height: 140%; /* 33.6px */
     margin-bottom: 6px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: #fff;
   }
 `;
 
 const HistoryId = () => {
   const router = useRouter();
   const counselId: any = router.query.id!;
-  const { data: result } = useSWR(`/api/counsel/end/${counselId}`, fetcher);
+  const { data: chatData } = useSWR(`/api/counsel/end/${counselId}`, fetcher);
 
-  // const chatData = result?.messages
+  const messagesEndRef = useRef(null);
 
-  const chatData = [
-    {
-      role: '상담원',
-      message:
-        '안녕하세요 조성혁님! 어떤 내용이든 좋으니, 저에게 마음편히 이야기해주세요.',
-      date: '2024-05-24T13:03:34.000Z',
-    },
-    {
-      role: '내담자',
-      message: '나는 하정이',
-      date: '2024-05-24T13:03:34.000Z',
-    },
-    {
-      role: '상담원',
-      message: '나는 상담원',
-      date: '2024-06-18T13:03:34.000Z',
-    },
-    {
-      role: '내담자',
-      message: '나는 하정이',
-      date: '2024-06-18T13:03:34.000Z',
-    },
-    {
-      role: '상담원',
-      message: '나는 상담원',
-      date: '2024-06-18T13:03:34.000Z',
-    },
-    {
-      role: '내담자',
-      message: '나는 하정이',
-      date: '2024-06-18T13:03:34.000Z',
-    },
-  ];
+  const chatSections = makeSection(chatData ? chatData.messages.flat() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
 
-  const isEmpty = chatData?.length === 0;
-  const isReachingEnd = isEmpty || (chatData && chatData?.length < 20) || false;
-  // const scrollbarRef = useRef<Scrollbars>(null);
-
-  const chatSections = makeSection(chatData ? chatData.flat() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
-
-  const setSize = 1;
-
+  console.log('chatSections', chatSections);
   return (
     <Layout>
       <Header>
@@ -133,21 +100,16 @@ const HistoryId = () => {
       <CounselResultSection>
         <div className='counsel-title'>
           <p>심리검사 결과</p>
-          <p>조성혁님의 심리상태가 더 좋아졌어요!</p>
+          <p>{chatData?.result}</p>
         </div>
         <div className='counsel-summary'>
           <p>상담 내용 요약</p>
-          <div>{result?.summary}</div>
+          <div>{chatData?.summary}</div>
         </div>
       </CounselResultSection>
       <CounselChatHistory>
         <div className='title'>대화 내역</div>
-        <ChatSection
-          chatSections={chatSections}
-          // ref={scrollbarRef}
-          setSize={setSize}
-          isReachingEnd={isReachingEnd}
-        />
+        <ChatSection chatSections={chatSections} ref={messagesEndRef} />
       </CounselChatHistory>
     </Layout>
   );

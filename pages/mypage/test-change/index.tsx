@@ -71,6 +71,7 @@ const CompleteSection = styled.div`
     display: flex;
     flex-direction: column;
     gap: 18px;
+    margin-bottom: 20px;
 
     .consel-title {
       color: var(--gray09, #222);
@@ -170,7 +171,7 @@ const TestChange = ({ token }: Props) => {
                       router.push(`/history/${list.counselId}`);
                     }}
                   >
-                    <p className='consel-title'>{list.title}상담명</p>
+                    <p className='consel-title'>{list.title}</p>
                     <p className='consel-date'>{list.createdDate}</p>
                   </div>
                 ))}

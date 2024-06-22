@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 // import svg
@@ -10,6 +10,7 @@ import { getCookieValue } from '@/utils/getCookieValue';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 import { startCounselAPI } from '@/pages/api/counsel';
+import makeEmbedUrl from '@/utils/makeEmbedUrl';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -88,8 +89,7 @@ const Content = styled.div`
   }
 
   .title {
-    margin-top: 78px;
-    padding: 0 20px;
+    margin-top: 48px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';
     font-size: clamp(20px, 5vw, 24px);
@@ -99,26 +99,44 @@ const Content = styled.div`
 
   .content-wrapper {
     margin-top: 18px;
-    & > div > p:last-child {
+    padding: 0 20px;
+
+    .main-title {
+      margin-top: 106px;
+      margin-bottom: 8px;
+      color: var(--gray09, #222);
+      font-family: 'Pretendard';
+      font-size: clamp(20px, 5vw, 24px);
+      font-weight: 600;
+      line-height: 140%; /* 33.6px */
+    }
+
+    .sub-discription {
+      color: var(--gray07, #666);
+      font-family: 'Pretendard';
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%; /* 25.2px */
+    }
+    & > div > p {
       margin-top: -18px;
       margin-bottom: 30px;
-      padding: 0 20px;
       color: var(--gray07, #666);
       font-family: 'Pretendard';
       font-size: clamp(16px, 4vw, 20px);
       font-weight: 400;
       line-height: 140%; /* 28px */
     }
-
     .title {
-      margin-top: 106px;
       font-size: clamp(18px, 5vw, 22px);
       margin-bottom: 26px;
     }
-
     .content {
+      width: 100vw;
       background: var(--gray01, #f7f7f7);
       height: 290px;
+      transform: translateX(-20px);
     }
   }
 
@@ -150,12 +168,21 @@ const Result = ({ token }: Props) => {
   const router = useRouter();
   const counselId: any = router.query.id!;
 
-  const { data: result } = useSWR(`/api/counsel/end/${counselId}`, fetcher);
+  const { data: result, isLoading } = useSWR(
+    `/api/counsel/end/${counselId}`,
+    fetcher
+  );
+  const [embedUrlData, setEmbedUrlData] = useState<any>();
 
   const moveToCounsel = useCallback(() => {
     router.push('/counsel');
   }, []);
 
+  useEffect(() => {
+    result && setEmbedUrlData(makeEmbedUrl(result?.contents));
+  }, [isLoading, result]);
+
+  console.log(result, embedUrlData);
   return (
     <Layout>
       <Header>
@@ -167,7 +194,7 @@ const Result = ({ token }: Props) => {
         <div className='content-section'>
           <div className='counsel-title'>
             <p>심리검사 결과</p>
-            <p>조성혁님의 심리상태가 더 좋아졌어요!</p>
+            <p>{result?.result}</p>
             <button
               className='counsel-start-button'
               onClick={() => {
@@ -183,21 +210,36 @@ const Result = ({ token }: Props) => {
             <div>{result?.summary}</div>
           </div>
           <div className='content-wrapper'>
-            <div>
-              <p className='title'>심리치료 콘텐츠를 시청해보세요.</p>
-              <p>
-                도란도란이 맞춤 콘텐츠를 추천해드릴게요.
-                <br />
-                콘텐츠 탭으로 이동하시면 더 많은 콘텐츠를 보실 수 있어요.
-              </p>
-            </div>
-            <div className='content'></div>
+            <p className='main-title'>심리치료 콘텐츠를 시청해보세요.</p>
+            <p className='sub-discription'>
+              도란도란이 맞춤 콘텐츠를 추천해드릴게요.
+              <br />
+              콘텐츠 탭으로 이동하시면 더 많은 콘텐츠를 보실 수 있어요.
+            </p>
+            <button
+              className='counsel-start-button'
+              onClick={() => {
+                router.push('/contents');
+              }}
+            >
+              콘텐츠 탭으로 이동하기{' '}
+              <RightArrowSVG width={20} height={20} alt={'arrow'} />
+            </button>
           </div>
           {result?.contents.map(
             (content: { [key: string]: string }, i: number) => (
               <div key={i} className='content-wrapper'>
                 <p className='title'>{content.title}</p>
-                <div className='content'></div>
+                <div className='content'>
+                  <iframe
+                    width={'100%'}
+                    height='290'
+                    src={embedUrlData && embedUrlData[i].embedUrl}
+                    title='YouTube video player'
+                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
             )
           )}

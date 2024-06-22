@@ -8,8 +8,6 @@ import Image from 'next/image';
 import CounselorPNG from '../../public/image/counselor.png';
 
 const ChatStyle = styled.div`
-  margin-bottom: 16px;
-
   .content {
     max-width: 312px;
     padding: 14px;
@@ -27,6 +25,7 @@ const ChatStyle = styled.div`
     color: #000;
     max-width: fit-content;
     float: right;
+    margin-bottom: 16px;
   }
 
   .receiver {
@@ -36,6 +35,7 @@ const ChatStyle = styled.div`
     border-radius: 16px 16px 16px 0px;
     color: var(--gray09, #222);
     clear: right;
+    margin-bottom: 16px;
 
     .profile {
       width: 68px;
@@ -71,7 +71,6 @@ interface Props {
 }
 
 const Chat = ({ chat }: Props) => {
-  console.log(chat);
   return (
     <ChatStyle>
       {chat ? (

@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
@@ -14,8 +14,13 @@ const Header = styled.header`
   padding: 126px 20px 0 20px;
   color: #222;
 `;
-const Point = styled.span`
-  color: var(--doranblue, #565bff);
+const Point = styled.span<{ color: string }>`
+  color: ${(props: any) =>
+    props.color === '안정적'
+      ? '#565BFF'
+      : props.color === '불안정'
+      ? '#BA9100'
+      : '#F25151'};
 `;
 
 const Content = styled.div`
@@ -182,6 +187,26 @@ const PsychologicalTestResult = () => {
     else if (category === 'ANXIETY') return '불안감';
   }, []);
 
+  const [psychologicalState, setPsychologicelState] = useState('');
+  const getPsychologicalState = () => {
+    const standard = testResult?.result.map(
+      (item: { [key: string]: any }) => item.standard
+    );
+    if (standard.includes('심각')) {
+      setPsychologicelState('위험');
+    } else if (standard.every((value: string) => value === '적음')) {
+      setPsychologicelState('안정적');
+    } else {
+      setPsychologicelState('불안정');
+    }
+  };
+
+  useEffect(() => {
+    if (testResult) {
+      getPsychologicalState();
+    }
+  }, [testResult]);
+
   return (
     <div>
       <Header></Header>
@@ -189,7 +214,9 @@ const PsychologicalTestResult = () => {
         <div className='test-result-title'>
           <p>심리검사 결과</p>
           <p>
-            {testResult?.name}님의 심리상태는 <Point>안정적</Point>이에요.
+            {testResult?.name}님의 심리상태는{' '}
+            <Point color={psychologicalState}>{psychologicalState}</Point>
+            {psychologicalState === '안정적' ? '이에요.' : '해요.'}
           </p>
         </div>
         <div className='test-date'>
