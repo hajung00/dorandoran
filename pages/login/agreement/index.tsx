@@ -1,17 +1,20 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 // import svg
-import XIcon from '../../../public/icons/x.svg';
+import ArrowIcon from '../../../public/icons/arrow.svg';
 import CheckIcon from '../../../public/icons/check.svg';
+import ArrowUp from '../../../public/icons/chevron-up.svg';
+import ArrowDown from '../../../public/icons/chevron-down.svg';
 
 // import components
 import Layout from '@/components/Layout';
-import { useRouter } from 'next/router';
 import { joinAPI } from '@/pages/api/user';
-import useSWR from 'swr';
 import { USER_ACCOUNT_KEY } from '@/hooks/useUserAccount';
+import AgreementContent from '@/components/AgreementContent';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -20,55 +23,61 @@ const Header = styled.header`
   .icon-wrapper {
     display: inline-block;
     padding: 12px 8px;
+    cursor: pointer;
   }
 `;
 
 const Content = styled.div`
   padding: 0 20px;
   margin-top: 22px;
-  margin-bottom: 12.5%;
-  flex: 1;
+  display: flex;
+  flex-direction: column;
 
   .description {
     color: #222;
     font-family: 'Pretendard';
     font-size: clamp(20px, 6vw, 26px);
     font-weight: 600;
-    margin-bottom: 65px;
+    margin-bottom: 22px;
   }
 
-  .sub-description {
-    margin-top: 12px;
-    margin-bottom: 48px;
-    color: #666;
+  .toggle-agreement {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--gray08, #444);
     font-family: 'Pretendard';
-    font-size: clamp(16px, 5vw, 20px);
-    font-weight: 400;
-  }
-  .point {
-    display: block;
-    margin-bottom: 20px;
-    color: #222;
-    font-family: 'Pretendard';
-    font-size: clamp(20px, 6vw, 26px);
-    font-weight: 600;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.4px;
+    padding: 20px 4px;
+    cursor: pointer;
   }
 
   .agreement-content {
-    height: 450px;
-    margin-bottom: 50px;
+    overflow: auto;
+    flex: 1;
+    max-height: 53.3vh;
+    visibility: hidden;
+  }
+
+  .visible {
+    visibility: visible;
   }
 
   .check-box-section {
     display: flex;
     gap: 15px;
     align-items: center;
-    margin-bottom: 35px;
+    padding: 20px 0;
+    margin-bottom: 12px;
 
     & > p {
       color: var(--gray09, #222);
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(18px, 4vw, 20px);
       font-style: normal;
       font-weight: 500;
       line-height: normal;
@@ -93,6 +102,7 @@ const Content = styled.div`
 
   & > button {
     width: 100%;
+    margin-bottom: 68px;
     border-radius: 18px;
     background: #e3e3e3;
     border: none;
@@ -119,6 +129,7 @@ const Agreement = () => {
 
   const [checked, setChecked] = useState(false);
   const [enableButton, setEnableButton] = useState(false);
+  const [agreementToggle, setAgreementToggle] = useState(false);
 
   useEffect(() => {
     if (checked) {
@@ -128,7 +139,10 @@ const Agreement = () => {
     }
   }, [checked]);
 
-  console.log(account);
+  const agreementToggleHandler = useCallback(() => {
+    setAgreementToggle((prev) => !prev);
+  }, []);
+
   const onClickJoinHandler = useCallback(async () => {
     if (checked) {
       // 회원가입 api 적용
@@ -153,20 +167,29 @@ const Agreement = () => {
         <div
           className='icon-wrapper'
           onClick={() => {
-            router.push('/counsel');
+            router.back();
           }}
         >
-          <XIcon width={18} height={18} alt={'cancel'} stroke={'#666666'} />
+          <ArrowIcon width={21} height={21} alt={'prev'} stroke={'#666666'} />
         </div>
       </Header>
       <Content>
-        <p className='description'>서비스 이용약관에 동의해주세요.</p>
-        <p className='sub-description'>
-          <span className='point'>도란도란 서비스는</span>
-          내담자님의 개인정보와 상담내역을 안전하게 보관해요. <br />위 항목들을
-          보관하는것에 동의해주세요.
+        <p className='description'>
+          도란도란을 이용하기 위해
+          <br />
+          아래 서비스 이용약관에 동의해주세요.
         </p>
-        <div className='agreement-content'>이용 약관 내용</div>
+        <div className='toggle-agreement' onClick={agreementToggleHandler}>
+          약관 내용 펼쳐보기
+          {agreementToggle ? (
+            <ArrowUp width={24} height={24} alt={'list-up'} />
+          ) : (
+            <ArrowDown width={24} height={24} alt={'list-down'} />
+          )}
+        </div>
+        <div className={`agreement-content ${agreementToggle && 'visible'}`}>
+          <AgreementContent />
+        </div>
         <div
           className='check-box-section'
           onClick={() => {
@@ -185,7 +208,7 @@ const Agreement = () => {
               />
             )}
           </div>
-          <p>위 약관에 동의합니다.(필수)</p>
+          <p>도란도란 챗봇 서비스 이용약관 (필수)</p>
         </div>
         <button
           className={`${enableButton ? 'enable' : ''}`}

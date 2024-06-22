@@ -292,7 +292,7 @@ const Contents = ({ token }: Props) => {
           {testCheck ? (
             <div className='today-famous'>
               <div>오늘의 명언</div>
-              {/* <p>{contentsData?.quotation}</p> */}
+              <p>{contentsData?.quotation}</p>
             </div>
           ) : (
             <>

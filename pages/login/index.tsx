@@ -223,7 +223,7 @@ const Login = ({ token }: Props) => {
         setLoginAlertModal(true);
       }
     }
-  }, [name, phoneNumber, enableRequestButton]);
+  }, [name, phoneNumber, enableRequestButton, verificationCode]);
 
   // 인증문자 받기 클릭 후 유효 시간 설정
   useEffect(() => {
