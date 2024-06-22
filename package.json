@@ -25,6 +25,7 @@
     "react-say": "^2.1.0",
     "react-speech-recognition": "^3.10.0",
     "styled-components": "^6.1.11",
+    "swiper": "^11.1.4",
     "swr": "^2.2.5"
   },
   "devDependencies": {
