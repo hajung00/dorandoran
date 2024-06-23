@@ -10,9 +10,9 @@ import Chat from '../Chat';
 import styled from 'styled-components';
 import moment from 'moment';
 
-export const ChatZone = styled.div`
+export const ChatZone = styled.div<{ isVoice: string }>`
   width: 100%;
-  margin-bottom: 94px;
+  margin-bottom: ${(props) => (props.isVoice === 'true' ? '320px' : '104px')};
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -45,14 +45,15 @@ export const StickyHeader = styled.div`
 interface Props {
   chatSections: any;
   isLoading?: boolean;
+  isVoice?: boolean;
 }
 
 const ChatSection = forwardRef<HTMLDivElement, Props>(
-  ({ chatSections, isLoading }, ref) => {
+  ({ isVoice, chatSections, isLoading }, ref) => {
     console.log(ref);
 
     return (
-      <ChatZone>
+      <ChatZone isVoice={`${isVoice}`}>
         {Object.entries(chatSections).map(([date, chats]: any, i) => {
           return (
             <Section key={i}>

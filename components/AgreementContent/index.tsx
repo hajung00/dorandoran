@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 const AgreementContentStyle = styled.div`
-  padding: 20px 10px;
+  padding: 20px 30px;
+  background: var(--gray01, #f7f7f7);
+
   .content-wrapper {
     & > div {
       font-family: 'Pretendard';

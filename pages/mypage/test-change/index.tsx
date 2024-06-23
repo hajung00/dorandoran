@@ -103,7 +103,9 @@ interface Props {
 
 const TestChange = ({ token }: Props) => {
   const router = useRouter();
-  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
+  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
+    fetcher(url, token)
+  );
 
   const [clickDate, setClickDate] = useState('');
   const [completeCounselList, setCompleteCounselList] =

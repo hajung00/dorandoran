@@ -96,10 +96,12 @@ interface Props {
 const History = ({ token }: Props) => {
   const [listSection, setListSection] = useState('counsel');
 
-  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
+  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
+    fetcher(url, token)
+  );
   const { data: listData } = useSWR(
     `/api/counsel/history/${listSection}`,
-    fetcher
+    (url) => fetcher(url, token)
   );
 
   const handleListSection = useCallback((type: string) => {

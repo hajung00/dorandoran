@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 import MypageNonTest from '@/components/MyPageNonTest';
+import { getCookieValue } from '@/utils/getCookieValue';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -203,12 +204,18 @@ const TestItem = styled.div<{ background: string; color: string }>`
   }
 `;
 
-const TestResult = () => {
+interface Props {
+  token: string;
+}
+
+const TestResult = ({ token }: Props) => {
   const router = useRouter();
-  const { data: testCheck } = useSWR('/api/assessment/has-result', fetcher);
+  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
+    fetcher(url, token)
+  );
   const { data: testResult } = useSWR(
     '/api/mypage/first-assessment-result',
-    fetcher
+    (url) => fetcher(url, token)
   );
 
   const typeByScore = [
@@ -325,6 +332,19 @@ const TestResult = () => {
       </Content>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default TestResult;

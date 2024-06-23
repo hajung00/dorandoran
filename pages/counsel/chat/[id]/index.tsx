@@ -15,6 +15,7 @@ import fetcher from '@/utils/fetchers';
 import useSWR from 'swr';
 import { chatCounselAPI } from '@/pages/api/counsel';
 import moment from 'moment';
+import useMicDiscription from '@/hooks/useMicDiscription';
 
 const Header = styled.header`
   padding: 60px 20px 10px 20px;
@@ -64,16 +65,21 @@ interface Props {
 const Chat = ({ token }: Props) => {
   const router = useRouter();
   const counselId: any = router.query.id!;
+  const { enableMicDiscription } = useMicDiscription();
 
   const { data: chatData, mutate: mutateChat } = useSWR(
     `/api/counsel/proceed/${counselId}`,
-    fetcher
+    (url) => fetcher(url, token)
   );
 
   const messagesEndRef = useRef<any>(null);
   const chatSections = makeSection(
     chatData?.messages ? chatData.messages.flat() : []
   );
+
+  useEffect(() => {
+    enableMicDiscription();
+  }, []);
 
   const [chat, setChat] = useState('');
 
@@ -158,6 +164,7 @@ const Chat = ({ token }: Props) => {
       <ChatSection
         chatSections={chatSections}
         isLoading={isLoading}
+        isVoice={isVoice}
         ref={messagesEndRef}
       />
       {!isVoice ? (

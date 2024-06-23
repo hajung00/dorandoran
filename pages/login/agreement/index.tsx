@@ -61,6 +61,9 @@ const Content = styled.div`
     flex: 1;
     max-height: 53.3vh;
     visibility: hidden;
+    width: 100vw;
+    transform: translateX(-20px);
+    max-width: 512px;
   }
 
   .visible {

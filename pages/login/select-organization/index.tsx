@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 // import svg
-import XIcon from '../../../public/icons/x.svg';
+import ArrowIcon from '../../../public/icons/arrow.svg';
 import ArrowUp from '../../../public/icons/chevron-up.svg';
 import ArrowDown from '../../../public/icons/chevron-down.svg';
 
@@ -20,6 +20,7 @@ const Header = styled.header`
   .icon-wrapper {
     display: inline-block;
     padding: 12px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -68,7 +69,7 @@ const Content = styled.div`
 
 const SelectSection = styled.div`
   margin-bottom: 121%;
-
+  cursor: pointer;
   & > p {
     color: var(--gray07, #666);
     font-family: 'Pretendard';
@@ -192,10 +193,10 @@ const SelectOrganization = ({ organizationList }: Props) => {
         <div
           className='icon-wrapper'
           onClick={() => {
-            router.push('/counsel');
+            router.back();
           }}
         >
-          <XIcon width={18} height={18} alt={'cancel'} stroke={'#666666'} />
+          <ArrowIcon width={21} height={21} alt={'cancel'} stroke={'#666666'} />
         </div>
       </Header>
       <Content>

@@ -34,10 +34,12 @@ const NonLoginStyle = styled.div`
   }
 
   & > button {
+    min-width: fit-content;
+    margin: 0 auto;
     margin-top: 50px;
     display: flex;
-    width: 100%;
-    padding: 4.7% 4px;
+    width: 61%;
+    padding: 4.7% 20px;
     justify-content: center;
     align-items: center;
     gap: 4px;

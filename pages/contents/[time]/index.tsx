@@ -12,6 +12,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 10.5px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -65,22 +66,35 @@ const MeditationContent = ({ time }: Props) => {
   const router = useRouter();
 
   const [contentLink, setContentLink] = useState('');
+  const [contentTitle, setContentTitle] = useState('');
+
   useEffect(() => {
     switch (time) {
-      case '3분':
+      case '3':
         setContentLink('https://www.youtube.com/embed/ClrNeM9528A');
+        setContentTitle(
+          '[아침 3분 명상] ‘~해야만 하는 것’은 없어요. | 동기부여 · 마음챙김 · 짧은명상'
+        );
         break;
-      case '5분':
+      case '5':
         setContentLink('https://www.youtube.com/embed/zGifCNokUy8');
+        setContentTitle('아침에 하는 5분 긍정확언 (아침 확언 명상)');
         break;
-      case '10분':
+      case '10':
         setContentLink('https://www.youtube.com/embed/7lKI_XVHh_Q');
+        setContentTitle(
+          '10분만에 마음을 다스리는 법 | 마음챙김 명상, 알아차림, 생각 비우기'
+        );
         break;
-      case '30분':
+      case '30':
         setContentLink('https://www.youtube.com/embed/vvHy990p844');
+        setContentTitle('윤홍식의 몰라명상_30분');
         break;
-      case '1시간':
+      case '60':
         setContentLink('https://www.youtube.com/embed/_wPs5MLzqwY');
+        setContentTitle(
+          '☯ [미라클모닝] 매일아침 하루 운이 좋아지는 아침명상▶오늘하루가 180도 바뀌는 감사명상 [리뉴얼] 하루를 시작하는 아침루틴 "매일매일 아침마다 모든 것이 좋아진다" [60분]'
+        );
         break;
     }
   }, [time]);
@@ -91,7 +105,7 @@ const MeditationContent = ({ time }: Props) => {
         <div
           className='icon-wrapper'
           onClick={() => {
-            router.push('/contents');
+            router.back();
           }}
         >
           <ArrowSVG width={21} height={21} alt={'prev'} />
@@ -116,7 +130,7 @@ const MeditationContent = ({ time }: Props) => {
             allowFullScreen
           ></iframe>
         </div>
-        <p className='content-title'>영상 유튜브 제목</p>
+        <p className='content-title'>{contentTitle}</p>
       </ContentWrapper>
     </Layout>
   );

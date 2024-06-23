@@ -142,10 +142,6 @@ const ChatBox = ({
     disableMicDiscription();
   }, []);
 
-  useEffect(() => {
-    enableMicDiscription();
-  }, []);
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter') {
       onSubmitForm(chat);

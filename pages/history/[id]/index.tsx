@@ -9,6 +9,7 @@ import ChatSection from '@/components/ChatSection';
 import makeSection from '@/utils/makeSection';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
+import { getCookieValue } from '@/utils/getCookieValue';
 
 const Header = styled.header`
   padding: 60px 20px 0 20px;
@@ -75,10 +76,16 @@ const CounselChatHistory = styled.div`
   }
 `;
 
-const HistoryId = () => {
+interface Props {
+  token: string;
+}
+
+const HistoryId = ({ token }: Props) => {
   const router = useRouter();
   const counselId: any = router.query.id!;
-  const { data: chatData } = useSWR(`/api/counsel/end/${counselId}`, fetcher);
+  const { data: chatData } = useSWR(`/api/counsel/end/${counselId}`, (url) =>
+    fetcher(url, token)
+  );
 
   const messagesEndRef = useRef(null);
 
@@ -113,6 +120,19 @@ const HistoryId = () => {
       </CounselChatHistory>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default HistoryId;

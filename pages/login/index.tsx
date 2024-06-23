@@ -21,6 +21,7 @@ const Header = styled.header`
   .icon-wrapper {
     display: inline-block;
     padding: 12px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -105,6 +106,7 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
     align-items: center;
     gap: 4px;
     border-radius: 18px;
+    outline: none;
     border: ${(props: any) =>
       props.bordercolor === 'true' ? '1px solid #FF2020' : '1px solid #d9d9d9'};
     background: #fff;

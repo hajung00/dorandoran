@@ -102,7 +102,9 @@ interface Props {
 }
 const DropOut1 = ({ token }: Props) => {
   const router = useRouter();
-  const { data: userData } = useSWR('/api/mypage/main', fetcher);
+  const { data: userData } = useSWR('/api/mypage/main', (url) =>
+    fetcher(url, token)
+  );
 
   // 회원 탈퇴
   const DropOutHandler = useCallback(async () => {

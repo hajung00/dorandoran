@@ -89,7 +89,9 @@ interface Props {
 const MyPage = ({ token }: Props) => {
   const router = useRouter();
 
-  const { data: userData } = useSWR('/api/mypage/main', fetcher);
+  const { data: userData } = useSWR('/api/mypage/main', (url) =>
+    fetcher(url, token)
+  );
 
   const [logoutModal, setLogoutModal] = useState(false);
   const logoutModalHandler = useCallback(() => {

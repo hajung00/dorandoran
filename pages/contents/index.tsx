@@ -127,6 +127,7 @@ const ContentSection = styled.div`
       padding: 0;
       list-style: none;
       box-sizing: border-box;
+      cursor: pointer;
     }
 
     & > ul {
@@ -163,6 +164,7 @@ const ContentSection = styled.div`
 `;
 
 const MeditationTime = styled.div<{ color: string }>`
+  cursor: pointer;
   min-width: 21.6%;
   aspect-ratio: 1 / 1;
   border: ${(props: any) => props.color && `1px solid ${props.color}`};
@@ -229,11 +231,11 @@ const Contents = ({ token }: Props) => {
 
   const { data: testCheck, isLoading } = useSWR(
     '/api/assessment/has-result',
-    fetcher
+    (url) => fetcher(url, token)
   );
   const { data: contentsData, isLoading: contentsLoading } = useSWR(
     `/api/contents/main/${currentContentCategory}`,
-    fetcher
+    (url) => fetcher(url, token)
   );
   const [embedUrlData, setEmbedUrlData] = useState<any>();
 

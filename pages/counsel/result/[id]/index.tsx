@@ -170,7 +170,7 @@ const Result = ({ token }: Props) => {
 
   const { data: result, isLoading } = useSWR(
     `/api/counsel/end/${counselId}`,
-    fetcher
+    (url) => fetcher(url, token)
   );
   const [embedUrlData, setEmbedUrlData] = useState<any>();
 

@@ -147,13 +147,12 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
     onSubmitForm(transcript);
     handleStop();
     resetTranscript();
-  }, []);
+  }, [transcript]);
 
   const handleStop = () => {
     SpeechRecognition.stopListening();
   };
 
-  console.log(transcript, listening);
   return (
     <ChatVoiceStyle>
       <ChatVoiceStart
