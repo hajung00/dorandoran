@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Cookies from 'js-cookie';
 
@@ -21,6 +21,7 @@ const ChatBoxStyle = styled.div`
   max-width: 512px;
   background: #fff;
   z-index: 999;
+  align-items: end;
 
   .icon-wrapper {
     display: flex;
@@ -36,13 +37,14 @@ const ChatBoxStyle = styled.div`
     width: calc(100% - 60px);
     position: relative;
     display: flex;
-    align-items: center;
+    align-items: end;
     gap: 13px;
 
-    & > input {
+    & > textarea {
       width: 100%;
-      height: 100%;
-      padding: 10px 14px;
+      height: 56px;
+      padding: 16px 14px;
+      padding-right: 63px;
       border-radius: 16px;
       background: var(--gray01, #f7f7f7);
       outline: none;
@@ -53,6 +55,7 @@ const ChatBoxStyle = styled.div`
       font-weight: 400;
       letter-spacing: -0.4px;
       text-transform: uppercase;
+      white-space: pre-wrap;
     }
 
     & > button {
@@ -67,6 +70,7 @@ const ChatBoxStyle = styled.div`
       right: 14px;
       border: none;
       cursor: pointer;
+      margin-bottom: 10px;
     }
   }
 `;
@@ -142,6 +146,26 @@ const ChatBox = ({
     enableMicDiscription();
   }, []);
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter') {
+      onSubmitForm(chat);
+    }
+  };
+
+  const maxHeight = 200; // 최대 높이를 설정
+  const initialHeight = 56; // 초기 높이 설정
+  const textareaRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      const newHeight = Math.max(
+        textareaRef.current.scrollHeight,
+        initialHeight
+      );
+      textareaRef.current.style.height = `${Math.min(newHeight, maxHeight)}px`;
+    }
+  }, [chat]);
+
   return (
     <ChatBoxStyle>
       {showdiscription && <Description />}
@@ -155,10 +179,11 @@ const ChatBox = ({
         />
       </div>
       <div className='chat-send-wrapper'>
-        <input
-          type='text'
+        <textarea
+          ref={textareaRef}
           value={isLoading ? 'AI의 답변을 기다리는 중이에요.' : chat}
           onChange={onChangeChat}
+          onKeyDown={handleKeyDown}
           placeholder='메세지를 입력해주세요.'
           onFocus={removeDescription}
         />

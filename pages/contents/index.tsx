@@ -10,6 +10,7 @@ import { getCookieValue } from '@/utils/getCookieValue';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 import makeEmbedUrl from '@/utils/makeEmbedUrl';
+import { useRouter } from 'next/router';
 
 const Content = styled.div`
   height: max-content;
@@ -181,12 +182,14 @@ interface Props {
   token: string;
 }
 const Contents = ({ token }: Props) => {
+  const router = useRouter();
+
   const meditationTime = [
-    { type: '3분', color: '#E1E2FF' },
-    { type: '5분', color: '#BEC0FF' },
-    { type: '10분', color: '#9EA1FF' },
-    { type: '30분', color: '#878AFF' },
-    { type: '1시간', color: '#797DFF' },
+    { time: 3, color: '#E1E2FF' },
+    { time: 5, color: '#BEC0FF' },
+    { time: 10, color: '#9EA1FF' },
+    { time: 30, color: '#878AFF' },
+    { time: 60, color: '#797DFF' },
   ];
 
   const psychotherapyContent = [
@@ -210,35 +213,11 @@ const Contents = ({ token }: Props) => {
     },
   ];
 
-  const responseData = [
-    {
-      title:
-        '당장 내일 죽을 수도 있다는 의사 말에도 끊지 못하는 술│알코올 의존증 치료하는 과정│국가에서 지정한 알콜 치료 병원의 모습│다큐 시선│#EBS건강',
-      link: 'https://www.youtube.com/watch?v=L_xmM9_iRJQ',
-      thumbnailLink: 'https://img.youtube.com/vi/L_xmM9_iRJQ/0.jpg',
-    },
-    {
-      title: '[ 새해계획 ] 의사가 알려주는 확실한 금연 방법 !',
-      link: 'https://www.youtube.com/watch?v=I0ypGCXTGww',
-      thumbnailLink: 'https://img.youtube.com/vi/I0ypGCXTGww/0.jpg',
-    },
-    {
-      title:
-        '혼술이 알코올 중독의 시작이다? l 건강한 음주습관 l #신신당부 17화',
-      link: 'https://www.youtube.com/watch?v=6fKph4n74Rg',
-      thumbnailLink: 'https://img.youtube.com/vi/6fKph4n74Rg/0.jpg',
-    },
-    {
-      title: '[알코올중독 치료] 알코올 의존증 증상 완벽하게 치료하고 싶으세요?',
-      link: 'https://www.youtube.com/watch?v=0hNDg7s4K-0',
-      thumbnailLink: 'https://img.youtube.com/vi/0hNDg7s4K-0/0.jpg',
-    },
-    {
-      title: '금연의 이익ㅣ금연 EP.3',
-      link: 'https://www.youtube.com/watch?v=cu8irdThyJE',
-      thumbnailLink: 'https://img.youtube.com/vi/cu8irdThyJE/0.jpg',
-    },
-  ];
+  useEffect(() => {
+    if (!token) {
+      router.push('/login');
+    }
+  }, [token]);
 
   const [psychotherapyList, setPsychotherapyList] = useState([
     ...psychotherapyContent,
@@ -263,7 +242,7 @@ const Contents = ({ token }: Props) => {
       setEmbedUrlData(makeEmbedUrl(contentsData?.psychotherapyContents));
   }, [contentsLoading, contentsData]);
 
-  const [currentMeditationTime, setCurrentMeditationTime] = useState('3분');
+  const [currentMeditationTime, setCurrentMeditationTime] = useState(3);
   const [contentModal, setContentModal] = useState(false);
 
   useEffect(() => {
@@ -279,9 +258,8 @@ const Contents = ({ token }: Props) => {
     setEmbedUrlData([]);
   }, []);
 
-  console.log(embedUrlData);
-  const handelContentModal = useCallback((type: string) => {
-    setCurrentMeditationTime(type);
+  const handelContentModal = useCallback((time: number) => {
+    setCurrentMeditationTime(time);
     setContentModal((prev) => !prev);
   }, []);
 
@@ -324,10 +302,10 @@ const Contents = ({ token }: Props) => {
                 color={item.color}
                 key={i}
                 onClick={() => {
-                  handelContentModal(item.type);
+                  handelContentModal(item.time);
                 }}
               >
-                {item.type}
+                {item.time}분
               </MeditationTime>
             ))}
           </ScrollContainer>
@@ -376,7 +354,7 @@ const Contents = ({ token }: Props) => {
       <Footer />
       {contentModal && (
         <ContentModal
-          type={currentMeditationTime}
+          time={currentMeditationTime}
           onClosed={() => {
             setContentModal((prev) => !prev);
           }}

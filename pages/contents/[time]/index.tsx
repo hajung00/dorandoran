@@ -68,19 +68,19 @@ const MeditationContent = ({ time }: Props) => {
   useEffect(() => {
     switch (time) {
       case '3분':
-        setContentLink('https://www.youtube.com/embed/L_xmM9_iRJQ');
+        setContentLink('https://www.youtube.com/embed/ClrNeM9528A');
         break;
       case '5분':
-        setContentLink('https://www.youtube.com/embed/I0ypGCXTGww');
+        setContentLink('https://www.youtube.com/embed/zGifCNokUy8');
         break;
       case '10분':
-        setContentLink('https://www.youtube.com/embed/6fKph4n74Rg');
+        setContentLink('https://www.youtube.com/embed/7lKI_XVHh_Q');
         break;
       case '30분':
-        setContentLink('https://www.youtube.com/embed/0hNDg7s4K-0');
+        setContentLink('https://www.youtube.com/embed/vvHy990p844');
         break;
       case '1시간':
-        setContentLink('https://www.youtube.com/embed/cu8irdThyJE');
+        setContentLink('https://www.youtube.com/embed/_wPs5MLzqwY');
         break;
     }
   }, [time]);

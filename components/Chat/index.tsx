@@ -23,7 +23,7 @@ const ChatStyle = styled.div`
     background: var(--doranblue02, #e1e2ff);
     border-radius: 16px 16px 0px 16px;
     color: #000;
-    max-width: fit-content;
+    max-width: 312px;
     float: right;
     margin-bottom: 16px;
   }

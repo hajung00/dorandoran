@@ -74,11 +74,11 @@ const ContentModalStyle = styled.div`
 `;
 
 interface Props {
-  type: string;
+  time: number;
   onClosed: () => void;
 }
 
-const ContentModal = ({ type, onClosed }: Props) => {
+const ContentModal = ({ time, onClosed }: Props) => {
   const router = useRouter();
 
   const stopPropagation = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -89,7 +89,7 @@ const ContentModal = ({ type, onClosed }: Props) => {
     <ModalLayout onClosed={onClosed}>
       <ContentModalStyle onClick={stopPropagation}>
         <div>
-          <p className='main-description'>{type} 명상을 시작할까요?</p>
+          <p className='main-description'>{time}분 명상을 시작할까요?</p>
           <p className='sub-description'>
             명상으로 지친 마음을 훈련시켜 보아요.
           </p>
@@ -98,7 +98,7 @@ const ContentModal = ({ type, onClosed }: Props) => {
           <button onClick={onClosed}>다음에 할게요</button>
           <button
             onClick={() => {
-              router.push(`/contents/${type}`);
+              router.push(`/contents/${time}`);
             }}
           >
             네 시작할게요
