@@ -48,6 +48,7 @@ const ContentWrapper = styled.div`
 
   .content-title {
     margin-top: 18px;
+    margin-bottom: 50px;
     padding: 0 20px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';

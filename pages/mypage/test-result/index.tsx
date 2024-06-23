@@ -18,6 +18,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 10.5px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -59,7 +60,7 @@ const Content = styled.div`
     &::after {
       content: '';
       display: block;
-      min-width: 100vw;
+      width: 100vw;
       max-width: 512px;
       height: 22px;
       background: #f7f7f7;

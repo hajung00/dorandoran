@@ -62,16 +62,17 @@ const CallModalStyle = styled.div`
 interface Props {
   name: string;
   callNumber: string;
+  isModalOpen: boolean;
   onClosed: () => void;
 }
 
-const CallModal = ({ name, callNumber, onClosed }: Props) => {
+const CallModal = ({ name, callNumber, isModalOpen, onClosed }: Props) => {
   const stopPropagation = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   }, []);
 
   return (
-    <ModalLayout onClosed={onClosed}>
+    <ModalLayout show={isModalOpen} onClosed={onClosed}>
       <CallModalStyle onClick={stopPropagation}>
         <div className='phone-number-wrapper'>
           <Phone width={24} height={24} alt='phone' />

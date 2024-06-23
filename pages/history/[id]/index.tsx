@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 // import svg
+import RightArrowSVG from '../../../public/icons/arrow-right.svg';
 import ArrowSVG from '../../../public/icons/arrow.svg';
 import Layout from '@/components/Layout';
 import ChatSection from '@/components/ChatSection';
@@ -17,6 +18,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 10.5px 8px;
+    cursor: pointer;
   }
 `;
 const CounselResultSection = styled.div`
@@ -28,6 +30,24 @@ const CounselResultSection = styled.div`
     font-size: clamp(20px, 5.5vw, 26px);
     font-weight: 600;
     line-height: 140%; /* 36.4px */
+  }
+
+  .counsel-start-button {
+    margin-top: 16px;
+    padding: 6px 6px 6px 12px;
+    border-radius: 18px;
+    background: #fff;
+    color: #565bff;
+    font-family: 'Pretendard';
+    font-size: clamp(14px, 4vw, 16px);
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    border-radius: 6px;
+    background: var(--doranblue03, #f3f3ff);
+    border: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
   }
 
   .counsel-summary {
@@ -50,6 +70,22 @@ const CounselResultSection = styled.div`
       padding: 16px;
       max-height: 248px;
       min-height: 136px;
+      width: 100%;
+      margin-top: 12px;
+      border: 10px solid #f7f7f7;
+      padding: 16px;
+      max-height: 248px;
+      min-height: 136px;
+      height: fit-content;
+      overflow: hidden;
+      color: var(--gray08, #444);
+      text-overflow: ellipsis;
+      font-family: 'Pretendard';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 140%; /* 28px */
+      letter-spacing: -0.4px;
     }
   }
 `;
@@ -106,8 +142,17 @@ const HistoryId = ({ token }: Props) => {
       </Header>
       <CounselResultSection>
         <div className='counsel-title'>
-          <p>심리검사 결과</p>
+          <p>상담 결과</p>
           <p>{chatData?.result}</p>
+          <button
+            className='counsel-start-button'
+            onClick={() => {
+              router.push('/counsel/chat-intro');
+            }}
+          >
+            새로운 상담 시작하기
+            <RightArrowSVG width={20} height={20} alt={'arrow'} />
+          </button>
         </div>
         <div className='counsel-summary'>
           <p>상담 내용 요약</p>

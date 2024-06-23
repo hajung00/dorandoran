@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import styled from 'styled-components';
 import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
@@ -7,6 +8,9 @@ import CounselHistoryList from '@/components/CounselHistoryList';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 import { getCookieValue } from '@/utils/getCookieValue';
+import { useRouter } from 'next/router';
+import NonTestPNG from '../../public/image/nontest.png';
+import CounselorPNG from '../../public/image/counselor.png';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
@@ -34,6 +38,7 @@ const SubNav = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+    cursor: pointer;
   }
   .focus {
     color: var(--gray09, #222);
@@ -87,6 +92,7 @@ const NonListStyle = styled.div`
     padding: 4.5% 0;
     width: 260px;
     margin-top: 26px;
+    cursor: pointer;
   }
 `;
 interface Props {
@@ -94,6 +100,7 @@ interface Props {
 }
 
 const History = ({ token }: Props) => {
+  const router = useRouter();
   const [listSection, setListSection] = useState('counsel');
 
   const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
@@ -134,12 +141,18 @@ const History = ({ token }: Props) => {
       <Container>
         {!testCheck ? (
           <NonListStyle>
-            <div className='icon'></div>
+            <Image src={NonTestPNG} width={60} height={60} alt='non-test-png' />
             <p>
               심리검사 후 상담을 완료하면 <br />
               상담 내역이 나타나요.
             </p>
-            <button>심리검사 하러가기</button>
+            <button
+              onClick={() => {
+                router.push('/counsel/psychological-test-intro');
+              }}
+            >
+              심리검사 하러가기
+            </button>
           </NonListStyle>
         ) : listData?.counselHistories.length !== 0 ? (
           listData?.counselHistories.map(
@@ -149,13 +162,24 @@ const History = ({ token }: Props) => {
           )
         ) : (
           <NonListStyle>
-            <div className='icon'></div>
+            <Image
+              src={CounselorPNG}
+              width={60}
+              height={60}
+              alt='non-test-png'
+            />
             <p>
               아직 상담을 해보지 않으셨군요,
               <br />
               지금바로 상담을 시작해볼까요?
             </p>
-            <button>상담 시작하기</button>
+            <button
+              onClick={() => {
+                router.push('/counsel/chat-intro');
+              }}
+            >
+              상담 시작하기
+            </button>
           </NonListStyle>
         )}
       </Container>

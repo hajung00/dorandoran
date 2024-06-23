@@ -357,6 +357,7 @@ const Contents = ({ token }: Props) => {
       {contentModal && (
         <ContentModal
           time={currentMeditationTime}
+          contentModal={contentModal}
           onClosed={() => {
             setContentModal((prev) => !prev);
           }}

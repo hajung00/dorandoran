@@ -18,6 +18,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 10.5px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -72,6 +73,7 @@ const CompleteSection = styled.div`
     flex-direction: column;
     gap: 18px;
     margin-bottom: 20px;
+    cursor: pointer;
 
     .consel-title {
       color: var(--gray09, #222);

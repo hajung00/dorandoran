@@ -61,6 +61,7 @@ const Content = styled.div`
     border: 1px solid var(--doranblue, #565bff);
     background: var(--white, #fff);
     color: var(--doranblue, #565bff);
+    cursor: pointer;
   }
   & > button {
     margin-top: 28px;
@@ -219,7 +220,8 @@ const Login = ({ token }: Props) => {
 
       // 유효한 이름과 휴대폰 번호일 경우 인증번호 시간 카운트
       if (valid === 200) {
-        setRequestAuthentication((prev) => !prev);
+        setRequestAuthentication(true);
+        setTimeLeft(300);
       } else if (valid === 400) {
         // 유효하지 않은 이름과 휴대폰 번호일 경우 모달 오픈
         setLoginAlertModal(true);
@@ -349,7 +351,7 @@ const Login = ({ token }: Props) => {
           </button>
         ) : (
           <>
-            <button className='again-button'>
+            <button className='again-button' onClick={onClickReceiveButton}>
               인증문자 다시 받기 ({Math.floor(timeLeft / 60)}분{' '}
               {Math.floor(timeLeft % 60)}초)
             </button>

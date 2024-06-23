@@ -6,12 +6,14 @@ import Image from 'next/image';
 import NonLoginPNG from '../../public/image/nonlogin.png';
 
 const NonLoginStyle = styled.div`
-  margin-top: 38.2%;
   width: 100%;
   padding: 0 2%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   flex: 1;
+  justify-content: center;
+  transform: translateY(-13%);
 
   .description {
     display: flex;
@@ -52,6 +54,7 @@ const NonLoginStyle = styled.div`
     font-style: normal;
     font-weight: 600;
     letter-spacing: -0.4px;
+    cursor: pointer;
   }
 `;
 

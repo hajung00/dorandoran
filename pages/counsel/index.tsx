@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -16,6 +16,7 @@ import fetcher from '@/utils/fetchers';
 // import image
 import LogoPNG from '../../public/image/logo.png';
 import CounselWarning from '@/components/CounselWarning';
+import CallModal from '@/modal/CallModal';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
@@ -64,6 +65,7 @@ const CounselStyle = styled.div`
       font-style: normal;
       font-weight: 600;
       letter-spacing: -0.4px;
+      cursor: pointer;
     }
   }
 
@@ -110,6 +112,7 @@ const CounselStyle = styled.div`
       display: flex;
       flex-direction: column;
       gap: 14px;
+      cursor: pointer;
 
       .counsel-title {
         color: #000;
@@ -153,6 +156,24 @@ const Counsel = ({ token }: Props) => {
     { summary: '상담 내용 요약', date: '2024년 05월 25일' },
   ];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [callType, setCallType] = useState('');
+  const [callNumber, setCallNumber] = useState('');
+
+  const callModalHandler = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
+  const onClickHandler = useCallback(
+    (number: string, e: React.MouseEvent<HTMLButtonElement>) => {
+      const target = e.target as HTMLLIElement;
+      setCallType(target.innerText);
+      setCallNumber(number);
+      callModalHandler();
+    },
+    []
+  );
+
   return (
     <Layout>
       <Header>상담</Header>
@@ -164,7 +185,10 @@ const Counsel = ({ token }: Props) => {
         ) : (
           <CounselStyle>
             {counselWarning?.suggestVisit && (
-              <CounselWarning comment={counselWarning?.comment} />
+              <CounselWarning
+                comment={counselWarning?.comment}
+                onClickHandler={onClickHandler}
+              />
             )}
             <div className='counsel-start-section'>
               <div className='description'>
@@ -201,6 +225,14 @@ const Counsel = ({ token }: Props) => {
           </CounselStyle>
         )}
       </Content>
+      {isModalOpen && (
+        <CallModal
+          name={callType}
+          callNumber={callNumber}
+          isModalOpen={isModalOpen}
+          onClosed={callModalHandler}
+        />
+      )}
       {token && <Footer />}
     </Layout>
   );

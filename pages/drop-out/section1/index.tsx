@@ -16,6 +16,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 10.5px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -94,6 +95,7 @@ const Content = styled.div`
     bottom: 0;
     margin-bottom: 26px;
     padding: 4.5% 0;
+    cursor: pointer;
   }
 `;
 

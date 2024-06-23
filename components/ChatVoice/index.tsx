@@ -80,6 +80,7 @@ const ChatVoiceStart = styled.div<{ display: string; opacity: string }>`
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
   }
   .cancel {
     visibility: ${(props: any) =>
@@ -124,6 +125,7 @@ const ChatVoiceStart = styled.div<{ display: string; opacity: string }>`
     font-size: clamp(16px, 4vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
+    cursor: pointer;
   }
 `;
 

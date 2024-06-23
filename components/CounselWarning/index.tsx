@@ -76,8 +76,12 @@ const CounselWarningStyle = styled.div`
 
 interface Props {
   comment: string;
+  onClickHandler: (
+    number: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => void;
 }
-const CounselWarning = ({ comment }: Props) => {
+const CounselWarning = ({ comment, onClickHandler }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -86,24 +90,6 @@ const CounselWarning = ({ comment }: Props) => {
     const isMobileUserAgent = /android|ipad|iphone|ipod/i.test(userAgent);
     setIsMobile(isMobileUserAgent);
   }, []);
-
-  const [callType, setCallType] = useState('');
-  const [callNumber, setCallNumber] = useState('');
-
-  const onClickHandler = useCallback(
-    (callNumber: string, e: React.MouseEvent<HTMLButtonElement>) => {
-      const target = e.target as HTMLLIElement;
-      setCallType(target.innerText);
-      setCallNumber(callNumber);
-      callModalHandler();
-    },
-    []
-  );
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const callModalHandler = useCallback(() => {
-    setIsModalOpen((prev) => !prev);
-  }, [callType, callNumber]);
 
   return (
     <CounselWarningStyle>
@@ -144,13 +130,6 @@ const CounselWarning = ({ comment }: Props) => {
           </>
         )}
       </div>
-      {isModalOpen && (
-        <CallModal
-          name={callType}
-          callNumber={callNumber}
-          onClosed={callModalHandler}
-        />
-      )}
     </CounselWarningStyle>
   );
 };

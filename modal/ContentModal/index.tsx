@@ -75,10 +75,11 @@ const ContentModalStyle = styled.div`
 
 interface Props {
   time: number;
+  contentModal: boolean;
   onClosed: () => void;
 }
 
-const ContentModal = ({ time, onClosed }: Props) => {
+const ContentModal = ({ time, contentModal, onClosed }: Props) => {
   const router = useRouter();
 
   const stopPropagation = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -86,7 +87,7 @@ const ContentModal = ({ time, onClosed }: Props) => {
   }, []);
 
   return (
-    <ModalLayout onClosed={onClosed}>
+    <ModalLayout show={contentModal} onClosed={onClosed}>
       <ContentModalStyle onClick={stopPropagation}>
         <div>
           <p className='main-description'>{time}분 명상을 시작할까요?</p>

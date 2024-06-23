@@ -7,6 +7,7 @@ const ListStyle = styled.div`
   padding: 20px;
   border-radius: 16px;
   background: var(--gray01, #f7f7f7);
+  cursor: pointer;
 
   & > p {
     margin-bottom: 18px;

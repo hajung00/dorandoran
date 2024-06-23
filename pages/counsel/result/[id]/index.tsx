@@ -18,6 +18,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 10.5px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -51,12 +52,22 @@ const Content = styled.div`
     }
 
     & > div {
+      width: 100%;
       margin-top: 12px;
       border: 10px solid #f7f7f7;
       padding: 16px;
       max-height: 248px;
       min-height: 136px;
       height: fit-content;
+      overflow: hidden;
+      color: var(--gray08, #444);
+      text-overflow: ellipsis;
+      font-family: 'Pretendard';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 140%; /* 28px */
+      letter-spacing: -0.4px;
     }
   }
 
@@ -75,6 +86,7 @@ const Content = styled.div`
     border: none;
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
 
   .counsel-summary::after {
@@ -134,6 +146,7 @@ const Content = styled.div`
     }
     .content {
       width: 100vw;
+      max-width: 512px;
       background: var(--gray01, #f7f7f7);
       height: 290px;
       transform: translateX(-20px);
@@ -152,7 +165,7 @@ const Content = styled.div`
     font-weight: 600;
     line-height: normal;
     letter-spacing: -0.4px;
-    padding: 4.15% 0;
+    height: 66px;
     border-radius: 18px;
     border: none;
     position: fixed;
@@ -193,7 +206,7 @@ const Result = ({ token }: Props) => {
       <Content>
         <div className='content-section'>
           <div className='counsel-title'>
-            <p>심리검사 결과</p>
+            <p>상담 결과</p>
             <p>{result?.result}</p>
             <button
               className='counsel-start-button'

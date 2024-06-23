@@ -31,6 +31,7 @@ const ChatBoxStyle = styled.div`
     align-items: center;
     border-radius: 109.091px;
     background: var(--gray02, #eaeaea);
+    cursor: pointer;
   }
 
   .chat-send-wrapper {
@@ -56,6 +57,7 @@ const ChatBoxStyle = styled.div`
       letter-spacing: -0.4px;
       text-transform: uppercase;
       white-space: pre-wrap;
+      resize: none;
     }
 
     & > button {

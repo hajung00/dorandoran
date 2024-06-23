@@ -29,6 +29,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 9.5px 8px;
+    cursor: pointer;
   }
 
   .title {
@@ -55,6 +56,7 @@ const Header = styled.header`
     font-weight: 500;
     letter-spacing: -0.36px;
     text-transform: uppercase;
+    cursor: pointer;
   }
 `;
 
@@ -87,6 +89,11 @@ const Chat = ({ token }: Props) => {
     setChat(e.target.value);
   }, []);
 
+  const [isVoice, setIsVoice] = useState(false);
+  const onClickVoice = useCallback(() => {
+    setIsVoice((prev) => !prev);
+  }, []);
+
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitForm = useCallback(
     async (chat: string) => {
@@ -109,6 +116,10 @@ const Chat = ({ token }: Props) => {
         const result = await chatCounselAPI(token, counselId, chat);
 
         if (result) {
+          if (isVoice) {
+            const utterance = new SpeechSynthesisUtterance(result);
+            speechSynthesis.speak(utterance);
+          }
           mutateChat((prevChatData: any) => {
             prevChatData.messages.push({
               role: '상담원',
@@ -124,8 +135,13 @@ const Chat = ({ token }: Props) => {
         }
       }
     },
-    [chat, chatData]
+    [chat, chatData, isVoice]
   );
+
+  const [finishCounselModal, setFinishCounselModal] = useState(false);
+  const handleFinishCounselModal = useCallback(() => {
+    setFinishCounselModal((prev) => !prev);
+  }, []);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -135,17 +151,7 @@ const Chat = ({ token }: Props) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatData]);
-
-  const [isVoice, setIsVoice] = useState(false);
-  const onClickVoice = useCallback(() => {
-    setIsVoice((prev) => !prev);
-  }, []);
-
-  const [finishCounselModal, setFinishCounselModal] = useState(false);
-  const handleFinishCounselModal = useCallback(() => {
-    setFinishCounselModal((prev) => !prev);
-  }, []);
+  }, [chatData, isVoice]);
 
   return (
     <Layout>
@@ -185,6 +191,7 @@ const Chat = ({ token }: Props) => {
       {finishCounselModal && (
         <FinishCounselModal
           token={token}
+          finishCounselModal={finishCounselModal}
           counselId={counselId}
           onClosed={handleFinishCounselModal}
         />

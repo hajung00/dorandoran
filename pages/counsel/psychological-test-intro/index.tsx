@@ -17,6 +17,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 12px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -42,7 +43,7 @@ const Content = styled.div`
     margin-top: 8px;
     color: var(--gray07, #666);
     font-family: 'Pretendard';
-    font-size: 20px;
+    font-size: clamp(18px, 4vw, 20px);
     font-style: normal;
     font-weight: 400;
     line-height: 140%; /* 28px */

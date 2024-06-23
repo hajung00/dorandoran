@@ -42,6 +42,7 @@ const DiseaseTypeWrapper = styled.div`
     font-weight: 600;
     line-height: 140%; /* 28px */
     color: var(--gray06, #898989);
+    cursor: pointer;
   }
 
   .focus {
@@ -68,6 +69,7 @@ const ScrollContainerCustom = styled(ScrollContainer)`
     font-style: normal;
     font-weight: 500;
     line-height: 140%; /* 28px */
+    cursor: pointer;
   }
 
   .focus {
@@ -85,6 +87,7 @@ const GraphBottom = styled.div`
   position: relative;
   &::after {
     content: '';
+    max-width: 512px;
     display: block;
     width: 100vw;
     min-width: 512px;
@@ -107,6 +110,7 @@ const GraphBottom = styled.div`
     font-weight: 400;
     line-height: normal;
     letter-spacing: -0.36px;
+    cursor: pointer;
   }
 `;
 

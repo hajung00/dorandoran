@@ -49,6 +49,7 @@ const NonTestStyle = styled.div`
     font-style: normal;
     font-weight: 600;
     letter-spacing: -0.4px;
+    cursor: pointer;
   }
 `;
 

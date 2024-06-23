@@ -79,12 +79,18 @@ const FinishCounselModalStyle = styled.div`
 
 interface Props {
   token: string;
+  finishCounselModal: boolean;
   counselId: string;
   onClosed: () => void;
 }
-const FinishCounselModal = ({ token, counselId, onClosed }: Props) => {
+const FinishCounselModal = ({
+  token,
+  finishCounselModal,
+  counselId,
+  onClosed,
+}: Props) => {
   const router = useRouter();
-
+  console.log(finishCounselModal);
   const stopPropagation = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   }, []);
@@ -100,7 +106,7 @@ const FinishCounselModal = ({ token, counselId, onClosed }: Props) => {
   }, []);
 
   return (
-    <ModalLayout onClosed={onClosed}>
+    <ModalLayout show={finishCounselModal} onClosed={onClosed}>
       <FinishCounselModalStyle onClick={stopPropagation}>
         <div>
           <p className='main-description'>상담을 종료할까요?</p>

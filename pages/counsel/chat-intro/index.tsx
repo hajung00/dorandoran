@@ -18,6 +18,7 @@ const Header = styled.header`
 
   .icon-wrapper {
     padding: 10.5px 8px;
+    cursor: pointer;
   }
 `;
 
@@ -106,6 +107,7 @@ const ButtonSection = styled.div`
     font-size: clamp(18px, 4vw, 20px);
     font-weight: 600;
     letter-spacing: -0.4px;
+    cursor: pointer;
   }
 `;
 interface Props {
