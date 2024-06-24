@@ -143,7 +143,10 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
       return;
     }
     SpeechRecognition.startListening();
-  }, []);
+    if (listening) {
+      handleStop();
+    }
+  }, [listening]);
 
   const handleFormSend = useCallback(() => {
     onSubmitForm(transcript);
@@ -168,6 +171,7 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
             className='cancel wrapper'
             onClick={() => {
               handleStop();
+              resetTranscript();
             }}
           >
             <XSVG alt={'cancel'} color={'#FF2020'} />
