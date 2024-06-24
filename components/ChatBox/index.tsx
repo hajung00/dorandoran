@@ -192,10 +192,14 @@ const ChatBox = ({
       <div className='chat-send-wrapper'>
         <textarea
           ref={textareaRef}
-          value={isLoading ? 'AI의 답변을 기다리는 중이에요.' : chat}
+          value={chat}
           onChange={onChangeChat}
           onKeyDown={handleKeyDown}
-          placeholder='메세지를 입력해주세요.'
+          placeholder={
+            isLoading
+              ? 'AI의 답변을 기다리는 중이에요.'
+              : '메세지를 입력해주세요.'
+          }
           onFocus={removeDescription}
           rows={1}
         />
