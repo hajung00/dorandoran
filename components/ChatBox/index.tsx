@@ -156,9 +156,11 @@ const ChatBox = ({
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      console.log(event.key);
       if (event.key === 'Enter') {
-        console.log(chat);
         event.preventDefault();
+        event.stopPropagation();
+        console.log(chat);
         onSubmitForm(chat);
         textarea.style.height = '56px';
         setChatBoxHeight(0);
