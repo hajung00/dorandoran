@@ -78,6 +78,7 @@ const Chat = ({ token }: Props) => {
   const chatSections = makeSection(
     chatData?.messages ? chatData.messages.flat() : []
   );
+  const [chatBoxHeight, setChatBoxHeight] = useState(0);
 
   useEffect(() => {
     enableMicDiscription();
@@ -151,7 +152,7 @@ const Chat = ({ token }: Props) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatData, isVoice]);
+  }, [chatData, isVoice, chatBoxHeight]);
 
   return (
     <Layout>
@@ -171,6 +172,7 @@ const Chat = ({ token }: Props) => {
         chatSections={chatSections}
         isLoading={isLoading}
         isVoice={isVoice}
+        chatBoxHeight={chatBoxHeight}
         ref={messagesEndRef}
       />
       {!isVoice ? (
@@ -180,6 +182,7 @@ const Chat = ({ token }: Props) => {
           onClickVoice={onClickVoice}
           onSubmitForm={onSubmitForm}
           isLoading={isLoading}
+          setChatBoxHeight={setChatBoxHeight}
         />
       ) : (
         <ChatVoice

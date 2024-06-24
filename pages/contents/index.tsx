@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ArrowSVG from '../../public/icons/arrow-right.svg';
 import ContentModal from '@/modal/ContentModal';
 import ScrollContainer from 'react-indiana-drag-scroll';
@@ -185,6 +185,8 @@ interface Props {
 }
 const Contents = ({ token }: Props) => {
   const router = useRouter();
+  const scrollPositionRef = useRef(0);
+  const listRef = useRef<any>(null);
 
   const meditationTime = [
     { time: 3, color: '#E1E2FF' },
@@ -215,11 +217,11 @@ const Contents = ({ token }: Props) => {
     },
   ];
 
-  useEffect(() => {
-    if (!token) {
-      router.push('/login');
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     router.push('/login');
+  //   }
+  // }, [token]);
 
   const [psychotherapyList, setPsychotherapyList] = useState([
     ...psychotherapyContent,

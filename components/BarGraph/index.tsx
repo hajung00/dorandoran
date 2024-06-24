@@ -90,7 +90,6 @@ const GraphBottom = styled.div`
     max-width: 512px;
     display: block;
     width: 100vw;
-    min-width: 512px;
     height: 22px;
     background: var(--gray01, #f7f7f7);
     position: absolute;

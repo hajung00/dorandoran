@@ -81,7 +81,7 @@ const CounselResultSection = styled.div`
       color: var(--gray08, #444);
       text-overflow: ellipsis;
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(18px, 4vw, 20px);
       font-style: normal;
       font-weight: 500;
       line-height: 140%; /* 28px */
@@ -94,7 +94,7 @@ const CounselChatHistory = styled.div`
   padding: 0 20px;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 436px);
+  height: 85vh;
   overflow: auto;
 
   .title {

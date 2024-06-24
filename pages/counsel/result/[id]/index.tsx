@@ -63,7 +63,7 @@ const Content = styled.div`
       color: var(--gray08, #444);
       text-overflow: ellipsis;
       font-family: 'Pretendard';
-      font-size: 20px;
+      font-size: clamp(18px, 4vw, 20px);
       font-style: normal;
       font-weight: 500;
       line-height: 140%; /* 28px */

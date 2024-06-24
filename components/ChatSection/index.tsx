@@ -10,9 +10,14 @@ import Chat from '../Chat';
 import styled from 'styled-components';
 import moment from 'moment';
 
-export const ChatZone = styled.div<{ isVoice: string }>`
+export const ChatZone = styled.div<{ isVoice: string; chatBoxHeight: number }>`
   width: 100%;
-  margin-bottom: ${(props) => (props.isVoice === 'true' ? '320px' : '104px')};
+  margin-bottom: ${(props) =>
+    props.isVoice === 'true'
+      ? '320px'
+      : props.chatBoxHeight !== 0
+      ? `${props.chatBoxHeight + 104}px`
+      : '104px'};
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -46,14 +51,17 @@ interface Props {
   chatSections: any;
   isLoading?: boolean;
   isVoice?: boolean;
+  chatBoxHeight?: number;
 }
 
 const ChatSection = forwardRef<HTMLDivElement, Props>(
-  ({ isVoice, chatSections, isLoading }, ref) => {
-    console.log(ref);
-
+  ({ isVoice, chatSections, isLoading, chatBoxHeight }, ref) => {
+    console.log(chatBoxHeight);
     return (
-      <ChatZone isVoice={`${isVoice}`}>
+      <ChatZone
+        isVoice={`${isVoice}`}
+        chatBoxHeight={chatBoxHeight ? chatBoxHeight : 0}
+      >
         {Object.entries(chatSections).map(([date, chats]: any, i) => {
           return (
             <Section key={i}>

@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import Cookies from 'js-cookie';
 
@@ -44,6 +51,7 @@ const ChatBoxStyle = styled.div`
     & > textarea {
       width: 100%;
       height: 56px;
+      max-height: 200px;
       padding: 16px 14px;
       padding-right: 63px;
       border-radius: 16px;
@@ -83,6 +91,7 @@ interface Props {
   onClickVoice: (e: any) => void;
   onSubmitForm: (e: any) => void;
   isLoading: boolean;
+  setChatBoxHeight: Dispatch<SetStateAction<any>>;
 }
 
 const Description = () => {
@@ -136,6 +145,7 @@ const ChatBox = ({
   onClickVoice,
   onSubmitForm,
   isLoading,
+  setChatBoxHeight,
 }: Props) => {
   const { enableMicDiscription, disableMicDiscription } = useMicDiscription();
   const { data: showdiscription } = useSWR(SHOW_DESCRIPTION_KEY);
@@ -147,21 +157,24 @@ const ChatBox = ({
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter') {
       onSubmitForm(chat);
+      console.log('handleKeyDown');
+      textarea.style.height = '56px';
+      setChatBoxHeight(0);
     }
   };
 
-  const maxHeight = 200; // 최대 높이를 설정
-  const initialHeight = 56; // 초기 높이 설정
   const textareaRef = useRef<any>(null);
+  const textarea = textareaRef.current;
+
+  const adjustHeight = () => {
+    console.log('adjustHeight');
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    setChatBoxHeight(textarea.scrollHeight - 56);
+  };
 
   useEffect(() => {
-    if (textareaRef.current) {
-      const newHeight = Math.max(
-        textareaRef.current.scrollHeight,
-        initialHeight
-      );
-      textareaRef.current.style.height = `${Math.min(newHeight, maxHeight)}px`;
-    }
+    if (chat) adjustHeight();
   }, [chat]);
 
   return (
@@ -184,10 +197,13 @@ const ChatBox = ({
           onKeyDown={handleKeyDown}
           placeholder='메세지를 입력해주세요.'
           onFocus={removeDescription}
+          rows={1}
         />
         <button
           onClick={() => {
             onSubmitForm(chat);
+            textarea.style.height = '56px';
+            setChatBoxHeight(0);
           }}
         >
           <SendSVG width={11} height={16} alt={'send'} color={'#fff'} />
