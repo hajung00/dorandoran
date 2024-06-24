@@ -143,10 +143,10 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
       return;
     }
     SpeechRecognition.startListening();
-    if (listening) {
+    if (listening && transcript) {
       handleStop();
     }
-  }, [listening]);
+  }, [listening, transcript]);
 
   const handleFormSend = useCallback(() => {
     onSubmitForm(transcript);

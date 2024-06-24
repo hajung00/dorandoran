@@ -176,7 +176,7 @@ const TestChange = ({ token }: Props) => {
                     }}
                   >
                     <p className='consel-title'>{list.title}</p>
-                    <p className='consel-date'>{list.createdDate}</p>
+                    <p className='consel-date'>{list.counselDate}</p>
                   </div>
                 ))}
             </CompleteSection>
