@@ -200,7 +200,7 @@ const ChatBox = ({
           ref={textareaRef}
           value={chat}
           onChange={onChangeChat}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
           placeholder={
             isLoading
               ? 'AI의 답변을 기다리는 중이에요.'
