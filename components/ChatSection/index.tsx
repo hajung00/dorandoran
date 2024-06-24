@@ -56,7 +56,6 @@ interface Props {
 
 const ChatSection = forwardRef<HTMLDivElement, Props>(
   ({ isVoice, chatSections, isLoading, chatBoxHeight }, ref) => {
-    console.log(chatBoxHeight);
     return (
       <ChatZone
         isVoice={`${isVoice}`}

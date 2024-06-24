@@ -156,6 +156,7 @@ const ChatBox = ({
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter') {
+      console.log(chat);
       event.preventDefault();
       onSubmitForm(chat);
       textarea.style.height = '56px';
@@ -167,7 +168,6 @@ const ChatBox = ({
   const textarea = textareaRef.current;
 
   const adjustHeight = () => {
-    console.log('adjustHeight');
     textarea.style.height = 'auto';
     textarea.style.height = `${textarea.scrollHeight}px`;
     setChatBoxHeight(textarea.scrollHeight - 56);
