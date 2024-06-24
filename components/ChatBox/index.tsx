@@ -154,15 +154,18 @@ const ChatBox = ({
     disableMicDiscription();
   }, []);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter') {
-      console.log(chat);
-      event.preventDefault();
-      onSubmitForm(chat);
-      textarea.style.height = '56px';
-      setChatBoxHeight(0);
-    }
-  };
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === 'Enter') {
+        console.log(chat);
+        event.preventDefault();
+        onSubmitForm(chat);
+        textarea.style.height = '56px';
+        setChatBoxHeight(0);
+      }
+    },
+    [chat]
+  );
 
   const textareaRef = useRef<any>(null);
   const textarea = textareaRef.current;
