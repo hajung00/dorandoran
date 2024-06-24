@@ -154,20 +154,21 @@ const ChatBox = ({
     disableMicDiscription();
   }, []);
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      console.log(event.key);
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        event.stopPropagation();
-        console.log(chat);
-        onSubmitForm(chat);
-        textarea.style.height = '56px';
-        setChatBoxHeight(0);
-      }
-    },
-    [chat]
-  );
+  // 맥북에서 요청 두번가는 에러있음,,, 나중에 수정!!
+  // const handleKeyDown = useCallback(
+  //   (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  //     console.log(event.key);
+  //     if (event.key === 'Enter') {
+  //       event.preventDefault();
+  //       event.stopPropagation();
+  //       console.log(chat);
+  //       onSubmitForm(chat);
+  //       textarea.style.height = '56px';
+  //       setChatBoxHeight(0);
+  //     }
+  //   },
+  //   [chat]
+  // );
 
   const textareaRef = useRef<any>(null);
   const textarea = textareaRef.current;
