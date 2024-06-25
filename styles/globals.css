@@ -4,6 +4,12 @@
   box-sizing: border-box;
 }
 
+:root {
+  --Pretendard--26-600: 600 clamp(20px, 6vw, 26px) Pretendard;
+  --Pretendard--20-400: 400 clamp(16px, 5vw, 20px) Pretendard;
+  --Pretendard--20-600: 600 clamp(18px, 5vw, 20px) Pretendard;
+}
+
 body {
   margin: 0;
   /* background: #f5efea; */

@@ -4,82 +4,26 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
 // import svg
-import XIcon from '../../public/icons/x.svg';
 import AlertIcon from '../../public/icons/alert-circle.svg';
 
 // import components
 import Layout from '@/components/Layout';
 import LoginAlertModal from '@/modal/LoginAlertModal';
+import Header from '@/components/Header';
+import Description from '@/components/Description';
+import Button from '@/components/Button';
+
+// import api
 import { loginAPI, requestSMSAPI } from '../api/user';
+
+// import hooks
 import { getCookieValue } from '@/utils/getCookieValue';
 import useUserAccount from '@/hooks/useUserAccount';
-
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-
-  .icon-wrapper {
-    display: inline-block;
-    padding: 12px 8px;
-    cursor: pointer;
-  }
-`;
 
 const Content = styled.div`
   padding: 0 20px;
   margin-top: 22px;
   margin-bottom: 35%;
-
-  .description {
-    color: #222;
-    font-family: 'Pretendard';
-    font-size: clamp(20px, 6vw, 26px);
-    font-weight: 600;
-  }
-
-  .sub-description {
-    margin-top: 12px;
-    margin-bottom: 93px;
-    color: #666;
-    font-family: 'Pretendard';
-    font-size: clamp(16px, 5vw, 20px);
-    font-weight: 400;
-  }
-
-  .enable {
-    background: #565bff;
-    color: #ffffff;
-    cursor: pointer;
-  }
-
-  .disable {
-    background: #e3e3e3;
-    color: #b2b2b2;
-  }
-
-  .again-button {
-    border: 1px solid var(--doranblue, #565bff);
-    background: var(--white, #fff);
-    color: var(--doranblue, #565bff);
-    cursor: pointer;
-  }
-  & > button {
-    margin-top: 28px;
-    margin-bottom: 24px;
-    display: flex;
-    width: 100%;
-    padding: 4.5% 20px;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-    border: none;
-    border-radius: 18px;
-    font-family: 'Pretendard';
-    font-size: clamp(18px, 5vw, 20px);
-    font-weight: 600;
-    letter-spacing: -0.4px;
-  }
 `;
 
 const InputWrapper = styled.div<{ bordercolor?: string }>`
@@ -139,6 +83,12 @@ const InputWrapper = styled.div<{ bordercolor?: string }>`
   }
 `;
 
+const VerificationCodeSection = styled.section`
+  & > button {
+    margin-bottom: 24px;
+  }
+`;
+
 interface Props {
   token: string;
 }
@@ -146,17 +96,21 @@ interface Props {
 const Login = ({ token }: Props) => {
   const router = useRouter();
   const { initializeUserAccount } = useUserAccount();
-  const nameRegex = /^[ㄱ-ㅎ|가-힣]/;
-  const [nameRegexCheck, setNameRegexCheck] = useState(true);
+
+  const nameRegex = /^[ㄱ-ㅎ가-힣]*$/; // 이름 유효성(한글만 가능)
   const [name, setName] = useState('');
+  const [nameRegexCheck, setNameRegexCheck] = useState(true); // 유효성 체크
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
+
+  const [verificationCode, setVerificationCode] = useState(''); // 인증번호
+
+  const [requestAuthentication, setRequestAuthentication] = useState(false); // 인증번호 요청 여부
+  const [timeLeft, setTimeLeft] = useState(300); // 인증번호 유효 시간
+  const [authenticationError, setAuthenticationError] = useState(false); // 인증번호 확인
   const [enableRequestButton, setEnableRequestButton] = useState(false); // 인증번호 요청 버튼 활성화 여부
   const [enableCheckButton, setEnableCheckButton] = useState(false); // 인증번호 확인 버튼 활성화 여부
-  const [timeLeft, setTimeLeft] = useState(300);
-  const [requestAuthentication, setRequestAuthentication] = useState(false); // 인증번호 요청 여부
-  const [loginAlertModal, setLoginAlertModal] = useState(false);
-  const [authenticationError, setAuthenticationError] = useState(false);
+
+  const [loginAlertModal, setLoginAlertModal] = useState(false); // 로그인 오류 모달(이름, 휴대전화 불일치)
 
   useEffect(() => {
     if (token) {
@@ -190,11 +144,12 @@ const Login = ({ token }: Props) => {
     } else {
       setNameRegexCheck(false);
     }
-  }, [name]);
+  }, [name, nameRegex]);
 
   // 인증번호 요청 버튼 활성화 여부 확인
   useEffect(() => {
-    if (name && phoneNumber.length === 11 && !nameRegexCheck) {
+    // 이름, 이름 유효성, 휴대전화가 조건에 부합하면 버튼 활성화
+    if (name && !nameRegexCheck && phoneNumber.length === 11) {
       setEnableRequestButton(true);
     } else {
       setEnableRequestButton(false);
@@ -210,26 +165,24 @@ const Login = ({ token }: Props) => {
     }
   }, [verificationCode]);
 
-  // 인증문자 받기 버튼 클릭
+  // 인증문자 받기, 인증문자 다시 받기 버튼 클릭
   const onClickReceiveButton = useCallback(async () => {
-    // db로 부터 검증 한 후 인증번호 전송
     if (enableRequestButton) {
       // 인증번호 요청 api 요청
       const valid = await requestSMSAPI(name, phoneNumber);
-      console.log('valid', valid);
 
       // 유효한 이름과 휴대폰 번호일 경우 인증번호 시간 카운트
       if (valid === 200) {
+        setTimeLeft(300); // 시간 초기화
         setRequestAuthentication(true);
-        setTimeLeft(300);
       } else if (valid === 400) {
         // 유효하지 않은 이름과 휴대폰 번호일 경우 모달 오픈
         setLoginAlertModal(true);
       }
     }
-  }, [name, phoneNumber, enableRequestButton, verificationCode]);
+  }, [name, phoneNumber, enableRequestButton]);
 
-  // 인증문자 받기 클릭 후 유효 시간 설정
+  // 인증문자 받기, 인증문자 다시 받기 버튼 클릭 후 유효 시간 설정
   useEffect(() => {
     if (requestAuthentication && timeLeft > 0) {
       const timer = setTimeout(() => {
@@ -243,6 +196,7 @@ const Login = ({ token }: Props) => {
   // 인증문자 확인 버튼 클릭
   const onClickCheckButton = useCallback(async () => {
     if (enableCheckButton) {
+      // 이름, 핸드폰 번호 전역으로 저장
       initializeUserAccount({
         name: name,
         phoneNumber: phoneNumber,
@@ -250,13 +204,12 @@ const Login = ({ token }: Props) => {
 
       // 인증번호 확인, 로그인 api 요청
       const result = await loginAPI(phoneNumber, verificationCode);
-      console.log('result', result);
 
-      // 인증번호 확인 성공 및 로그인
+      // 인증번호 확인 성공 및 로그인(토큰 O => 기존 회원)
       if (result.status === 200 && result.token) {
         return router.push('/counsel');
       } else if (result.status === 200 && !result.token) {
-        // 인증번호 확인 성공 및 로그인
+        // 인증번호 확인 성공 및 회원가입(토큰 X => 새로운 회원)
         return router.push('/login/select-organization');
       } else if (result === 400) {
         // 인증번호 확인 실패
@@ -272,40 +225,24 @@ const Login = ({ token }: Props) => {
 
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.push('/counsel');
-          }}
-        >
-          <XIcon width={18} height={18} alt={'cancel'} stroke={'#666666'} />
-        </div>
-      </Header>
+      <Header type={'close'} link={'/counsel'} />
       <Content>
         {!requestAuthentication ? (
-          <>
-            <p className='description'>
-              내담자님만의 사연을 듣고 상담하고 싶어요.
-              <br />
-              휴대폰 번호로 로그인해주세요.
-            </p>
-            <p className='sub-description'>
-              내담자님의 정보는 안전하게 보관돼요.
-            </p>
-          </>
+          <Description
+            desc={
+              '내담자님만의 사연을 듣고 상담하고 싶어요.<br />휴대폰 번호로 로그인해주세요.'
+            }
+            subDesc={'내담자님의 정보는 안전하게 보관돼요.'}
+          />
         ) : (
-          <>
-            <p className='description'>
-              받으신 인증번호를 입력하시고,
-              <br />
-              아래 인증번호 확인 버튼을 눌러주세요.
-            </p>
-            <p className='sub-description'>
-              인증번호를 받지 못하셨다면 <br />
-              인증문자 다시 받기 버튼을 클릭해주세요.
-            </p>
-          </>
+          <Description
+            desc={
+              '받으신 인증번호를 입력하시고,<br />아래 인증번호 확인 버튼을 눌러주세요.'
+            }
+            subDesc={
+              '인증번호를 받지 못하셨다면<br />인증문자 다시 받기 버튼을 클릭해주세요.'
+            }
+          />
         )}
         <InputWrapper bordercolor={`${nameRegexCheck}`}>
           <label>이름</label>
@@ -317,12 +254,12 @@ const Login = ({ token }: Props) => {
               onChange={onChangeName}
             />
             {nameRegexCheck && (
-              <div className='alert-icon-wrapper'>
-                <AlertIcon width={24} height={24} alt={'alert'} />
-              </div>
-            )}
-            {nameRegexCheck && (
-              <p className='alert'>이름을 정확히 입력해주세요</p>
+              <>
+                <div className='alert-icon-wrapper'>
+                  <AlertIcon width={24} height={24} alt={'alert'} />
+                </div>
+                <p className='alert'>이름을 정확히 입력해주세요</p>
+              </>
             )}
           </div>
         </InputWrapper>
@@ -343,18 +280,20 @@ const Login = ({ token }: Props) => {
           </div>
         </InputWrapper>
         {!requestAuthentication ? (
-          <button
-            className={enableRequestButton ? 'enable' : 'disable'}
+          <Button
+            text='인증문자 받기'
+            type={enableRequestButton}
             onClick={onClickReceiveButton}
-          >
-            인증문자 받기
-          </button>
+          />
         ) : (
-          <>
-            <button className='again-button' onClick={onClickReceiveButton}>
-              인증문자 다시 받기 ({Math.floor(timeLeft / 60)}분{' '}
-              {Math.floor(timeLeft % 60)}초)
-            </button>
+          <VerificationCodeSection>
+            <Button
+              text={`인증문자 다시 받기 (${Math.floor(
+                timeLeft % 60
+              )}분 ${Math.floor(timeLeft % 60)}초)`}
+              type={'nomal'}
+              onClick={onClickReceiveButton}
+            />
             <InputWrapper bordercolor={`${authenticationError}`}>
               <label>인증번호</label>
               <div>
@@ -365,24 +304,23 @@ const Login = ({ token }: Props) => {
                   onChange={onChangeVerificationCode}
                 />
                 {authenticationError && (
-                  <div className='alert-icon-wrapper'>
-                    <AlertIcon width={24} height={24} alt={'alert'} />
-                  </div>
-                )}
-                {authenticationError && (
-                  <p className='alert'>
-                    인증번호가 정확하지 않아요. 다시 입력해주세요.
-                  </p>
+                  <>
+                    <div className='alert-icon-wrapper'>
+                      <AlertIcon width={24} height={24} alt={'alert'} />
+                    </div>
+                    <p className='alert'>
+                      인증번호가 정확하지 않아요. 다시 입력해주세요.
+                    </p>
+                  </>
                 )}
               </div>
             </InputWrapper>
-            <button
-              className={enableCheckButton ? 'enable' : 'disable'}
+            <Button
+              text='인증번호 확인'
+              type={enableRequestButton}
               onClick={onClickCheckButton}
-            >
-              인증번호 확인
-            </button>
-          </>
+            />
+          </VerificationCodeSection>
         )}
       </Content>
       {loginAlertModal && <LoginAlertModal onClosed={loginAlertModalHandler} />}
