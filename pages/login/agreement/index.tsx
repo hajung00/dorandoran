@@ -21,6 +21,7 @@ import { joinAPI } from '@/pages/api/user';
 
 // import hooks
 import { USER_ACCOUNT_KEY } from '@/hooks/useUserAccount';
+import { getCookieValue } from '@/utils/getCookieValue';
 
 const Content = styled.div`
   padding: 0 20px;
@@ -94,13 +95,24 @@ const CheckBoxSection = styled.div`
   }
 `;
 
-const Agreement = () => {
+interface Props {
+  token: string;
+}
+
+const Agreement = ({ token }: Props) => {
   const router = useRouter();
   const { data: account } = useSWR(USER_ACCOUNT_KEY); // 개인정보
 
   const [checked, setChecked] = useState(false); // 약관동의 체크 여부
   const [enableButton, setEnableButton] = useState(false); // 버튼 활성화
   const [agreementToggle, setAgreementToggle] = useState(false); // 약관동의 내용 toggle
+
+  // 이미 로그인한 경우 상담페이지로 이동
+  useEffect(() => {
+    if (token) {
+      router.push('/counsel');
+    }
+  }, [token]);
 
   const agreementToggleHandler = useCallback(() => {
     setAgreementToggle((prev) => !prev);
@@ -178,6 +190,19 @@ const Agreement = () => {
       </Content>
     </Layout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default Agreement;

@@ -11,6 +11,7 @@ import { getCookieValue } from '@/utils/getCookieValue';
 import { useRouter } from 'next/router';
 import NonTestPNG from '../../public/image/nontest.png';
 import CounselorPNG from '../../public/image/counselor.png';
+import IntendSection from '@/components/IntendSection';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
@@ -140,20 +141,13 @@ const History = ({ token }: Props) => {
       </SubNav>
       <Container>
         {!testCheck ? (
-          <NonListStyle>
-            <Image src={NonTestPNG} width={60} height={60} alt='non-test-png' />
-            <p>
-              심리검사 후 상담을 완료하면 <br />
-              상담 내역이 나타나요.
-            </p>
-            <button
-              onClick={() => {
-                router.push('/counsel/psychological-test-intro');
-              }}
-            >
-              심리검사 하러가기
-            </button>
-          </NonListStyle>
+          <IntendSection
+            text='심리검사 후 상담을 완료하면<br />상담 내역이 나타나요.'
+            src='/image/nontest.png'
+            type='psychologicaltest'
+            svgWidth={60}
+            svgHeight={60}
+          />
         ) : listData?.counselHistories.length !== 0 ? (
           listData?.counselHistories.map(
             (item: { [key: string]: any }, i: number) => (
@@ -161,26 +155,13 @@ const History = ({ token }: Props) => {
             )
           )
         ) : (
-          <NonListStyle>
-            <Image
-              src={CounselorPNG}
-              width={60}
-              height={60}
-              alt='non-test-png'
-            />
-            <p>
-              아직 상담을 해보지 않으셨군요,
-              <br />
-              지금바로 상담을 시작해볼까요?
-            </p>
-            <button
-              onClick={() => {
-                router.push('/counsel/chat-intro');
-              }}
-            >
-              상담 시작하기
-            </button>
-          </NonListStyle>
+          <IntendSection
+            text='아직 상담을 해보지 않으셨군요,<br />지금바로 상담을 시작해볼까요?'
+            src='/image/counselor.png'
+            type='counsel'
+            svgWidth={60}
+            svgHeight={60}
+          />
         )}
       </Container>
       <Footer />

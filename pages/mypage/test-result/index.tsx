@@ -9,18 +9,10 @@ import FileSVG from '../../../public/icons/file.svg';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
-import MypageNonTest from '@/components/MyPageNonTest';
 import { getCookieValue } from '@/utils/getCookieValue';
-
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-
-  .icon-wrapper {
-    padding: 10.5px 8px;
-    cursor: pointer;
-  }
-`;
+import IntendSection from '@/components/IntendSection';
+import Description from '@/components/Description';
+import Header from '@/components/Header';
 
 const Point = styled.span<{ color: string }>`
   color: ${(props: any) =>
@@ -39,36 +31,22 @@ const Content = styled.div`
 
   .content-header {
     .title {
-      color: var(--gray09, #222);
-      font-family: 'Pretendard';
-      font-size: 26px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 140%; /* 36.4px */
+      color: #222;
+      font: var(--Pretendard--26-600);
     }
   }
 
-  .description {
-    margin-top: 8px;
-    color: var(--gray07, #666);
-    font-family: 'Pretendard';
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 140%; /* 25.2px */
-
-    &::after {
-      content: '';
-      display: block;
-      width: 100vw;
-      max-width: 512px;
-      height: 22px;
-      background: #f7f7f7;
-      transform: translateX(-20px);
-      margin-top: 62px;
-      margin-bottom: 54px;
-    }
-  }
+  // &::after {
+  //   content: '';
+  //   display: block;
+  //   width: 100vw;
+  //   max-width: 512px;
+  //   height: 22px;
+  //   background: #f7f7f7;
+  //   transform: translateX(-20px);
+  //   margin-top: 62px;
+  //   margin-bottom: 54px;
+  // }
 
   .test-result-title {
     color: var(--gray09, #222);
@@ -263,29 +241,27 @@ const TestResult = ({ token }: Props) => {
 
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.push('/mypage');
-          }}
-        >
-          <ArrowSVG width={21} height={21} alt={'prev'} />
-        </div>
-      </Header>
+      <Header type={'prev'} />
       <Content>
-        <div className='content-header'>
-          <p className='title'>나의 첫 심리검사 결과</p>
-        </div>
         {!testCheck ? (
-          <MypageNonTest />
+          <>
+            <div className='content-header'>
+              <p className='title'>나의 첫 심리검사 결과</p>
+            </div>
+            <IntendSection
+              text='아직 심리검사를 하지 않으셨네요.<br/>지금 바로 검사를 시작해보세요!'
+              src='/image/nontest.png'
+              type='psychologicaltest'
+              svgWidth={60}
+              svgHeight={60}
+            />
+          </>
         ) : (
           <>
-            <p className='description'>
-              {testResult?.name}님의 첫 심리검사 결과는 아래와 같아요.
-              <br />
-              심리검사 내용은 안전하게 보관돼요.
-            </p>
+            <Description
+              desc={'나의 첫 심리검사 결과'}
+              subDesc={`${testResult?.name}님의 첫 심리검사 결과는 아래와 같아요.<br />심리검사 내용은 안전하게 보관돼요.`}
+            />
             <div className='test-result-title'>
               <p>심리검사 결과</p>
               <p>

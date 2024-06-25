@@ -9,7 +9,7 @@ import DescriptionIcon from '../../public/icons/description.svg';
 import FolderIcon from '../../public/icons/folder.svg';
 import UserIcon from '../../public/icons/user.svg';
 
-const FooterStyle = styled.footer`
+const FooterStyle = styled.nav`
   height: 74px;
   background: yellow;
   position: fixed;

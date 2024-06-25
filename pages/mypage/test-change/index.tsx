@@ -8,19 +8,11 @@ import ArrowSVG from '../../../public/icons/arrow.svg';
 import BarGraph from '@/components/BarGraph';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
-import MypageNonTest from '@/components/MyPageNonTest';
 import { getCookieValue } from '@/utils/getCookieValue';
 import { completeCounselAPI } from '@/pages/api/counsel';
-
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-
-  .icon-wrapper {
-    padding: 10.5px 8px;
-    cursor: pointer;
-  }
-`;
+import IntendSection from '@/components/IntendSection';
+import Header from '@/components/Header';
+import Description from '@/components/Description';
 
 const Content = styled.div`
   padding: 22px 20px 64px 20px;
@@ -30,23 +22,9 @@ const Content = styled.div`
 
   .content-header {
     .title {
-      margin-bottom: 8px;
-      color: var(--gray09, #222);
-      font-family: 'Pretendard';
-      font-size: 26px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 140%; /* 36.4px */
+      color: #222;
+      font: var(--Pretendard--26-600);
     }
-  }
-  .description {
-    color: var(--gray07, #666);
-    font-family: 'Pretendard';
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 140%; /* 25.2px */
-    margin-bottom: 40px;
   }
 `;
 
@@ -136,29 +114,25 @@ const TestChange = ({ token }: Props) => {
 
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.push('/mypage');
-          }}
-        >
-          <ArrowSVG width={21} height={21} alt={'prev'} />
-        </div>
-      </Header>
+      <Header type={'prev'} />
       <Content>
         <div className='content-header'>
           <p className='title'>나의 심리변화 추이</p>
         </div>
         {!testCheck ? (
-          <MypageNonTest />
+          <IntendSection
+            text='아직 심리검사를 하지 않으셨네요.<br/>지금 바로 검사를 시작해보세요!'
+            src='/image/nontest.png'
+            type='psychologicaltest'
+            svgWidth={60}
+            svgHeight={60}
+          />
         ) : (
           <>
-            <p className='description'>
-              상담 종료 후 도란도란에서 분석한
-              <br />
-              조성혁님의 심리변화 추이에요.
-            </p>
+            <Description
+              desc={'나의 심리변화 추이'}
+              subDesc='상담 종료 후 도란도란에서 분석한<br />조성혁님의 심리변화 추이에요.'
+            />
             <BarGraph
               token={token}
               clickDate={clickDate}

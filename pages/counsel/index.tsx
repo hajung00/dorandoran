@@ -7,8 +7,6 @@ import styled from 'styled-components';
 // import components
 import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
-import NonLogin from '@/components/NonLogin';
-import NonTest from '@/components/NonTest';
 import { getCookieValue } from '@/utils/getCookieValue';
 import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
@@ -17,6 +15,7 @@ import fetcher from '@/utils/fetchers';
 import LogoPNG from '../../public/image/logo.png';
 import CounselWarning from '@/components/CounselWarning';
 import CallModal from '@/modal/CallModal';
+import IntendSection from '@/components/IntendSection';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
@@ -27,12 +26,20 @@ const Header = styled.header`
 `;
 
 const Content = styled.div`
-  // height: calc(100vh - 94px - 74px);
   display: flex;
   flex: 1;
-  // flex-direction: column;
-  // align-items: center;
   padding: 0 20px;
+  padding-bottom: 74px;
+
+  .test-intend-wrapper {
+    display: flex;
+    width: 100%;
+    max-height: 329px;
+    margin-top: 30px;
+    padding: 40px 0px;
+    border-radius: 26px;
+    background: var(--gray01, #f7f7f7);
+  }
 `;
 
 const CounselStyle = styled.div`
@@ -143,18 +150,17 @@ const Counsel = ({ token }: Props) => {
   const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
     fetcher(url, token)
   );
-  const { data: counselWarning } = useSWR('/api/counsel/suggest', (url) =>
-    fetcher(url, token)
-  );
+  // const { data: counselWarning } = useSWR('/api/counsel/suggest', (url) =>
+  //   fetcher(url, token)
+  // );
   const { data: listData } = useSWR(`/api/counsel/history/counsel`, (url) =>
     fetcher(url, token)
   );
 
-  const data = [
-    { summary: '상담 내용 요약', date: '2024년 05월 20일' },
-    { summary: '상담 내용 요약', date: '2024년 05월 25일' },
-    { summary: '상담 내용 요약', date: '2024년 05월 25일' },
-  ];
+  const counselWarning = {
+    suggestVisit: false,
+    comment: '',
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [callType, setCallType] = useState('');
@@ -179,9 +185,23 @@ const Counsel = ({ token }: Props) => {
       <Header>상담</Header>
       <Content>
         {!token ? (
-          <NonLogin />
+          <IntendSection
+            text='상담을 하기 위해서는 로그인 상태여야 해요!<br />아래 버튼을 눌러 로그인을 진행해주세요.'
+            src='/image/nonlogin.png'
+            type='login'
+            svgWidth={160}
+            svgHeight={160}
+          />
         ) : !testCheck ? (
-          <NonTest />
+          <div className='test-intend-wrapper'>
+            <IntendSection
+              text='심리검사로<br />현재 내 마음상태 알아보기'
+              src='/image/nontest.png'
+              type='psychologicaltest'
+              svgWidth={80}
+              svgHeight={80}
+            />
+          </div>
         ) : (
           <CounselStyle>
             {counselWarning?.suggestVisit && (
@@ -191,17 +211,13 @@ const Counsel = ({ token }: Props) => {
               />
             )}
             <div className='counsel-start-section'>
-              <div className='description'>
-                <Image src={LogoPNG} width={100} height={48} alt='logo-png' />
-                <p>새로운 상담 시작하기</p>
-              </div>
-              <button
-                onClick={() => {
-                  router.push('/counsel/chat-intro');
-                }}
-              >
-                상담 시작하기
-              </button>
+              <IntendSection
+                text='새로운 상담 시작하기'
+                src='/image/logo.png'
+                type='counsel'
+                svgWidth={100}
+                svgHeight={48}
+              />
             </div>
             <div className='counsel-list-section'>
               <p className='title'>현재 진행중인 상담</p>
