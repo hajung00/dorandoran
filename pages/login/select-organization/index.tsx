@@ -1,73 +1,31 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
 import styled from 'styled-components';
 
 // import svg
-import ArrowIcon from '../../../public/icons/arrow.svg';
 import ArrowUp from '../../../public/icons/chevron-up.svg';
 import ArrowDown from '../../../public/icons/chevron-down.svg';
 
 // import components
 import Layout from '@/components/Layout';
-import { useRouter } from 'next/router';
-import useSWR from 'swr';
+import Header from '@/components/Header';
+import Description from '@/components/Description';
+import Button from '@/components/Button';
+
+// import hooks
+import { getCookieValue } from '@/utils/getCookieValue';
 import useUserAccount, { USER_ACCOUNT_KEY } from '@/hooks/useUserAccount';
-
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-
-  .icon-wrapper {
-    display: inline-block;
-    padding: 12px 8px;
-    cursor: pointer;
-  }
-`;
 
 const Content = styled.div`
   padding: 0 20px;
   margin-top: 22px;
   margin-bottom: 12.5%;
-
-  .description {
-    color: #222;
-    font-family: 'Pretendard';
-    font-size: clamp(20px, 6vw, 26px);
-    font-weight: 600;
-  }
-
-  .sub-description {
-    margin-top: 12px;
-    margin-bottom: 48px;
-    color: #666;
-    font-family: 'Pretendard';
-    font-size: clamp(16px, 5vw, 20px);
-    font-weight: 400;
-  }
-
-  & > button {
-    width: 100%;
-    padding: 4.5%;
-    border-radius: 18px;
-    background: #e3e3e3;
-    border: none;
-    color: #b2b2b2;
-    font-family: 'Pretendard';
-    font-size: clamp(18px, 4vw, 20px);
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.4px;
-  }
-
-  .enable {
-    background: var(--doranblue, #565bff);
-    color: var(--white, #fff);
-    cursor: pointer;
-  }
 `;
 
 const SelectSection = styled.div`
+  margin-top: 44px;
   margin-bottom: 121%;
   cursor: pointer;
   & > p {
@@ -150,26 +108,34 @@ const SelectSection = styled.div`
   }
 `;
 interface Props {
+  token: string;
   organizationList: { [key: string]: string }[];
 }
 
-const SelectOrganization = ({ organizationList }: Props) => {
+const SelectOrganization = ({ token, organizationList }: Props) => {
   const router = useRouter();
-  const { data: account } = useSWR(USER_ACCOUNT_KEY);
+  const { data: account } = useSWR(USER_ACCOUNT_KEY); // 사용자 이름, 핸드폰 번호
   const { initializeUserAccount } = useUserAccount();
 
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(false); // select box toggle
   const [selectedKo, setSelectedKo] = useState('소속기관을 선택해주세요.');
   const [selectedEn, setSelectedEn] = useState('');
-  const [enableButton, setEnableButton] = useState(false);
+  const [enableButton, setEnableButton] = useState(false); // 버튼 활성화 여부
 
-  console.log('account', account);
+  // 이미 로그인한 경우 상담페이지로 이동
+  useEffect(() => {
+    if (token) {
+      router.push('/counsel');
+    }
+  }, [token]);
 
+  // 리스트 선택 이벤트
   const selectListHandler = useCallback((list: { [key: string]: string }) => {
     setSelectedKo(list.ko);
     setSelectedEn(list.en);
   }, []);
 
+  // 선택한 리스트 있는 경우 버튼 활성화
   useEffect(() => {
     if (selectedEn) {
       setEnableButton(true);
@@ -178,7 +144,9 @@ const SelectOrganization = ({ organizationList }: Props) => {
     }
   }, [selectedEn]);
 
+  // 선택 완료 클릭 이벤트
   const onClickCompelete = useCallback(() => {
+    // 개인정보에 소속기관 전역으로 추가
     if (enableButton) {
       const addedInfo = { ...account };
       addedInfo.userAgency = selectedEn;
@@ -189,23 +157,14 @@ const SelectOrganization = ({ organizationList }: Props) => {
 
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.back();
-          }}
-        >
-          <ArrowIcon width={21} height={21} alt={'cancel'} stroke={'#666666'} />
-        </div>
-      </Header>
+      <Header type={'prev'} />
       <Content>
-        <p className='description'>소속 기관을 선택해주세요.</p>
-        <p className='sub-description'>
-          현재 속해있는 기관이 있으시다면 선택해주세요.
-          <br />
-          없으시다면 무소속으로 선택해주세요.
-        </p>
+        <Description
+          desc={'소속 기관을 선택해주세요.'}
+          subDesc={
+            '현재 속해있는 기관이 있으시다면 선택해주세요.<br />없으시다면 무소속으로 선택해주세요.'
+          }
+        />
         <SelectSection
           className={`${toggle ? 'active' : ''}`}
           onClick={() => {
@@ -240,24 +199,29 @@ const SelectOrganization = ({ organizationList }: Props) => {
             </ul>
           </div>
         </SelectSection>
-        <button
-          className={`${enableButton ? 'enable' : 'disable'}`}
+        <Button
+          text='선택완료'
+          type={enableButton}
           onClick={onClickCompelete}
-        >
-          선택완료
-        </button>
+        />
       </Content>
     </Layout>
   );
 };
 
 export const getServerSideProps = async (context: any) => {
+  // 로그인 여부 확인
+  const cookie = context.req ? context.req.headers.cookie : '';
+
+  let token = cookie ? getCookieValue(cookie, 'token') : null;
+
   const organizationList = (
     await import('../../../public/organization_list/organization_list.json')
-  ).default;
+  ).default; // 소속기관 list
 
   return {
     props: {
+      token,
       organizationList,
     },
   };

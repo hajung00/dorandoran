@@ -26,7 +26,7 @@ const Header = ({ type, link }: Props) => {
   const onClickHandler = useCallback(() => {
     if (type === 'close' && link) {
       router.push(link);
-    } else {
+    } else if (type === 'prev') {
       router.back();
     }
   }, [type, link]);
@@ -37,7 +37,7 @@ const Header = ({ type, link }: Props) => {
         {type === 'close' ? (
           <XIcon width={18} height={18} alt={'cancel'} stroke={'#666666'} />
         ) : (
-          <ArrowIcon width={21} height={21} alt={'cancel'} stroke={'#666666'} />
+          <ArrowIcon width={21} height={21} alt={'prev'} stroke={'#666666'} />
         )}
       </div>
     </HeaderStyle>

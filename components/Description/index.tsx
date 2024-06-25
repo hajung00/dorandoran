@@ -10,16 +10,15 @@ const DescriptionStyle = styled.section`
     color: #666;
     font: var(--Pretendard--20-400);
     margin-top: 12px;
-    margin-bottom: 93px;
   }
 `;
 
 interface Props {
   desc: string;
-  subDesc: string;
+  subDesc?: string;
 }
 
-const Description = ({ desc, subDesc }: Props) => {
+const Description = ({ desc, subDesc = '' }: Props) => {
   return (
     <DescriptionStyle>
       <p className='description' dangerouslySetInnerHTML={{ __html: desc }}></p>
