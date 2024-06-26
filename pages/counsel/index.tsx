@@ -16,13 +16,12 @@ import LogoPNG from '../../public/image/logo.png';
 import CounselWarning from '@/components/CounselWarning';
 import CallModal from '@/modal/CallModal';
 import IntendSection from '@/components/IntendSection';
+import CounselHistoryList from '@/components/CounselHistoryList';
 
 const Header = styled.header`
   padding: 54px 20px 0 20px;
   color: #222;
-  font-family: 'Pretendard';
-  font-size: clamp(30px, 7vw, 34px);
-  font-weight: 700;
+  font: var(--Pretendard--34-700);
 `;
 
 const Content = styled.div`
@@ -54,42 +53,6 @@ const CounselStyle = styled.div`
     align-items: center;
     border-radius: 26px;
     background: var(--gray01, #f7f7f7);
-
-    & > button {
-      margin-top: 29px;
-      display: flex;
-      width: 260px;
-      padding: 4.5% 4px;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-      border: none;
-      border-radius: 18px;
-      background: #565bff;
-      color: var(--white, #fff);
-      font-family: 'Pretendard';
-      font-size: clamp(16px, 5vw, 20px);
-      font-style: normal;
-      font-weight: 600;
-      letter-spacing: -0.4px;
-      cursor: pointer;
-    }
-  }
-
-  .description {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    border-radius: 16px;
-    color: var(--gray09, #222);
-    text-align: center;
-    font-family: 'Pretendard';
-    font-size: clamp(18px, 5vw, 22px);
-    font-weight: 600;
-    line-height: 140%; /* 30.8px */
-    letter-spacing: -0.44px;
   }
 
   .counsel-list-section {
@@ -150,17 +113,12 @@ const Counsel = ({ token }: Props) => {
   const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
     fetcher(url, token)
   );
-  // const { data: counselWarning } = useSWR('/api/counsel/suggest', (url) =>
-  //   fetcher(url, token)
-  // );
+  const { data: counselWarning } = useSWR('/api/counsel/suggest', (url) =>
+    fetcher(url, token)
+  );
   const { data: listData } = useSWR(`/api/counsel/history/counsel`, (url) =>
     fetcher(url, token)
   );
-
-  const counselWarning = {
-    suggestVisit: false,
-    comment: '',
-  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [callType, setCallType] = useState('');
@@ -223,17 +181,8 @@ const Counsel = ({ token }: Props) => {
               <p className='title'>현재 진행중인 상담</p>
               <div className='counsel-list-wrapper'>
                 {listData?.counselHistories.map(
-                  (item: { [key: string]: any }) => (
-                    <div
-                      key={item.counselId}
-                      className='counsel-list'
-                      onClick={() =>
-                        router.push(`/counsel/chat/${item.counselId}`)
-                      }
-                    >
-                      <div className='counsel-title'>{item.title}</div>
-                      <div className='counsel-date'>{item.date}</div>
-                    </div>
+                  (item: { [key: string]: any }, i: number) => (
+                    <CounselHistoryList type={'counsel'} list={item} key={i} />
                   )
                 )}
               </div>

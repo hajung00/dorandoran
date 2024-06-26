@@ -20,7 +20,6 @@ import useUserAccount, { USER_ACCOUNT_KEY } from '@/hooks/useUserAccount';
 
 const Content = styled.div`
   padding: 0 20px;
-  margin-top: 22px;
   margin-bottom: 12.5%;
 `;
 

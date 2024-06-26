@@ -8,6 +8,7 @@ import ArrowIcon from '../../public/icons/arrow.svg';
 
 const HeaderStyle = styled.section`
   padding: 60px 20px 0 20px;
+  margin-bottom: 22px;
 
   .icon-wrapper {
     display: inline-block;

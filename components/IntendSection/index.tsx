@@ -75,7 +75,7 @@ const IntentSection = ({ text, src, type, svgWidth, svgHeight }: Props) => {
     if (type === 'login') {
       router.push('/login');
     } else if (type === 'psychologicaltest') {
-      router.push('/counsel/psychological-test-intro');
+      router.push('/psychological');
     } else if (type === 'counsel') {
       router.push('/counsel/chat-intro');
     }

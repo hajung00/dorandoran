@@ -24,7 +24,7 @@ ChartJS.register(
 );
 
 const DiseaseTypeWrapper = styled.div`
-  margin-bottom: 36px;
+  margin: 36px 0;
 
   & > ul {
     display: flex;
@@ -244,7 +244,7 @@ const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
   }, []);
 
   const data = {
-    labels: graphData?.map((item) => item.dayOfMonth),
+    labels: graphData?.map((item) => item.dayOfMonth + '일'),
     datasets: [
       {
         label: '분류 1', //그래프 분류되는 항목

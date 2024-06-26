@@ -10,6 +10,7 @@ const DescriptionStyle = styled.section`
     color: #666;
     font: var(--Pretendard--20-400);
     margin-top: 12px;
+    line-height: 140%;
   }
 `;
 

@@ -24,10 +24,11 @@ const Point = styled.span<{ color: string }>`
 `;
 
 const Content = styled.div`
-  padding: 22px 20px 64px 20px;
+  padding: 0 20px 0 20px;
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-bottom: 12.5%;
 
   .content-header {
     .title {
@@ -36,24 +37,24 @@ const Content = styled.div`
     }
   }
 
-  // &::after {
-  //   content: '';
-  //   display: block;
-  //   width: 100vw;
-  //   max-width: 512px;
-  //   height: 22px;
-  //   background: #f7f7f7;
-  //   transform: translateX(-20px);
-  //   margin-top: 62px;
-  //   margin-bottom: 54px;
-  // }
-
   .test-result-title {
     color: var(--gray09, #222);
     font-family: 'Pretendard';
     font-size: clamp(21px, 5vw, 26px);
     font-weight: 600;
     line-height: 140%; /* 36.4px */
+
+    &::before {
+      content: '';
+      display: block;
+      width: 100vw;
+      max-width: 512px;
+      height: 22px;
+      background: #f7f7f7;
+      transform: translateX(-20px);
+      margin-top: 62px;
+      margin-bottom: 54px;
+    }
   }
 
   .test-date {

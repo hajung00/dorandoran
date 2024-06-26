@@ -14,7 +14,6 @@ const fetcher = (url: string, token: string) => {
       headers,
     })
     .then((response) => {
-      console.log(response);
       return response.data.data;
     })
     .catch((error) => console.error(error));

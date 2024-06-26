@@ -25,9 +25,10 @@ import { getCookieValue } from '@/utils/getCookieValue';
 
 const Content = styled.div`
   padding: 0 20px;
-  margin-top: 22px;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  margin-bottom: 12.5%;
 `;
 
 const AgreementSection = styled.section`

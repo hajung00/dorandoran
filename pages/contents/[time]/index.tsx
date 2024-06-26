@@ -114,7 +114,7 @@ const MeditationContent = ({ time }: Props) => {
       </Header>
       <ContentWrapper>
         <div className='content-text'>
-          <p className='title'>{time} 명상</p>
+          <p className='title'>{time}분 명상</p>
           <p className='description'>
             눈을 감고 편안하게 명상을 진행해보세요.
             <br />

@@ -1,16 +1,19 @@
 'use client';
 import Image from 'next/image';
-import Layout from '../../components/Layout';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
+import Cookies from 'js-cookie';
 
+// import components
+import Layout from '../../components/Layout';
+
+// import png
 import OnBoarding1 from '../../public/image/onboarding/onboarding_1.png';
 import OnBoarding2 from '../../public/image/onboarding/onboarding_2.png';
 import OnBoarding3 from '../../public/image/onboarding/onboarding_3.png';
 
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-
+// import swiper
+import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles

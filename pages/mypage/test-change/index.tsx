@@ -15,10 +15,11 @@ import Header from '@/components/Header';
 import Description from '@/components/Description';
 
 const Content = styled.div`
-  padding: 22px 20px 64px 20px;
+  padding: 0 20px 0 20px;
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-bottom: 12.5%;
 
   .content-header {
     .title {
@@ -83,6 +84,10 @@ interface Props {
 
 const TestChange = ({ token }: Props) => {
   const router = useRouter();
+  const { data: userData } = useSWR('/api/mypage/main', (url) =>
+    fetcher(url, token)
+  );
+
   const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
     fetcher(url, token)
   );
@@ -130,8 +135,8 @@ const TestChange = ({ token }: Props) => {
         ) : (
           <>
             <Description
-              desc={'나의 심리변화 추이'}
-              subDesc='상담 종료 후 도란도란에서 분석한<br />조성혁님의 심리변화 추이에요.'
+              desc={''}
+              subDesc={`상담 종료 후 도란도란에서 분석한<br />${userData?.name}님의 심리변화 추이에요.`}
             />
             <BarGraph
               token={token}

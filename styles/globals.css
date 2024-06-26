@@ -5,9 +5,10 @@
 }
 
 :root {
+  --Pretendard--34-700: 700 clamp(30px, 7vw, 34px) Pretendard;
   --Pretendard--26-600: 600 clamp(20px, 6vw, 26px) Pretendard;
-  --Pretendard--20-400: 400 clamp(16px, 5vw, 20px) Pretendard;
-  --Pretendard--20-600: 600 clamp(18px, 5vw, 20px) Pretendard;
+  --Pretendard--20-400: 400 clamp(16px, 4vw, 20px) Pretendard;
+  --Pretendard--20-600: 600 clamp(16px, 4vw, 20px) Pretendard;
 }
 
 body {

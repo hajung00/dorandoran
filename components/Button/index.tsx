@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const ButtonStyle = styled.button<{ type: string }>`
   width: 100%;
-  padding: 4.5% 20px;
+  padding: 4.5% 10px;
   border: none;
   border-radius: 18px;
   font: var(--Pretendard--20-600);

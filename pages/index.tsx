@@ -1,12 +1,15 @@
 'use client';
-
-import Layout from '@/components/Layout';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Lottie from 'lottie-react';
 import Cookies from 'js-cookie';
-import SplashAnimation from '../public/animation/splash.json';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+
+// import components
+import Layout from '@/components/Layout';
+
+// import animation
+import SplashAnimation from '../public/animation/splash.json';
 
 const SplashStyle = styled.div<{ opacity: number }>`
   flex: 1;
