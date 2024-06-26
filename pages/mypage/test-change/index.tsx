@@ -100,22 +100,63 @@ const TestChange = ({ token }: Props) => {
     setClickDate(date);
   }, []);
 
-  useEffect(() => {
-    // 선택한 날짜 바뀔 때마다 상담 정보 가져오기
-    const fetchData = async () => {
-      try {
-        const response = await completeCounselAPI(token, clickDate);
-        console.log('선택한 날짜', response);
-        setCompleteCounselList(response);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  // useEffect(() => {
+  //   // 선택한 날짜 바뀔 때마다 상담 정보 가져오기
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await completeCounselAPI(token, clickDate);
+  //       console.log('선택한 날짜', response);
+  //       setCompleteCounselList(response);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
 
-    if (clickDate) {
-      fetchData();
+  //   if (clickDate) {
+  //     fetchData();
+  //   }
+  // }, [clickDate]);
+
+  // 더미!!
+  const dummy = [
+    {
+      counselId: 40,
+      title: '우울감 극복하기',
+      counselDate: '2024년 06월 26일',
+    },
+    {
+      counselId: 40,
+      title: '일상 회복하기',
+      counselDate: '2024년 06월 27일',
+    },
+    {
+      counselId: 40,
+      title: '무기력 타파법',
+      counselDate: '2024년 06월 28일',
+    },
+    {
+      counselId: 40,
+      title: '긍정 변화의 시작',
+      counselDate: '2024년 06월 29일',
+    },
+  ];
+
+  useEffect(() => {
+    if (clickDate === '0626') {
+      setCompleteCounselList([dummy[0]]);
+    }
+    if (clickDate === '0627') {
+      setCompleteCounselList([dummy[1]]);
+    }
+    if (clickDate === '0628') {
+      setCompleteCounselList([dummy[2]]);
+    }
+    if (clickDate === '0629') {
+      setCompleteCounselList([dummy[3]]);
     }
   }, [clickDate]);
+
+  //
 
   return (
     <Layout>

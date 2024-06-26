@@ -213,6 +213,9 @@ const ChatBox = ({
           onClick={() => {
             onSubmitForm(chat);
             textarea.style.height = '56px';
+            if (textareaRef.current) {
+              textareaRef.current.focus();
+            }
             setChatBoxHeight(0);
           }}
         >

@@ -59,7 +59,7 @@ const Content = styled.div`
       max-height: 248px;
       min-height: 136px;
       height: fit-content;
-      overflow: hidden;
+      overflow-y: scroll;
       color: var(--gray08, #444);
       text-overflow: ellipsis;
       font-family: 'Pretendard';
@@ -96,7 +96,8 @@ const Content = styled.div`
     height: 22px;
     background: #f7f7f7;
     position: absolute;
-    top: 218px;
+    // top: 218px;
+    bottom: -22%;
     left: -20px;
   }
 
@@ -196,6 +197,22 @@ const Result = ({ token }: Props) => {
   }, [isLoading, result]);
 
   console.log(result, embedUrlData);
+
+  const dummy = [
+    {
+      title: '우울증 재발 확률 75%...? 우울증의 재발을 막는 방법은?',
+      link: 'https://www.youtube.com/embed/Fy4E9TMlP6Q',
+    },
+    {
+      title: '우울증 약이 듣지 않을 땐 어떻게 해야 할까?',
+      link: 'https://www.youtube.com/embed/ewi1UKA4dus',
+    },
+    {
+      title: '아무것도 하기 싫은 나, 우울증 일까?',
+      link: 'https://www.youtube.com/embed/zHG4LChuZt8',
+    },
+  ];
+
   return (
     <Layout>
       <Header>
@@ -207,7 +224,8 @@ const Result = ({ token }: Props) => {
         <div className='content-section'>
           <div className='counsel-title'>
             <p>상담 결과</p>
-            <p>{result?.result}</p>
+            {/* <p>{result?.result}</p> */}
+            <p>김도란님의 심리상태가 더 좋아졌어요!</p>
             <button
               className='counsel-start-button'
               onClick={() => {
@@ -220,7 +238,15 @@ const Result = ({ token }: Props) => {
           </div>
           <div className='counsel-summary'>
             <p>상담 내용 요약</p>
-            <div>{result?.summary}</div>
+            {/* <div>{result?.summary}</div> */}
+            <div>
+              김도란님은 최근 우울함과 무기력함을 느끼며, 앞으로 나아질 수 없을
+              것 같다는 생각에 사로잡혀 아무것도 할 수 없는 상태입니다. 상담원은
+              작은 행동들이 도움이 될 수 있다고 조언하며, 걷기나 깊게 숨쉬기를
+              제안했습니다. 김도란님은 긍정적으로 받아들여 오늘부터 시도해보기로
+              했고, 상담원은 용기를 격려하며 언제든지 다시 도움을 요청할 수
+              있음을 강조합니다.
+            </div>
           </div>
           <div className='content-wrapper'>
             <p className='main-title'>심리치료 콘텐츠를 시청해보세요.</p>
@@ -239,23 +265,23 @@ const Result = ({ token }: Props) => {
               <RightArrowSVG width={20} height={20} alt={'arrow'} />
             </button>
           </div>
-          {result?.contents.map(
-            (content: { [key: string]: string }, i: number) => (
-              <div key={i} className='content-wrapper'>
-                <p className='title'>{content.title}</p>
-                <div className='content'>
-                  <iframe
-                    width={'100%'}
-                    height='290'
-                    src={embedUrlData && embedUrlData[i].embedUrl}
-                    title='YouTube video player'
-                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                    allowFullScreen
-                  ></iframe>
-                </div>
+          {/* {result?.contents.map( */}
+          {dummy.map((content: { [key: string]: string }, i: number) => (
+            <div key={i} className='content-wrapper'>
+              <p className='title'>{content.title}</p>
+              <div className='content'>
+                <iframe
+                  width={'100%'}
+                  height='290'
+                  // src={embedUrlData && embedUrlData[i].embedUrl}
+                  src={content.link}
+                  title='YouTube video player'
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                  allowFullScreen
+                ></iframe>
               </div>
-            )
-          )}
+            </div>
+          ))}
         </div>
         <button className='main-button' onClick={moveToCounsel}>
           메인화면으로 돌아가기

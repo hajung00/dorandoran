@@ -61,18 +61,19 @@ const ChatSection = forwardRef<HTMLDivElement, Props>(
         isVoice={`${isVoice}`}
         chatBoxHeight={chatBoxHeight ? chatBoxHeight : 0}
       >
-        {Object.entries(chatSections).map(([date, chats]: any, i) => {
-          return (
-            <Section key={i}>
-              <StickyHeader className={`section-${date}`} key={date}>
-                <button>{moment(date).format('YYYY년 M월 DD일')}</button>
-              </StickyHeader>
-              {chats.map((chat: { [key: string]: string }, idx: number) => (
-                <Chat key={idx} chat={chat} />
-              ))}
-            </Section>
-          );
-        })}
+        {chatSections &&
+          Object.entries(chatSections).map(([date, chats]: any, i) => {
+            return (
+              <Section key={i}>
+                <StickyHeader className={`section-${date}`} key={date}>
+                  <button>{moment(date).format('YYYY년 M월 DD일')}</button>
+                </StickyHeader>
+                {chats.map((chat: { [key: string]: string }, idx: number) => (
+                  <Chat key={idx} chat={chat} />
+                ))}
+              </Section>
+            );
+          })}
         {isLoading && <Chat chat={undefined} />}
         <div ref={ref}></div>
       </ChatZone>

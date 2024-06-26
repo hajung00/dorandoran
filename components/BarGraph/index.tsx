@@ -218,30 +218,106 @@ const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
   }, []);
 
   // 질병 종류, 달 변할 때 마다 데이터 요청
-  useEffect(() => {
-    console.log('데이터 요청', diseaseType, currentMonth);
-    const fetchData = async () => {
-      try {
-        const response = await trendCounselAPI(
-          token,
-          diseaseType,
-          currentMonth
-        );
-        console.log(response);
-        setGraphData(response);
-        setBarColor(response);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  // useEffect(() => {
+  //   console.log('데이터 요청', diseaseType, currentMonth);
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await trendCounselAPI(
+  //         token,
+  //         diseaseType,
+  //         currentMonth
+  //       );
+  //       console.log(response);
+  //       setGraphData(response);
+  //       setBarColor(response);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
 
-    fetchData();
-  }, [diseaseType, currentMonth]);
+  //   fetchData();
+  // }, [diseaseType, currentMonth]);
 
   const clearClickDate = useCallback(() => {
     handleClickDate('');
     setClickedIndex(-1);
   }, []);
+
+  // 더미!!
+  const dummy1 = [
+    {
+      dayOfMonth: 26,
+      score: 32,
+    },
+    {
+      dayOfMonth: 27,
+      score: 34,
+    },
+    {
+      dayOfMonth: 28,
+      score: 36,
+    },
+    {
+      dayOfMonth: 29,
+      score: 33,
+    },
+  ];
+
+  const dummy2 = [
+    {
+      dayOfMonth: 26,
+      score: 58,
+    },
+    {
+      dayOfMonth: 27,
+      score: 60,
+    },
+    {
+      dayOfMonth: 28,
+      score: 62,
+    },
+    {
+      dayOfMonth: 29,
+      score: 63,
+    },
+  ];
+
+  const dummy3 = [
+    {
+      dayOfMonth: 26,
+      score: 80,
+    },
+    {
+      dayOfMonth: 27,
+      score: 82,
+    },
+    {
+      dayOfMonth: 28,
+      score: 84,
+    },
+    {
+      dayOfMonth: 29,
+      score: 86,
+    },
+  ];
+
+  useEffect(() => {
+    console.log('데이터 요청', diseaseType, currentMonth);
+    if (diseaseType === 'DEPRESSION') {
+      setGraphData(dummy1);
+      setBarColor(dummy1);
+    }
+    if (diseaseType === 'STRESS') {
+      setGraphData(dummy2);
+      setBarColor(dummy2);
+    }
+    if (diseaseType === 'ANXIETY') {
+      setGraphData(dummy3);
+      setBarColor(dummy3);
+    }
+  }, [diseaseType, currentMonth]);
+
+  //
 
   const data = {
     labels: graphData?.map((item) => item.dayOfMonth + '일'),
