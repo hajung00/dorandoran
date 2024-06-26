@@ -44,21 +44,12 @@ interface Props {
 
 const PsychologicalTestResult = ({ token }: Props) => {
   const router = useRouter();
-  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
-    fetcher(url, token)
-  );
 
   useEffect(() => {
     if (!token) {
       router.push('/login');
     }
   }, [token]);
-
-  useEffect(() => {
-    if (testCheck) {
-      router.push('/counsel');
-    }
-  }, [testCheck]);
 
   const moveToChat = useCallback(() => {
     router.push('/counsel/chat-intro');
