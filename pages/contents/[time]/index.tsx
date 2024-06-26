@@ -1,61 +1,30 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-// import svg
-import ArrowSVG from '../../../public/icons/arrow.svg';
+// import components
 import Layout from '@/components/Layout';
+import Header from '@/components/Header';
+import Description from '@/components/Description';
 
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
+const Content = styled.div`
+  padding: 0 20px;
 
-  .icon-wrapper {
-    padding: 10.5px 8px;
-    cursor: pointer;
-  }
-`;
-
-const ContentWrapper = styled.div`
-  .content-text {
-    padding: 0 20px;
-    margin-top: 14.8%;
-    .title {
-      margin-bottom: 8px;
-      color: var(--gray09, #222);
-      font-family: 'Pretendard';
-      font-size: clamp(22px, 6vw, 26px);
-      font-style: normal;
-      font-weight: 600;
-      line-height: 140%; /* 36.4px */
-    }
-
-    .description {
-      margin-bottom: 42px;
-      color: var(--gray07, #666);
-      font-family: 'Pretendard';
-      font-size: clamp(16px, 5vw, 20px);
-      font-style: normal;
-      font-weight: 400;
-      line-height: 140%; /* 28px */
-    }
+  .description {
+    margin-top: 15.1%;!important;
   }
 
   .content {
-    height: 290px;
-    background: var(--gray01, #f7f7f7);
+    width: 100vw;
+    transform: translateX(-20px);
+    max-width: 512px;
+    margin-top: 42px;
   }
 
   .content-title {
     margin-top: 18px;
     margin-bottom: 50px;
-    padding: 0 20px;
     color: var(--gray09, #222);
-    font-family: 'Pretendard';
-    font-size: clamp(16px, 5vw, 20px);
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+    font: var(--Pretendard--20-600);
   }
 `;
 
@@ -64,8 +33,6 @@ interface Props {
 }
 
 const MeditationContent = ({ time }: Props) => {
-  const router = useRouter();
-
   const [contentLink, setContentLink] = useState('');
   const [contentTitle, setContentTitle] = useState('');
 
@@ -102,25 +69,14 @@ const MeditationContent = ({ time }: Props) => {
 
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.back();
-          }}
-        >
-          <ArrowSVG width={21} height={21} alt={'prev'} />
-        </div>
-      </Header>
-      <ContentWrapper>
-        <div className='content-text'>
-          <p className='title'>{time}분 명상</p>
-          <p className='description'>
-            눈을 감고 편안하게 명상을 진행해보세요.
+      <Header type={'prev'} />
+      <Content>
+        <Description
+          desc={`${time}분 명상`}
+          subDesc='눈을 감고 편안하게 명상을 진행해보세요.
             <br />
-            화면은 잠시 꺼두어도 좋아요.
-          </p>
-        </div>
+            화면은 잠시 꺼두어도 좋아요.'
+        />
         <div className='content'>
           <iframe
             width={'100%'}
@@ -132,7 +88,7 @@ const MeditationContent = ({ time }: Props) => {
           ></iframe>
         </div>
         <p className='content-title'>{contentTitle}</p>
-      </ContentWrapper>
+      </Content>
     </Layout>
   );
 };

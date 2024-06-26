@@ -23,6 +23,7 @@ import { getCookieValue } from '@/utils/getCookieValue';
 const Content = styled.div`
   padding: 0 20px;
   flex: 1;
+  margin-bottom: 17.8%;
 `;
 
 const InfoSection = styled.section`

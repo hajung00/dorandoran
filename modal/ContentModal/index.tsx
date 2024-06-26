@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
-import ModalLayout from '../ModalLayout';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import ModalLayout from '../ModalLayout';
 
 const ContentModalStyle = styled.div`
   width: 84.4%;
