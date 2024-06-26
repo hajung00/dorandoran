@@ -1,27 +1,17 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
-// import svg
-import ArrowSVG from '../../../public/icons/arrow.svg';
+// import components
 import Layout from '@/components/Layout';
-import { useRouter } from 'next/router';
-
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-
-  .icon-wrapper {
-    padding: 10.5px 8px;
-    cursor: pointer;
-  }
-`;
+import Button from '@/components/Button';
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   flex: 1;
+  padding: 0 20px;
+  margin-bottom: 12.5%;
 
   .description {
     display: flex;
@@ -29,56 +19,26 @@ const Content = styled.div`
     align-items: center;
     flex: 1;
     justify-content: center;
+    font-family: 'Pretendard';
 
-    .icon {
-      width: 80px;
-      height: 80px;
-      background: var(--gray02, #eaeaea);
-      margin-bottom: 33px;
-    }
     .main-description {
       color: var(--gray09, #222);
       text-align: center;
-      font-family: 'Pretendard';
-      font-size: 26px;
-      font-style: normal;
-      font-weight: 600;
+      font: var(--Pretendard--26-600);
       line-height: 150%; /* 39px */
-      letter-spacing: -0.52px;
       margin-bottom: 14px;
     }
     .sub-description {
       color: var(--gray08, #444);
       text-align: center;
-      font-family: 'Pretendard';
       font-size: 20px;
-      font-style: normal;
       font-weight: 500;
       line-height: 150%; /* 30px */
       margin-bottom: 22px;
     }
   }
-
-  .button-section {
-    padding: 0 20px;
-    width: 100%;
-
-    & > button {
-      width: 100%;
-      border-radius: 18px;
-      background: #565bff;
-      border: none;
-      color: #fff;
-      font-family: 'Pretendard';
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: -0.4px;
-      margin-bottom: 26px;
-      padding: 4.5% 0;
-      cursor: pointer;
-    }
-  }
 `;
+
 const DropOut2 = () => {
   const router = useRouter();
 
@@ -95,15 +55,13 @@ const DropOut2 = () => {
             언제든지 도란도란을 찾아와주세요!
           </p>
         </div>
-        <div className='button-section'>
-          <button
-            onClick={() => {
-              router.push('/counsel');
-            }}
-          >
-            메인화면으로 이동
-          </button>
-        </div>
+        <Button
+          text='메인화면으로 이동'
+          type={true}
+          onClick={() => {
+            router.push('/counsel');
+          }}
+        />
       </Content>
     </Layout>
   );
