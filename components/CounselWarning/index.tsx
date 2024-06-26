@@ -51,8 +51,7 @@ const CounselWarningStyle = styled.div`
       text-decoration: none;
     }
 
-    & > a,
-    & > button {
+    & > a {
       color: var(--doranblue, #565bff);
       font-family: 'Pretendard';
       font-size: clamp(12px, 4vw, 16px);
@@ -84,6 +83,7 @@ interface Props {
 const CounselWarning = ({ comment, onClickHandler }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
 
+  // 기기가 모바일인지 확인
   useEffect(() => {
     const userAgent =
       typeof navigator === 'undefined' ? '' : navigator.userAgent;
@@ -112,6 +112,7 @@ const CounselWarning = ({ comment, onClickHandler }: Props) => {
         ) : (
           <>
             <button
+              className='right-arrow-button'
               onClick={(e) => {
                 onClickHandler('1599-0199', e);
               }}
@@ -120,6 +121,7 @@ const CounselWarning = ({ comment, onClickHandler }: Props) => {
               <ArrowSVG width={20} height={20} alt='arrow' />
             </button>
             <button
+              className='right-arrow-button'
               onClick={(e) => {
                 onClickHandler('국번없이 129', e);
               }}

@@ -8,7 +8,7 @@ const AgreementContentStyle = styled.div`
   .content-wrapper {
     & > div {
       font-family: 'Pretendard';
-      font-size: 18px !important;
+      font-size: 18px;
       font-style: normal;
       font-weight: 500;
       line-height: 140%;

@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import styled from 'styled-components';
 
 // import svg
-import ArrowSVG from '../../public/icons/arrow-right.svg';
+import RightArrowSVG from '../../public/icons/arrow-right.svg';
 
 // import components
 import Layout from '../../components/Layout';
@@ -35,26 +35,6 @@ const ContentHeader = styled.section`
       color: var(--gray09, #222);
       font: var(--Pretendard--26-600);
       line-height: 140%; /* 36.4px */
-    }
-
-    & > button {
-      padding: 4px 12px;
-      border-radius: 6px;
-      background: var(--doranblue02, #f3f3ff);
-      color: var(--doranblue, #565bff);
-      font-family: 'Pretendard';
-      font-size: clamp(16px, 4vw, 18px);
-      font-style: normal;
-      font-weight: 600;
-      line-height: 140%;
-      margin-bottom: 20px;
-      margin-top: 16px;
-      border: none;
-      cursor: pointer;
-
-      & > svg {
-        transform: translateY(12%);
-      }
     }
   }
 
@@ -268,7 +248,7 @@ const Contents = ({ token }: Props) => {
     <Layout>
       <Content>
         <ContentHeader>
-          {testCheck ? (
+          {!testCheck ? (
             <div className='today-famous'>
               <div>오늘의 명언</div>
               <p>{contentsData?.quotation}</p>
@@ -280,9 +260,9 @@ const Contents = ({ token }: Props) => {
                 <br />
                 맞춤 콘텐츠를 추천받아보세요!
               </p>
-              <button>
+              <button className='right-arrow-button'>
                 심리검사 하러 가기
-                <ArrowSVG
+                <RightArrowSVG
                   width={20}
                   height={20}
                   alt={'arrow'}

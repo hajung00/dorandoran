@@ -1,103 +1,76 @@
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
+import useSWR from 'swr';
 import styled from 'styled-components';
+
 // import svg
 import RightArrowSVG from '../../../public/icons/arrow-right.svg';
-import ArrowSVG from '../../../public/icons/arrow.svg';
+
+// import components
 import Layout from '@/components/Layout';
+import Header from '@/components/Header';
 import ChatSection from '@/components/ChatSection';
-// import Scrollbars from 'react-custom-scrollbars';
+
+// import hooks
 import makeSection from '@/utils/makeSection';
-import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 import { getCookieValue } from '@/utils/getCookieValue';
 
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-
-  .icon-wrapper {
-    padding: 10.5px 8px;
-    cursor: pointer;
-  }
+const Content = styled.div`
+  padding: 0 20px;
 `;
-const CounselResultSection = styled.div`
-  .counsel-title {
-    margin-top: 22px;
-    padding: 0 20px;
-    color: var(--gray09, #222);
+
+const CounselTitle = styled.section`
+  color: var(--gray09, #222);
+  font: var(--Pretendard--26-600);
+  line-height: 140%; /* 36.4px */
+`;
+
+const CounselSummary = styled.section`
+  margin-top: 24px;
+  position: relative;
+
+  & > p {
+    color: var(--gray07, #666);
     font-family: 'Pretendard';
-    font-size: clamp(20px, 5.5vw, 26px);
+    font-size: clamp(16px, 4vw, 18px);
     font-weight: 600;
-    line-height: 140%; /* 36.4px */
+    line-height: 150%; /* 27px */
+    letter-spacing: -0.36px;
   }
 
-  .counsel-start-button {
-    margin-top: 16px;
-    padding: 6px 6px 6px 12px;
-    border-radius: 18px;
-    background: #fff;
-    color: #565bff;
+  & > div {
+    margin-top: 12px;
+    border: 10px solid #f7f7f7;
+    padding: 16px;
+    max-height: 248px;
+    min-height: 136px;
+    width: 100%;
+    margin-top: 12px;
+    border: 10px solid #f7f7f7;
+    padding: 16px;
+    max-height: 248px;
+    min-height: 136px;
+    height: fit-content;
+    overflow: hidden;
+    color: var(--gray08, #444);
+    text-overflow: ellipsis;
     font-family: 'Pretendard';
-    font-size: clamp(14px, 4vw, 16px);
-    font-weight: 600;
+    font-size: clamp(18px, 4vw, 20px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%; /* 28px */
     letter-spacing: -0.4px;
-    border-radius: 6px;
-    background: var(--doranblue03, #f3f3ff);
-    border: none;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .counsel-summary {
-    padding: 0 20px;
-    margin-top: 24px;
-    position: relative;
-
-    & > p {
-      color: var(--gray07, #666);
-      font-family: 'Pretendard';
-      font-size: clamp(16px, 4vw, 18px);
-      font-weight: 600;
-      line-height: 150%; /* 27px */
-      letter-spacing: -0.36px;
-    }
-
-    & > div {
-      margin-top: 12px;
-      border: 10px solid #f7f7f7;
-      padding: 16px;
-      max-height: 248px;
-      min-height: 136px;
-      width: 100%;
-      margin-top: 12px;
-      border: 10px solid #f7f7f7;
-      padding: 16px;
-      max-height: 248px;
-      min-height: 136px;
-      height: fit-content;
-      overflow: hidden;
-      color: var(--gray08, #444);
-      text-overflow: ellipsis;
-      font-family: 'Pretendard';
-      font-size: clamp(18px, 4vw, 20px);
-      font-style: normal;
-      font-weight: 500;
-      line-height: 140%; /* 28px */
-      letter-spacing: -0.4px;
-    }
   }
 `;
 
 const CounselChatHistory = styled.div`
-  padding: 0 20px;
   display: flex;
   flex-direction: column;
   height: 85vh;
   overflow: auto;
 
-  .title {
+  & > p {
     padding-top: 38px;
     color: var(--gray09, #222);
     font-family: 'Pretendard';
@@ -124,28 +97,17 @@ const HistoryId = ({ token }: Props) => {
   );
 
   const messagesEndRef = useRef(null);
-
   const chatSections = makeSection(chatData ? chatData.messages.flat() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
 
-  console.log('chatSections', chatSections);
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.back();
-          }}
-        >
-          <ArrowSVG width={21} height={21} alt={'prev'} />
-        </div>
-      </Header>
-      <CounselResultSection>
-        <div className='counsel-title'>
+      <Header type='prev' />
+      <Content>
+        <CounselTitle>
           <p>상담 결과</p>
           <p>{chatData?.result}</p>
           <button
-            className='counsel-start-button'
+            className='right-arrow-button'
             onClick={() => {
               router.push('/counsel/chat-intro');
             }}
@@ -153,16 +115,16 @@ const HistoryId = ({ token }: Props) => {
             새로운 상담 시작하기
             <RightArrowSVG width={20} height={20} alt={'arrow'} />
           </button>
-        </div>
-        <div className='counsel-summary'>
+        </CounselTitle>
+        <CounselSummary>
           <p>상담 내용 요약</p>
           <div>{chatData?.summary}</div>
-        </div>
-      </CounselResultSection>
-      <CounselChatHistory>
-        <div className='title'>대화 내역</div>
-        <ChatSection chatSections={chatSections} ref={messagesEndRef} />
-      </CounselChatHistory>
+        </CounselSummary>
+        <CounselChatHistory>
+          <p>대화 내역</p>
+          <ChatSection chatSections={chatSections} ref={messagesEndRef} />
+        </CounselChatHistory>
+      </Content>
     </Layout>
   );
 };

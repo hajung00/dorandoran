@@ -1,6 +1,6 @@
-import moment from 'moment';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
 
 const ListStyle = styled.div`
@@ -39,9 +39,11 @@ const CounselHistoryList = ({ type, list }: Props) => {
 
   const moveToCounselDetail = useCallback(
     (id: number) => {
+      // 진행중인 상담일 경우, 상담 페이지로 이동
       if (type === 'counsel') {
         router.push(`counsel/chat/${id}`);
       } else {
+        // 완료한 상담일 경우, 상담 결과페이지로 이동
         router.push(`/history/${id}`);
       }
     },

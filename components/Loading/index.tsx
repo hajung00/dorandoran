@@ -2,22 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Lottie from 'lottie-react';
 
-// import svg
-import ArrowSVG from '../../public/icons/arrow.svg';
+// import animation
 import LoadinganimationData from '../../public/animation/loading.json';
-
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-
-  .icon-wrapper {
-    padding: 13px 8px;
-  }
-`;
 
 const TestLoadingStyle = styled.div`
   position: fixed;
