@@ -204,7 +204,7 @@ const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
   const [currentMonth, setCurrentMonth] = useState(moment().month() + 1);
   useEffect(() => {
     if (container.current) {
-      container.current.scrollTo(currentMonth * 1000, 0);
+      container.current.scrollTo(currentMonth * 55, 0);
     }
   }, []);
 
