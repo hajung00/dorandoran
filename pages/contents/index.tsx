@@ -248,7 +248,7 @@ const Contents = ({ token }: Props) => {
     <Layout>
       <Content>
         <ContentHeader>
-          {!testCheck ? (
+          {testCheck ? (
             <div className='today-famous'>
               <div>오늘의 명언</div>
               <p>{contentsData?.quotation}</p>
