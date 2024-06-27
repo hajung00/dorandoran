@@ -88,12 +88,6 @@ const Counsel = ({ token, testCheck, counselWarning, listData }: Props) => {
   const [callType, setCallType] = useState('');
   const [callNumber, setCallNumber] = useState('');
 
-  useEffect(() => {
-    if (!token) {
-      router.push('/login');
-    }
-  }, [token]);
-
   // 위급 전화 모달 toggle
   const callModalHandler = () => {
     setIsModalOpen((prev) => !prev);
