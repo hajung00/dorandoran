@@ -1,17 +1,20 @@
 'use client';
-import styled from 'styled-components';
-import Footer from '../../components/Footer';
-import Layout from '../../components/Layout';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
 
 // import svg
 import ArrowSVG from '../../public/icons/arrow-right.svg';
-import { useRouter } from 'next/router';
-import { getCookieValue } from '@/utils/getCookieValue';
-import useSWR from 'swr';
-import fetcher from '@/utils/fetchers';
+
+// import components
+import Layout from '../../components/Layout';
+import Footer from '../../components/Footer';
 import LogoutModal from '@/modal/LogoutModal';
+
+// import hooks
+import { getCookieValue } from '@/utils/getCookieValue';
+import fetcher from '@/utils/fetchers';
 
 const Header = styled.header`
   padding: 24% 20px 30px 20px;
@@ -24,7 +27,6 @@ const Header = styled.header`
     color: var(--gray09, #222);
     font-family: 'Pretendard';
     font-size: clamp(26px, 6vw, 30px);
-
     font-weight: 600;
   }
 
@@ -64,9 +66,7 @@ const Content = styled.div`
       justify-content: space-between;
       padding: 16px 0;
       color: var(--gray09, #222);
-      font-family: 'Pretendard';
-      font-size: 20px;
-      font-weight: 600;
+      font: var(--Pretendard--20-600);
       line-height: 140%; /* 28px */
       text-decoration: none;
     }
@@ -84,14 +84,16 @@ const Content = styled.div`
 
 interface Props {
   token: string;
+  userData: { [key: string]: any };
 }
 
-const MyPage = ({ token }: Props) => {
+const MyPage = ({ token, userData }: Props) => {
   const router = useRouter();
-
-  const { data: userData } = useSWR('/api/mypage/main', (url) =>
-    fetcher(url, token)
-  );
+  useEffect(() => {
+    if (!token) {
+      router.push('/login');
+    }
+  }, [token]);
 
   const [logoutModal, setLogoutModal] = useState(false);
   const logoutModalHandler = useCallback(() => {
@@ -141,10 +143,12 @@ export const getServerSideProps = async (context: any) => {
   const cookie = context.req ? context.req.headers.cookie : '';
 
   let token = cookie ? getCookieValue(cookie, 'token') : null;
+  const userData = token ? await fetcher('/api/mypage/main', token) : null;
 
   return {
     props: {
       token,
+      userData,
     },
   };
 };

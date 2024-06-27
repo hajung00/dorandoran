@@ -1,25 +1,22 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import styled from 'styled-components';
 
 // import components
 import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
-import { getCookieValue } from '@/utils/getCookieValue';
-import useSWR from 'swr';
-import fetcher from '@/utils/fetchers';
-
-// import image
-import LogoPNG from '../../public/image/logo.png';
-import CounselWarning from '@/components/CounselWarning';
-import CallModal from '@/modal/CallModal';
 import IntendSection from '@/components/IntendSection';
 import CounselHistoryList from '@/components/CounselHistoryList';
+import CounselWarning from '@/components/CounselWarning';
+import CallModal from '@/modal/CallModal';
+
+// import hooks
+import { getCookieValue } from '@/utils/getCookieValue';
+import fetcher from '@/utils/fetchers';
 
 const Header = styled.header`
-  padding: 54px 20px 0 20px;
+  padding: 10.6% 20px 0 20px;
   color: #222;
   font: var(--Pretendard--34-700);
 `;
@@ -67,67 +64,42 @@ const CounselStyle = styled.div`
       font-weight: 600;
       line-height: normal;
     }
-  }
 
-  .counsel-list-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 20px;
-
-    .counsel-list {
-      padding: 20px;
-      border-radius: 16px;
-      background: var(--gray01, #f7f7f7);
+    .counsel-list-wrapper {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      cursor: pointer;
-
-      .counsel-title {
-        color: #000;
-        font-family: 'Pretendard';
-        font-size: 18px;
-        font-weight: 500;
-        letter-spacing: -0.36px;
-        text-transform: uppercase;
-      }
-      .counsel-date {
-        color: #000;
-        font-family: 'Pretendard';
-        font-size: 16px;
-        font-weight: 400;
-        letter-spacing: -0.32px;
-        text-transform: uppercase;
-      }
+      margin-top: 20px;
     }
   }
 `;
 
 interface Props {
   token: string;
+  testCheck: boolean;
+  counselWarning: any;
+  listData: any;
 }
 
-const Counsel = ({ token }: Props) => {
+const Counsel = ({ token, testCheck, counselWarning, listData }: Props) => {
   const router = useRouter();
-  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
-    fetcher(url, token)
-  );
-  const { data: counselWarning } = useSWR('/api/counsel/suggest', (url) =>
-    fetcher(url, token)
-  );
-  const { data: listData } = useSWR(`/api/counsel/history/counsel`, (url) =>
-    fetcher(url, token)
-  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [callType, setCallType] = useState('');
   const [callNumber, setCallNumber] = useState('');
 
+  useEffect(() => {
+    if (!token) {
+      router.push('/login');
+    }
+  }, [token]);
+
+  // 위급 전화 모달 toggle
   const callModalHandler = () => {
     setIsModalOpen((prev) => !prev);
   };
 
+  // 위급 전화 컴포넌트에서 선택한 전화 종류
   const onClickHandler = useCallback(
     (number: string, e: React.MouseEvent<HTMLButtonElement>) => {
       const target = e.target as HTMLLIElement;
@@ -208,10 +180,22 @@ export const getServerSideProps = async (context: any) => {
   const cookie = context.req ? context.req.headers.cookie : '';
 
   let token = cookie ? getCookieValue(cookie, 'token') : null;
+  const testCheck = token
+    ? await fetcher('/api/assessment/has-result', token)
+    : null;
+  const counselWarning = token
+    ? await fetcher('/api/counsel/suggest', token)
+    : null;
+  const listData = token
+    ? await fetcher('/api/counsel/history/counsel', token)
+    : null;
 
   return {
     props: {
       token,
+      testCheck,
+      counselWarning,
+      listData,
     },
   };
 };

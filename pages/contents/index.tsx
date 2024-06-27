@@ -154,10 +154,6 @@ const MeditationTime = styled.div<{ color: string }>`
   line-height: 140%;
 `;
 
-interface Props {
-  token: string;
-}
-
 const meditationTime = [
   { time: 3, color: '#E1E2FF' },
   { time: 5, color: '#BEC0FF' },
@@ -187,14 +183,14 @@ const psychotherapyContent = [
   },
 ];
 
-const Contents = ({ token }: Props) => {
-  const router = useRouter();
+interface Props {
+  token: string;
+  testCheck: boolean;
+  initialContentData: any;
+}
 
-  useEffect(() => {
-    if (!token) {
-      router.push('/login');
-    }
-  }, [token]);
+const Contents = ({ token, testCheck, initialContentData }: Props) => {
+  const router = useRouter();
 
   const [psychotherapyList, setPsychotherapyList] = useState([
     ...psychotherapyContent,
@@ -204,14 +200,17 @@ const Contents = ({ token }: Props) => {
   ); // 선택한 컨텐츠 목록(영어)
   const [embedUrlData, setEmbedUrlData] =
     useState<{ [key: string]: string }[]>(); // embedUrl 추가된 contentsData
-  const { data: testCheck, isLoading } = useSWR(
-    '/api/assessment/has-result',
-    (url) => fetcher(url, token)
-  );
   const { data: contentsData, isLoading: contentsLoading } = useSWR(
     `/api/contents/main/${currentContentCategory}`,
-    (url) => fetcher(url, token)
+    (url) => fetcher(url, token),
+    { fallbackData: initialContentData }
   );
+
+  useEffect(() => {
+    if (!token) {
+      router.push('/login');
+    }
+  }, [token]);
 
   // contentsData에 embedUrl 추가
   useEffect(() => {
@@ -222,7 +221,7 @@ const Contents = ({ token }: Props) => {
   // 심리검사에 따른 컨텐츠 목록 설정
   useEffect(() => {
     // 심리검사 하지 않은 경우에는 "당신을 위한 컨텐츠" 목록 제거
-    if (!isLoading && !testCheck) {
+    if (!testCheck) {
       const newList = psychotherapyList.slice(1, 7);
       setPsychotherapyList([...newList]);
       setCurrentContentCategory('depression');
@@ -321,8 +320,6 @@ const Contents = ({ token }: Props) => {
                   height='290'
                   src={item.embedUrl}
                   title='YouTube video player'
-                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                  allowFullScreen
                 ></iframe>
                 <p>{item.title}</p>
               </YoutubeSection>
@@ -348,10 +345,18 @@ export const getServerSideProps = async (context: any) => {
   const cookie = context.req ? context.req.headers.cookie : '';
 
   let token = cookie ? getCookieValue(cookie, 'token') : null;
+  const testCheck = token
+    ? await fetcher('/api/assessment/has-result', token)
+    : null;
+  const initialContentData = token
+    ? await fetcher('/api/contents/main/personal', token)
+    : null;
 
   return {
     props: {
       token,
+      testCheck,
+      initialContentData,
     },
   };
 };

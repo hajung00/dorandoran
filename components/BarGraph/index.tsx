@@ -171,21 +171,42 @@ const BarStyle = styled.div`
     display: block;
   }
 `;
+
 interface Props {
   token: string;
   clickDate: string;
   handleClickDate: (date: string) => void;
 }
+
 const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
+  const chartRef = useRef(null);
+  const container = useRef<any>(null); // month scroll
+  const [diseaseType, setDiseaseType] = useState('DEPRESSION'); // 질병 타입
+  const [color, setColor] = useState<string[]>([]); // bar color list
+  const [clickedIndex, setClickedIndex] = useState(-1); // 클릭한 바 index
+  const [graphData, setGraphData] = useState<{ [key: string]: number }[]>(); // 항목, 달에 따른 그래프 데이터
+  const [currentMonth, setCurrentMonth] = useState(moment().month() + 1); // 선택한 달
+
   const month = Array(12)
     .fill(0)
     .map((item: number, i: number) => i + 1);
 
-  const chartRef = useRef(null);
-  const [color, setColor] = useState<string[]>([]);
-  const [clickedIndex, setClickedIndex] = useState(-1);
-  const [graphData, setGraphData] = useState<{ [key: string]: number }[]>();
+  const onClickTypeHandler = useCallback((category: string) => {
+    setDiseaseType(category);
+  }, []);
 
+  const onClickMonthHandler = useCallback((month: number) => {
+    setCurrentMonth(month);
+  }, []);
+
+  // 현재 달로 스크롤 이동
+  useEffect(() => {
+    if (container.current) {
+      container.current.scrollTo(currentMonth * 55, 0);
+    }
+  }, []);
+
+  // 점수에 따른 bar color 설정
   const setBarColor = (data: { [key: string]: number }[]) => {
     const scoreArray = data.map((item) => item.score);
     setColor([]);
@@ -200,124 +221,56 @@ const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
     }
   };
 
-  const container = useRef<any>(null);
-  const [currentMonth, setCurrentMonth] = useState(moment().month() + 1);
-  useEffect(() => {
-    if (container.current) {
-      container.current.scrollTo(currentMonth * 55, 0);
-    }
-  }, []);
-
-  const [diseaseType, setDiseaseType] = useState('DEPRESSION');
-  const onClickTypeHandler = useCallback((category: string) => {
-    setDiseaseType(category);
-  }, []);
-
-  const onClickMonthHandler = useCallback((month: number) => {
-    setCurrentMonth(month);
-  }, []);
-
   // 질병 종류, 달 변할 때 마다 데이터 요청
-  // useEffect(() => {
-  //   console.log('데이터 요청', diseaseType, currentMonth);
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await trendCounselAPI(
-  //         token,
-  //         diseaseType,
-  //         currentMonth
-  //       );
-  //       console.log(response);
-  //       setGraphData(response);
-  //       setBarColor(response);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await trendCounselAPI(
+          token,
+          diseaseType,
+          currentMonth
+        );
+        clearClickDate();
+        setGraphData(response);
+        setBarColor(response);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  //   fetchData();
-  // }, [diseaseType, currentMonth]);
+    fetchData();
+  }, [diseaseType, currentMonth]);
 
+  // 선택한 날짜 clear
   const clearClickDate = useCallback(() => {
     handleClickDate('');
     setClickedIndex(-1);
   }, []);
 
-  // 더미!!
-  const dummy1 = [
-    {
-      dayOfMonth: 26,
-      score: 32,
-    },
-    {
-      dayOfMonth: 27,
-      score: 34,
-    },
-    {
-      dayOfMonth: 28,
-      score: 36,
-    },
-    {
-      dayOfMonth: 29,
-      score: 33,
-    },
-  ];
+  // bar graph 클릭 이벤트
+  const onClickBarGraph = (c: any, chart_instances: any) => {
+    try {
+      if (chart_instances.length > 0) {
+        const chart: any = chartRef.current;
+        const scoreElement = document.getElementById(
+          'chartjs-tooltip'
+        ) as HTMLDivElement;
+        scoreElement.style.left = `calc(${chart_instances[0].element.x}px - 24px)`;
+        scoreElement.style.top = `calc(${chart_instances[0].element.y}px - 48px)`;
 
-  const dummy2 = [
-    {
-      dayOfMonth: 26,
-      score: 58,
-    },
-    {
-      dayOfMonth: 27,
-      score: 60,
-    },
-    {
-      dayOfMonth: 28,
-      score: 62,
-    },
-    {
-      dayOfMonth: 29,
-      score: 63,
-    },
-  ];
-
-  const dummy3 = [
-    {
-      dayOfMonth: 26,
-      score: 80,
-    },
-    {
-      dayOfMonth: 27,
-      score: 82,
-    },
-    {
-      dayOfMonth: 28,
-      score: 84,
-    },
-    {
-      dayOfMonth: 29,
-      score: 86,
-    },
-  ];
-
-  useEffect(() => {
-    console.log('데이터 요청', diseaseType, currentMonth);
-    if (diseaseType === 'DEPRESSION') {
-      setGraphData(dummy1);
-      setBarColor(dummy1);
+        handleClickDate(
+          graphData
+            ? currentMonth.toString().padStart(2, '0') +
+                graphData[chart_instances[0].index].dayOfMonth.toString()
+            : ''
+        );
+        setClickedIndex(chart_instances[0].index);
+        chart.update();
+      }
+    } catch (error) {
+      console.log(error);
     }
-    if (diseaseType === 'STRESS') {
-      setGraphData(dummy2);
-      setBarColor(dummy2);
-    }
-    if (diseaseType === 'ANXIETY') {
-      setGraphData(dummy3);
-      setBarColor(dummy3);
-    }
-  }, [diseaseType, currentMonth]);
-
-  //
+  };
 
   const data = {
     labels: graphData?.map((item) => item.dayOfMonth + '일'),
@@ -373,31 +326,8 @@ const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
         },
       },
     },
-    onClick: (c: any, chart_instances: any) => {
-      try {
-        if (chart_instances.length > 0) {
-          const chart: any = chartRef.current;
-
-          const scoreElement = document.getElementById(
-            'chartjs-tooltip'
-          ) as HTMLDivElement;
-
-          scoreElement.style.left = `calc(${chart_instances[0].element.x}px - 24px)`;
-          scoreElement.style.top = `calc(${chart_instances[0].element.y}px - 48px)`;
-
-          handleClickDate(
-            graphData
-              ? currentMonth.toString().padStart(2, '0') +
-                  graphData[chart_instances[0].index].dayOfMonth.toString()
-              : ''
-          );
-          setClickedIndex(chart_instances[0].index);
-          chart.update();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
+    onClick: (c: any, chart_instances: any) =>
+      onClickBarGraph(c, chart_instances),
   };
 
   return (
@@ -436,7 +366,9 @@ const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
             <li
               className={`${currentMonth === item && 'focus'}`}
               onClick={() => {
-                onClickMonthHandler(item);
+                if (moment().month() + 1 >= item) {
+                  onClickMonthHandler(item);
+                }
               }}
               key={item}
             >
@@ -462,7 +394,6 @@ const BarGraph = ({ token, clickDate, handleClickDate }: Props) => {
             : ''}
         </div>
       </BarStyle>
-
       <GraphBottom>
         <LegendStyle>
           <p id='stable'>안정</p>

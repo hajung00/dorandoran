@@ -101,18 +101,18 @@ interface Props {
   token: string;
 }
 
-const TestResult = ({ token }: Props) => {
+// 심리 상태에 따른 스타일
+const typeByScore = [
+  { background: '#E1E2FF', color: '#565BFF', text: '안정' },
+  { background: '#FFF3C8', color: '#BA9100', text: '불안정' },
+  { background: '#FDD', color: '#F25151', text: '위험' },
+];
+
+const PsychologicalTestResult = ({ token }: Props) => {
   const { data: testResult } = useSWR(
     '/api/mypage/first-assessment-result',
     (url) => fetcher(url, token)
   );
-
-  // 심리 상태에 따른 스타일
-  const typeByScore = [
-    { background: '#E1E2FF', color: '#565BFF', text: '안정' },
-    { background: '#FFF3C8', color: '#BA9100', text: '불안정' },
-    { background: '#FDD', color: '#F25151', text: '위험' },
-  ];
 
   // 심리 점수에 따른 상태 분류
   const sortScore = useCallback((score: number) => {
@@ -196,4 +196,4 @@ const TestResult = ({ token }: Props) => {
   );
 };
 
-export default TestResult;
+export default PsychologicalTestResult;

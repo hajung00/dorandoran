@@ -59,17 +59,17 @@ const Container = styled.div`
 
 interface Props {
   token: string;
+  testCheck: boolean;
+  initialListDate: any;
 }
 
-const History = ({ token }: Props) => {
+const History = ({ token, testCheck, initialListDate }: Props) => {
   const [listSection, setListSection] = useState('counsel');
 
-  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
-    fetcher(url, token)
-  );
   const { data: listData } = useSWR(
     `/api/counsel/history/${listSection}`,
-    (url) => fetcher(url, token)
+    (url) => fetcher(url, token),
+    { fallbackData: initialListDate }
   );
 
   const handleListSection = useCallback((type: string) => {
@@ -134,10 +134,18 @@ export const getServerSideProps = async (context: any) => {
   const cookie = context.req ? context.req.headers.cookie : '';
 
   let token = cookie ? getCookieValue(cookie, 'token') : null;
+  const testCheck = token
+    ? await fetcher('/api/assessment/has-result', token)
+    : null;
+  const initialListDate = token
+    ? await fetcher('/api/counsel/history/counsel', token)
+    : null;
 
   return {
     props: {
       token,
+      testCheck,
+      initialListDate,
     },
   };
 };

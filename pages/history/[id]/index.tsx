@@ -87,14 +87,11 @@ const CounselChatHistory = styled.div`
 
 interface Props {
   token: string;
+  chatData: any;
 }
 
-const HistoryId = ({ token }: Props) => {
+const HistoryId = ({ token, chatData }: Props) => {
   const router = useRouter();
-  const counselId: any = router.query.id!;
-  const { data: chatData } = useSWR(`/api/counsel/end/${counselId}`, (url) =>
-    fetcher(url, token)
-  );
 
   const messagesEndRef = useRef(null);
   const chatSections = makeSection(chatData ? chatData.messages.flat() : []); // 기존 데이터 변경하는 것이 아닌 복제된 데이터를 변경하여 사용
@@ -134,10 +131,15 @@ export const getServerSideProps = async (context: any) => {
   const cookie = context.req ? context.req.headers.cookie : '';
 
   let token = cookie ? getCookieValue(cookie, 'token') : null;
+  const counselId: any = context.query.id!;
+  const chatData = token
+    ? await fetcher(`/api/counsel/end/${counselId}`, token)
+    : null;
 
   return {
     props: {
       token,
+      chatData,
     },
   };
 };

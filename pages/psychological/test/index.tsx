@@ -1,7 +1,6 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import styled from 'styled-components';
 
 // import svg
@@ -160,14 +159,12 @@ const ButtonSection = styled.div`
 
 interface Props {
   token: string;
+  testCheck: boolean;
   testItmes: { [key: string]: any }[];
 }
 
-const PsychologicalTest = ({ token, testItmes }: Props) => {
+const PsychologicalTest = ({ token, testCheck, testItmes }: Props) => {
   const router = useRouter();
-  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
-    fetcher(url, token)
-  );
 
   const [currentNumber, setCurrnetNumber] = useState(1); // 현재 심리검사 항목 번호
   const [currentAnswer, setCurrentAnswer] = useState<number>(-1); // 현재 심리검사 항목 답변
@@ -377,13 +374,16 @@ export const getServerSideProps = async (context: any) => {
   const cookie = context.req ? context.req.headers.cookie : '';
 
   let token = cookie ? getCookieValue(cookie, 'token') : null;
-
+  const testCheck = token
+    ? await fetcher('/api/assessment/has-result', token)
+    : null;
   const testItmes = (await import('../../../public/test_items/test_item.json'))
     .default;
 
   return {
     props: {
       token,
+      testCheck,
       testItmes,
     },
   };

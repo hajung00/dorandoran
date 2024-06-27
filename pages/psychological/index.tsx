@@ -15,7 +15,6 @@ import Description from '@/components/Description';
 
 // import hooks
 import { getCookieValue } from '@/utils/getCookieValue';
-import useSWR from 'swr';
 import fetcher from '@/utils/fetchers';
 
 const Content = styled.div`
@@ -35,13 +34,11 @@ const Content = styled.div`
 
 interface Props {
   token: string;
+  testCheck: { [key: string]: boolean };
 }
 
-const PsychologicalTestIntro = ({ token }: Props) => {
+const PsychologicalTestIntro = ({ token, testCheck }: Props) => {
   const router = useRouter();
-  const { data: testCheck } = useSWR('/api/assessment/has-result', (url) =>
-    fetcher(url, token)
-  );
 
   useEffect(() => {
     if (!token) {
@@ -83,10 +80,14 @@ export const getServerSideProps = async (context: any) => {
   const cookie = context.req ? context.req.headers.cookie : '';
 
   let token = cookie ? getCookieValue(cookie, 'token') : null;
+  const testCheck = token
+    ? await fetcher('/api/assessment/has-result', token)
+    : null;
 
   return {
     props: {
       token,
+      testCheck,
     },
   };
 };

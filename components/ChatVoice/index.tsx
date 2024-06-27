@@ -1,10 +1,10 @@
 import 'regenerator-runtime/runtime';
 import React, { useCallback } from 'react';
-import styled from 'styled-components';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 import Lottie from 'lottie-react';
+import styled from 'styled-components';
 
 // import svg
 import MicSVG from '../../public/icons/mic.svg';
@@ -137,6 +137,7 @@ interface Props {
 const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
+  // 음성 듣기 시작
   const handleListen = useCallback(() => {
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
       alert('음성 인식이 지원되지 않는 브라우저입니다.');
@@ -148,15 +149,17 @@ const ChatVoice = ({ moveChatBox, onSubmitForm, isLoading }: Props) => {
     }
   }, [listening, transcript]);
 
+  // 음성 듣기 중지
+  const handleStop = () => {
+    SpeechRecognition.stopListening();
+  };
+
+  // 전송 클릭 이벤트
   const handleFormSend = useCallback(() => {
     onSubmitForm(transcript);
     handleStop();
     resetTranscript();
   }, [transcript]);
-
-  const handleStop = () => {
-    SpeechRecognition.stopListening();
-  };
 
   return (
     <ChatVoiceStyle>

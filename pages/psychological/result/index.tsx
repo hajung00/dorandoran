@@ -6,11 +6,10 @@ import styled from 'styled-components';
 
 // import components
 import Layout from '@/components/Layout';
-import TestResult from '@/components/TestResult';
+import PsychologicalTestResult from '@/components/PsychologicalTestResult';
 import Button from '@/components/Button';
 
 // import hooks
-import fetcher from '@/utils/fetchers';
 import { getCookieValue } from '@/utils/getCookieValue';
 
 const Content = styled.div`
@@ -42,7 +41,7 @@ interface Props {
   token: string;
 }
 
-const PsychologicalTestResult = ({ token }: Props) => {
+const PsychologicalResult = ({ token }: Props) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const PsychologicalTestResult = ({ token }: Props) => {
     <Layout>
       <Content>
         <div className='test-result-wrapper'>
-          <TestResult token={token} />
+          <PsychologicalTestResult token={token} />
         </div>
         <div className='test-description'>
           심리검사 결과는
@@ -87,4 +86,4 @@ export const getServerSideProps = async (context: any) => {
   };
 };
 
-export default PsychologicalTestResult;
+export default PsychologicalResult;

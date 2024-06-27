@@ -18,6 +18,7 @@ const FooterStyle = styled.nav`
   max-width: 512px;
   z-index: 1000;
   & > ul {
+    z-index: 1000;
     height: 100%;
     list-style: none;
     display: flex;
@@ -44,6 +45,8 @@ const ListStyle = styled.li<{ color: string }>`
   }
 
   & > a {
+    position: relative;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,6 +60,7 @@ const ListStyle = styled.li<{ color: string }>`
 
 const Footer = () => {
   const pathname = useRouter().pathname;
+
   return (
     <FooterStyle>
       <ul>

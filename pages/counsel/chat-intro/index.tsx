@@ -1,26 +1,22 @@
-import React, { useCallback } from 'react';
-import styled from 'styled-components';
-
-// import svg
-import XSVG from '../../../public/icons/x.svg';
+import React, { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '@/components/Layout';
 import Lottie from 'lottie-react';
+import styled from 'styled-components';
 
 // import animation
 import CounselIntroAnimation from '../../../public/animation/counsel-intro.json';
+
+// import components
+import Layout from '@/components/Layout';
+import Header from '@/components/Header';
+import Description from '@/components/Description';
+import Button from '@/components/Button';
+
+// import api
 import { startCounselAPI } from '@/pages/api/counsel';
+
+// import hooks
 import { getCookieValue } from '@/utils/getCookieValue';
-
-const Header = styled.header`
-  padding: 60px 20px 0 20px;
-  color: #222;
-
-  .icon-wrapper {
-    padding: 10.5px 8px;
-    cursor: pointer;
-  }
-`;
 
 const Content = styled.div`
   padding: 0 20px;
@@ -28,22 +24,7 @@ const Content = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-
-  .description {
-    margin-top: 22px;
-    color: #222;
-    font-family: 'Pretendard';
-    font-size: clamp(22px, 5.5vw, 26px);
-    font-weight: 600;
-  }
-
-  .sub-description {
-    margin-top: 12px;
-    color: #666;
-    font-family: 'Pretendard';
-    font-size: clamp(18px, 4vw, 20px);
-    font-weight: 400;
-  }
+  margin-bottom: 12.5%;
 `;
 
 const AniMationSection = styled.div`
@@ -58,7 +39,6 @@ const AniMationSection = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 44px;
-    // padding-top: 32.7%;
 
     .counselor-intro {
       position: relative;
@@ -77,45 +57,22 @@ const AniMationSection = styled.div`
       font-weight: 500;
       line-height: 140%;
       letter-spacing: -0.4px;
-
-      & > svg {
-        position: absolute;
-        bottom: -21px;
-      }
-    }
-
-    .icon {
-      width: 150px;
-      height: 150px;
-      background: var(--gray01, #f7f7f7);
     }
   }
 `;
-const ButtonSection = styled.div`
-  height: 130px;
 
-  & > button {
-    position: absolute;
-    bottom: 64px;
-    padding: 4.12% 4px;
-    border-radius: 18px;
-    background: var(--doranblue, #565bff);
-    width: calc(100% - 40px);
-    border: none;
-    color: var(--white, #fff);
-    font-family: 'Pretendard';
-    font-size: clamp(18px, 4vw, 20px);
-    font-weight: 600;
-    letter-spacing: -0.4px;
-    cursor: pointer;
-  }
-`;
 interface Props {
   token: string;
 }
 
 const ChatIntro = ({ token }: Props) => {
   const router = useRouter();
+
+  useEffect(() => {
+    if (!token) {
+      router.push('/login');
+    }
+  }, [token]);
 
   const startCounselHandler = useCallback(async () => {
     const result = await startCounselAPI(token);
@@ -126,50 +83,30 @@ const ChatIntro = ({ token }: Props) => {
 
   return (
     <Layout>
-      <Header>
-        <div
-          className='icon-wrapper'
-          onClick={() => {
-            router.push('/counsel');
-          }}
-        >
-          <XSVG width={18} height={18} alt={'close'} />
-        </div>
-      </Header>
+      <Header type='close' link='/counsel' />
       <Content>
-        <p className='description'>상담을 시작할게요.</p>
-        <p className='sub-description'>
-          모든 대화내용은 안전하게 보관되니 걱정마세요!
-        </p>
+        <Description
+          desc='상담을 시작할게요.'
+          subDesc='모든 대화내용은 안전하게 보관되니 걱정마세요!'
+        />
         <AniMationSection>
           <div className='counselor-intro-wrapper'>
             <div className='counselor-intro'>
               안녕하세요!
               <br />
               도란도란의 상담원입니다.
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='26'
-                height='23'
-                viewBox='0 0 26 23'
-                fill='none'
-              >
-                <path
-                  d='M13 23L0.00962073 0.499998L25.9904 0.5L13 23Z'
-                  fill='#f7f7f7'
-                />
-              </svg>
             </div>
           </div>
-
           <Lottie
             style={{ width: 200 }}
             animationData={CounselIntroAnimation}
           />
         </AniMationSection>
-        <ButtonSection>
-          <button onClick={startCounselHandler}>상담 시작하기</button>
-        </ButtonSection>
+        <Button
+          text='상담 시작하기'
+          type={true}
+          onClick={startCounselHandler}
+        />
       </Content>
     </Layout>
   );

@@ -4,19 +4,18 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState,
 } from 'react';
+import useSWR from 'swr';
 import styled from 'styled-components';
-import Cookies from 'js-cookie';
 
 // import svg
 import MicSVG from '../../public/icons/mic.svg';
 import SendSVG from '../../public/icons/send.svg';
-import { getCookieValue } from '@/utils/getCookieValue';
+
+// inport hooks
 import useMicDiscription, {
   SHOW_DESCRIPTION_KEY,
 } from '@/hooks/useMicDiscription';
-import useSWR from 'swr';
 
 const ChatBoxStyle = styled.div`
   width: 100%;
@@ -85,15 +84,6 @@ const ChatBoxStyle = styled.div`
   }
 `;
 
-interface Props {
-  chat: string;
-  onChangeChat: (e: any) => void;
-  onClickVoice: (e: any) => void;
-  onSubmitForm: (e: any) => void;
-  isLoading: boolean;
-  setChatBoxHeight: Dispatch<SetStateAction<any>>;
-}
-
 const Description = () => {
   const DescriptionStyle = styled.div`
     position: absolute;
@@ -139,6 +129,15 @@ const Description = () => {
   );
 };
 
+interface Props {
+  chat: string;
+  onChangeChat: (e: any) => void;
+  onClickVoice: (e: any) => void;
+  onSubmitForm: (e: any) => void;
+  isLoading: boolean;
+  setChatBoxHeight: Dispatch<SetStateAction<any>>;
+}
+
 const ChatBox = ({
   chat,
   onChangeChat,
@@ -148,11 +147,35 @@ const ChatBox = ({
   setChatBoxHeight,
 }: Props) => {
   const { enableMicDiscription, disableMicDiscription } = useMicDiscription();
-  const { data: showdiscription } = useSWR(SHOW_DESCRIPTION_KEY);
+  const { data: showdiscription } = useSWR(SHOW_DESCRIPTION_KEY); // 음성 설명 활성화 여부
+  const textareaRef = useRef<any>(null);
+  const textarea = textareaRef.current;
 
+  // textarea 값에 따른 높이 조절
+  const adjustHeight = () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    setChatBoxHeight(textarea.scrollHeight - 56);
+  };
+
+  useEffect(() => {
+    if (chat) adjustHeight();
+  }, [chat]);
+
+  // textarea focus시, 음성 설명 보이지 않게 설정
   const removeDescription = useCallback(() => {
     disableMicDiscription();
   }, []);
+
+  // 채팅 전송 이벤트
+  const onClickSend = useCallback(() => {
+    onSubmitForm(chat);
+    textarea.style.height = '56px';
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+    setChatBoxHeight(0);
+  }, [chat]);
 
   // 맥북에서 요청 두번가는 에러있음,,, 나중에 수정!!
   // const handleKeyDown = useCallback(
@@ -169,19 +192,6 @@ const ChatBox = ({
   //   },
   //   [chat]
   // );
-
-  const textareaRef = useRef<any>(null);
-  const textarea = textareaRef.current;
-
-  const adjustHeight = () => {
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
-    setChatBoxHeight(textarea.scrollHeight - 56);
-  };
-
-  useEffect(() => {
-    if (chat) adjustHeight();
-  }, [chat]);
 
   return (
     <ChatBoxStyle>
@@ -209,16 +219,7 @@ const ChatBox = ({
           onFocus={removeDescription}
           rows={1}
         />
-        <button
-          onClick={() => {
-            onSubmitForm(chat);
-            textarea.style.height = '56px';
-            if (textareaRef.current) {
-              textareaRef.current.focus();
-            }
-            setChatBoxHeight(0);
-          }}
-        >
+        <button onClick={onClickSend}>
           <SendSVG width={11} height={16} alt={'send'} color={'#fff'} />
         </button>
       </div>
