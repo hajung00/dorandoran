@@ -71,6 +71,24 @@ const CounselWarningStyle = styled.div`
       cursor: pointer;
     }
   }
+
+  .right-arrow-button {
+    margin-top: 16px;
+    padding: 6px 6px 6px 12px;
+    color: #565bff;
+    font-family: Pretendard;
+    font-size: clamp(14px, 4vw, 16px);
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    border-radius: 6px;
+    background: var(--doranblue03, #f3f3ff);
+    border: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 interface Props {
