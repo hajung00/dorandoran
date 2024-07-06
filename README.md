@@ -1,40 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📌 도란도란
 
-## Getting Started
+<br/> 
 
-First, run the development server:
+## 📑 Table Of Contents
+1.   👋🏻[ Introduce](#-introduce)<br/>
+2.   🚀[ Distribution Link](#-distribution-link)<br/>
+3.   🗓[ Develop Period](#-develop-period)<br/>
+4.   👪[ Team Composition](#-team-composition)  
+4.   🕶[ Preview](#-preview)<br/>
+5.   ⚙[ Installation](#-installation)<br/>
+6.   🛠[ Technology Stack](#-technology-stack)<br/>
+7.   💻[ Function](#-function)<br/>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+<br />
+
+
+## 👋🏻 Introduce
+'도란도란'은 노숙인 상담 서비스로 대화를 분석하여 감정 상태를 식별하고 이에 따른 우울, 불안, 스트레스 3가지 항목의 점수와, 상담 요약, 필요한 치료 컨텐츠를 추천하는 서비스입니다.
+2021년 기준 노숙인 중 48.8%가 우울증 의심 또는 확진 비율을 보이고 있습니다. 직접적으로 자신의 이야기를 털어놓지 못하는 분들에게 도움이 되고자 서비스를 만들게 되었습니다. 
+ 
+<br />
+
+## 🚀 Distribution Link
+👉 [도란도란 사이트 바로가기](https://dorandoran-gamma.vercel.app/)
+
+<br />
+
+## 🗓 Develop Period
+2024.05.03 ~ 2024.06.28
+
+<br />
+
+## 👪 Team Composition
+👨🏻‍💼기획 1, 👩🏻‍🎨디자인 1, 👩🏻‍💻프론트엔드 1, 👩🏻‍💻백엔드 2
+
+<br />
+
+## 🕶 Preview 
+![IMG_52531-ezgif com-video-to-gif-converter](https://github.com/hajung00/dorandoran/assets/66300154/7f96cafb-c8b6-44a6-ab78-24a6c4071d21)
+
+
+<br />
+
+## ⚙ Installation
 ```
+$ npm i
+$ npm run dev
+```    
+      
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🛠 Technology stack
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=react&logoColor=white">  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=react&logoColor=white">  <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=node.js&logoColor=white">  <img src="https://img.shields.io/badge/styled-components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white">    <img src="https://img.shields.io/badge/SWR-000000?style=for-the-badge&logo=redux&logoColor=white">  <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white">  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Heroku&logoColor=white">
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+<br />
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 💻 Function
+1. SMS 로그인
+2. 심리 검사 진행 및 결과 제공(우울, 불안, 스트레스 점수)
+3. 심리 상담 진행 및 결과 제공(상담 요약 및 심리 상태에 따른 컨텐츠 추천)
+4. 음성 채팅 STT, TTS 구현
+5. 심리 결과 추이 확인
+6. 응급 상황 알림 기능
